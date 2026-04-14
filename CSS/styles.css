@@ -3,30 +3,33 @@
 
 body {
     font-family: 'Outfit', sans-serif;
+    overflow-x: hidden;
+
 }
 
-a {
+.wrapper {
+    width: 100%;
+}
+
+#sidebar {
+    width: 250px;
+    height: 100vh;
+    background: #343a40;
+    color: white;
+    transition: all 0.3s;
+}
+
+#sidebar ul li a {
+    color: white;
     text-decoration: none;
+    display: block;
+    padding: 10px;
 }
 
-li {
-    list-style: none;
+#sidebar ul li a:hover {
+    background: #495057;
 }
 
-.wrapper .main {
-    min-height: 100vh;
-}
-
-.wrapper .main .navbar {
-    background: #F5F5F5;
-}
-
-.wrapper .sidebar{
-    width: 90px;
-    min-width: 90px;
-    transition: all 0.25s ease-in-out;
-}
-
-.wrapper .sidebar:not(.expand) .sidebar-logo {
-    display: none;
+#sidebar.active {
+    margin-left: -250px;
 }
