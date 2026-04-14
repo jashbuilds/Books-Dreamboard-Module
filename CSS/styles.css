@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+
+body {
+    font-family: 'Outfit', sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+li {
+    list-style: none;
+}
+
+.wrapper .main {
+    min-height: 100vh;
+}
+
+.wrapper .main .navbar {
+    background: #F5F5F5;
+}
+
+.wrapper .sidebar{
+    width: 90px;
+    min-width: 90px;
+    transition: all 0.25s ease-in-out;
+}
+
+.wrapper .sidebar:not(.expand) .sidebar-logo {
+    display: none;
+}
