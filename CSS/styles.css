@@ -1,35 +1,346 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+/*
+    ======================================
+    COLOR VARIABLES
+    ======================================
+    We use CSS variables ONLY for color values, to stick to best practices and make theming easier.
+*/
+:root {
+    --primary-blue: #0d6efd;
+    /* Default Bootstrap primary blue used for active/hover text and borders */
+    --bg-hover-sidebar: #eef4fc;
+    /* Very light blue background used when hovering over a menu link */
+    --bg-active-sidebar: #e3effd;
+    /* Slightly darker light blue background for the currently active link */
+    --text-sidebar: #444444;
+    /* Dark gray color for readable sidebar navigation text */
+}
 
-
+/*
+    ======================================
+    GLOBAL BASE STYLES
+    ======================================
+*/
 body {
     font-family: 'Outfit', sans-serif;
-    overflow-x: hidden;
-
+    /* Applies the sleek, modern Outfit font everywhere */
+    margin: 0px;
+    /* Removes default browser margin so content touches the edges */
+    background-color: #f0f2f5;
+    /* Slightly bluish-gray page background so the white sidebar/navbar pops out visually */
 }
 
-.wrapper {
-    width: 100%;
-}
-
+/*
+    ======================================
+    SIDEBAR CONTAINER
+    ======================================
+    Colors, borders, and general layout are managed by Bootstrap classes in HTML.
+    Here we define absolute widths in pixels and smooth tracking animations.
+*/
 #sidebar {
-    width: 250px;
-    height: 100vh;
-    background: #343a40;
-    color: white;
-    transition: all 0.3s;
+    width: 280px;
+    /* Sets exactly how wide the sidebar is on a large screen */
+    min-width: 280px;
+    /* Prevents CSS Flexbox from automatically shrinking it below 280px */
+    height: 100%;
+    /* Fills the full height of the .wrapper flex container (which is vh-100) */
+    flex-shrink: 0;
+    /* CRITICAL FIX: Stops Bootstrap Flexbox from collapsing/shrinking the sidebar to 0 width */
+    z-index: 1030;
+    /* Places it visually above other elements (like the navbar) on mobile setups */
+    overflow-x: hidden;
+    /* Hides text horizontally when the sidebar starts sliding closed */
+    /* We use box-shadow instead of a hard border to create a soft, depth-giving shadow on the right side.
+       This matches the reference image which shows a floating/lifted sidebar look, not a hard line. */
+    box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.07);
+    transition: all 0.3s ease-in-out;
+    /* Tells the browser to animate ANY changes (like width) smoothly over 0.3s */
 }
 
-#sidebar ul li a {
-    color: white;
-    text-decoration: none;
-    display: block;
-    padding: 10px;
+/* 
+    SIDEBAR HEADER LOGO AREA
+*/
+.sidebar-header {
+    height: 72px;
+    /* Matches the navbar height exactly to keep the top lines flush */
+    padding: 24px;
+    /* Adds space around the logo and title so it's not cramped */
+    transition: all 0.3s ease-in-out;
+    /* Smooth transition for padding changes when collapsing */
 }
 
-#sidebar ul li a:hover {
-    background: #495057;
+.logo-placeholder {
+    /* These sizes were previously written as inline styles on the HTML element.
+       We moved them here to follow best practices - all styling belongs in CSS. */
+    width: 40px;
+    /* Width of the square logo box */
+    height: 40px;
+    /* Height of the square logo box */
+    min-width: 40px;
+    /* Prevents the logo from shrinking when the sidebar collapses */
+
+    /* DEFAULT STATE: We hide the placeholder initially. It will only appear 
+       when the sidebar is either collapsed on desktop or viewed on mobile. */
+    display: none !important;
 }
 
-#sidebar.active {
-    margin-left: -250px;
+/* 
+    SIDEBAR NAVIGATION LINKS
+*/
+#sidebar .nav-link {
+    display: flex;
+    /* Lays the icon and the text side by side on the SAME horizontal line */
+    align-items: center;
+    /* Vertically centers the icon and the text so they line up neatly */
+    color: var(--text-sidebar);
+    /* Pulls our dark gray color variable */
+    font-weight: 500;
+    /* Makes the text slightly thicker (Medium) for a premium feel */
+    white-space: nowrap;
+    /* Stops long link names from wrapping to a second line when resizing */
+    padding: 16px 24px;
+    /* Explicit pixel padding for large, comfortable click targets */
+    transition: background-color 0.2s ease;
+    /* Gently fades background color over 0.2s on hover */
+}
+
+/* Hover effects */
+#sidebar .nav-link:hover {
+    background-color: var(--primary-blue);
+    /* Swaps to light blue variable */
+    color: var(--bg-active-sidebar);
+    /* Swaps text to primary blue variable */
+}
+
+/* Currently active link effects */
+#sidebar .nav-link.active {
+    background-color: var(--primary-blue);
+    /* Swaps to slightly darker light blue */
+    color: var(--bg-active-sidebar);
+    /* Keeps text primary blue */
+    border-right: 3px solid var(--primary-blue);
+    /* Adds a thick blue indicator line on the right edge */
+}
+
+/* 
+    SIDEBAR ICONS
+*/
+.icon-placeholder {
+    width: 24px;
+    /* Explicit width setting size for generic icons */
+    height: 24px;
+    /* Explicit height keeping the aspect ratio square */
+    min-width: 24px;
+    /* Stops Flexbox from ever squishing the icon */
+    margin-right: 16px;
+    /* Space separating the icon from the navigation link text */
+    transition: margin 0.3s ease;
+    /* Animate the margin disappearing when we shrink the sidebar */
+}
+
+/*
+    ======================================
+    DESKTOP: COLLAPSED SIDEBAR STATE
+    ======================================
+    When Javascript applies '.collapsed' to the sidebar.
+*/
+#sidebar.collapsed {
+    width: 85px;
+    /* Shrunk width just wide enough for icons and padding */
+    min-width: 85px;
+    /* Required matching property to lock the width */
+}
+
+/* 
+    LOGO TOGGLE: When collapsed, we bring back the 'ML' placeholder 
+    that we hid in the base styles above. 
+*/
+#sidebar.collapsed .logo-placeholder {
+    display: flex !important;
+}
+
+/* Text disappearing acts */
+#sidebar.collapsed .logo-text,
+#sidebar.collapsed .menu-text {
+    opacity: 0;
+    /* Makes text entirely transparent */
+    visibility: hidden;
+    /* Removes elements from browser interactivity so they don't block clicks */
+    transition: opacity 0.2s ease;
+    /* Fade out effect resolving slightly faster than the width shrink */
+}
+
+/* Realigning icons into the middle */
+#sidebar.collapsed .icon-placeholder,
+#sidebar.collapsed .logo-placeholder {
+    margin-right: 0px;
+    /* Removes previously set margins, ensuring space distributes evenly now */
+}
+
+/* The Bootstrap class 'me-2' on the logo-placeholder div also adds margin.
+   We override it here explicitly when sidebar is collapsed. */
+#sidebar.collapsed .logo-placeholder.me-2 {
+    margin-right: 0px !important;
+    /* '!important' needed to override Bootstrap's inline utility class */
+}
+
+#sidebar.collapsed .sidebar-header {
+    padding-left: 22px;
+    /* Force-pad from the left side until the logo box visually centers correctly */
+}
+
+#sidebar.collapsed .nav-link {
+    padding-left: 30px;
+    /* Force-pad from the left side until the menu icons are visually centered correctly */
+}
+
+/*
+    ======================================
+    TOP MAIN NAVBAR
+    ======================================
+    We keep the navbar white with a very soft bottom shadow (not a hard border).
+    This matches the reference image which shows a clean, minimal separation.
+*/
+#main-navbar {
+    height: 72px;
+    /* Rigid pixel height ensuring nothing breaks on resize */
+    padding-left: 24px;
+    /* Custom padding to match our sidebar inner padding logic */
+    padding-right: 24px;
+    /* Keeping both sides symmetrically padded */
+    /* Soft bottom shadow creates a subtle separation between the navbar and content.
+       Much cleaner look than a hard border-bottom line. */
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* 
+    NAVBAR: TOGGLE BUTTON
+    Previously had inline style="width: 40px; height: 40px;"
+    Moved here as best practice - all sizes should live in CSS.
+*/
+
+
+/* 
+    NAVBAR: SEARCH BOX WIDTH
+    Previously had inline style="width: 300px;"
+    Moved here as best practice.
+*/
+.search-box {
+    width: 300px;
+    /* Comfortable fixed width for the search input in the navbar */
+}
+
+/* 
+    NAVBAR: ACTION ICON PLACEHOLDERS
+    These are the circular icon buttons on the right side of the navbar (bell, message, etc.)
+    Previously had inline style="width: 40px; height: 40px;"
+    Moved here as best practice.
+*/
+.action-icon {
+    width: 40px;
+    /* Fixed width to keep the circle perfectly round */
+    height: 40px;
+    /* Fixed height matching the width */
+}
+
+/* 
+    NAVBAR: PROFILE AVATAR PLACEHOLDER
+    The circular user profile image next to the name.
+    Previously had inline style="width: 35px; height: 35px;"
+    Slightly smaller than action icons to match the reference image.
+    Moved here as best practice.
+*/
+
+/*
+    ======================================
+    MAIN CONTENT AREA
+    ======================================
+*/
+#content {
+    flex-grow: 1;
+    /* This is the KEY fix for the navbar not being full width.
+                     flex-grow: 1 tells the content area to stretch and fill ALL
+                     the leftover horizontal space that the sidebar doesn't use. */
+    overflow-y: auto;
+    /* Only creates a scrollbar internally if content is too tall */
+    overflow-x: hidden;
+    /* Prevents horizontal scrollbar appearing unexpectedly */
+    min-width: 0px;
+    /* Needed for flex children - without this, content can overflow */
+}
+
+/*
+    ======================================
+    MEDIA QUERIES / RESPONSIVENESS
+    ======================================
+*/
+
+/* -- DESKTOP (Screens 992px wide and above) -- */
+@media (min-width: 992px) {
+
+    /* Rules applied when simply looking at the normal expanded Desktop */
+    .logo-text,
+    .menu-text {
+        opacity: 1;
+        /* Fully visible */
+        visibility: visible;
+        /* Able to be read by user and clicked */
+        transition: opacity 0.5s ease;
+        /* We slow down the fade-in so it looks very graceful */
+    }
+}
+
+/* -- MOBILE & TABLET (Screens 991px wide and below) -- */
+@media (max-width: 991px) {
+    #sidebar {
+        margin-left: -85px;
+        /* Shifts the sidebar left by 85px entirely tucking it off-screen */
+        position: fixed;
+        /* Floats the sidebar above the rest of the application layout */
+        width: 85px;
+        /* Mobile sidebar will ONLY be the small icon version */
+        min-width: 85px;
+        /* Set constraint */
+    }
+
+    /* Class added by Javascript when the hamburger menu is pressed */
+    #sidebar.mobile-active {
+        margin-left: 0px;
+        /* Reset shift to 0, which pulls the 85px sidebar back onto the screen */
+        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.15);
+        /* Adding a slight drop shadow gives depth over content */
+    }
+
+    /* Enforce hidden text completely for mobile logic */
+    #sidebar .logo-text,
+    #sidebar .menu-text {
+        display: none !important;
+        /* CSS override guaranteeing text NEVER displays here */
+    }
+
+    /* On mobile, we always want the small placeholder rather than the large logo image */
+    #sidebar .logo-placeholder {
+        display: flex !important;
+    }
+
+    /* Centering logic reused from the Desktop collapsed state */
+    #sidebar .sidebar-header {
+        padding-left: 22px;
+        /* Shift logo */
+    }
+
+    #sidebar .nav-link {
+        padding-left: 30px;
+        /* Shift icon */
+    }
+
+    #sidebar .icon-placeholder,
+    #sidebar .logo-placeholder {
+        margin-right: 0px;
+        /* Remove extra margin space */
+    }
+
+    #content {
+        width: 100%;
+        /* Make content container take entire mobile screen width freely */
+    }
 }
