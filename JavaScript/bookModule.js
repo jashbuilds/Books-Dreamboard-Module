@@ -1,69 +1,166 @@
-/* 
-    SIDEBAR TOGGLE LOGIC
-    This script listens for clicks on the hamburger button and decides how to move the sidebar.
-*/
+const bookName = document.getElementById("bookName");
+const bookPDF = document.getElementById("bookPdf");
+const bookCategory = document.getElementById("bookType");
 
-// Wait for the browser to finish loading the HTML content before running the script
-document.addEventListener('DOMContentLoaded', function () {
+const booksGrid = document.getElementById("booksGrid");
+const submitBtn = document.getElementById("submitBtn");
 
-  // FETCH KEY ELEMENTS
-  // We get references to the elements we need to manipulate
-  const sidebar = document.getElementById('sidebar');
-  const sidebarToggleBtn = document.getElementById('sidebarCollapse');
+const addBookModal = document.getElementById("addBook");
+const addBookForm = document.getElementById("bookForm");
 
-  // ONLY PROCEED IF THE BUTTON EXISTS
+var db = new Dexie("BooksDB");
+db.version(1).stores({
+  books: "++id, name, category, file",
+});
+
+let currentDisplayBooks = [];
+const availableBooks = [];
+
+// Logic to Toggle Sidebar with Responsive View.
+document.addEventListener("DOMContentLoaded", () => {
+  const sidebar = document.getElementById("sidebar");
+  const sidebarToggleBtn = document.getElementById("sidebarCollapseBtn");
+
   if (sidebarToggleBtn) {
-
-    // ADD CLICK LISTENER
-    // When the user clicks the hamburger button, run this logic
-    sidebarToggleBtn.addEventListener('click', function () {
-
-      // CHECK THE SCREEN WIDTH
-      // 992 pixels is our "Breakpoint". Below this is mobile, above is desktop.
+    sidebarToggleBtn.addEventListener("click", () => {
       const isMobileView = window.innerWidth < 992;
 
       if (isMobileView) {
-        // MOBILE LOGIC:
-        // We toggle the 'mobile-active' class which slides the sidebar in from the left.
-        sidebar.classList.toggle('mobile-active');
+        sidebar.classList.toggle("mobile-active");
       } else {
-        // DESKTOP LOGIC:
-        // We toggle the 'collapsed' class which shrinks the width from 280px to 85px.
-        sidebar.classList.toggle('collapsed');
+        sidebar.classList.toggle("collapsed");
       }
-
-      // LOG FOR DEBUGGING
-      // This helps you see what's happening in the browser's console (F12 -> Console)
-      console.log('Sidebar toggled. Current view: ' + (isMobileView ? 'Mobile' : 'Desktop'));
     });
   }
 
-  // AUTO-CLOSE ON MOBILE RESIZE
-  // If the sidebar is open on mobile and the user makes the screen bigger (desktop size), 
-  // we should clean up the classes to prevent weird layout glitches.
-  window.addEventListener('resize', function () {
+  window.addEventListener("resize", () => {
     if (window.innerWidth >= 992) {
-      // Remove the mobile-specific overlay class when switching to desktop
-      sidebar.classList.remove('mobile-active');
+      sidebar.classList.remove("mobile-active");
     }
   });
 
-  // CLICK OUTSIDE TO CLOSE (Mobile Only)
-  // If the sidebar is open on mobile, clicking anywhere else on the page will close it.
-  document.addEventListener('click', function (event) {
+  document.addEventListener("click", (event) => {
     const isMobile = window.innerWidth < 992;
 
-    // We only care if we are in mobile view AND the sidebar is currently open
-    if (isMobile && sidebar.classList.contains('mobile-active')) {
-
-      // Check if the click happened OUTSIDE of the sidebar and NOT on the toggle button
+    if (isMobile && sidebar.classList.contains("mobile-active")) {
       const clickInsideSidebar = sidebar.contains(event.target);
       const clickOnToggleButton = sidebarToggleBtn.contains(event.target);
 
       if (!clickInsideSidebar && !clickOnToggleButton) {
-        sidebar.classList.remove('mobile-active');
-        console.log('Mobile sidebar closed by clicking outside.');
+        sidebar.classList.remove("mobile-active");
       }
     }
   });
 });
+
+// Function to generate Random book IDs.
+const randomId = () => {
+  return Math.floor(Math.random() * 1000);
+};
+
+const getBooksInfo = async () => {
+  // const books = await db.books.toArray()
+  currentDisplayBooks = await db.books.toArray()
+  console.log(currentDisplayBooks);
+}
+getBooksInfo().then(() => renderBooks(currentDisplayBooks))
+
+const renderBooks = (data) => {
+  // const books = await db.books.toArray();
+
+  booksGrid.innerHTML = data
+    .map(
+      (book) =>
+        `
+                            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                                <div
+                                    class="card booksCard shadow border-5 ${book.category === "Self-help" ? "border-primary" : book.category === "Finance" ? "border-success" : book.category === "Fiction" ? "border-danger" : book.category === "Historical" ? "border-secondary" : book.category === "Sci-Fi" ? "border-warning" : ""}  border-start border-bottom-0 border-top-0 border-end-0 rounded-3">
+                                    <div class="card-body">
+                                        <div
+                                            class="d-flex mb-2 justify-content-between align-items-center">
+                                            <p
+                                                class="card-title text-nowrap h5 w-100 ${book.category === "Self-help" ? "text-primary" : book.category === "Finance" ? "text-success" : book.category === "Fiction" ? "text-danger" : book.category === "Historical" ? "text-secondary" : book.category === "Sci-Fi" ? "text-warning" : ""} m-0">${book.category}</p>
+                                            <div class="dropdown">
+                                                <img id="actionDropdown"
+                                                    src="../Icons/three-dots-vertical.svg"
+                                                    class="dropdown-toggle cursor-pointer"
+                                                    alt="action-menu"
+                                                    data-bs-offset="0,5"
+                                                    data-bs-toggle="dropdown"
+                                                    aria-expanded="false">
+                                                <ul
+                                                    class="dropdown-menu"
+                                                    id="actionButtons">
+                                                    <li><a
+                                                            class="dropdown-item d-flex justify-content-start align-items-center gap-2"
+                                                            href="#"><img
+                                                                src="../Icons/preview-icon.svg"
+                                                                alt="preview"
+                                                                width="20"
+                                                                height="20">
+                                                            Preview</a></li>
+                                                    <li><a
+                                                            class="dropdown-item d-flex justify-content-start align-items-center gap-2"
+                                                            href="#"><img
+                                                                src="../Icons/delete-icon.svg"
+                                                                alt="delete"
+                                                                width="20"
+                                                                height="20">Delete</a></li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+                                        <p class="fw-light fs-5">${book.name}</p>
+                                    </div>
+                                </div>
+                            </div>`,
+    )
+    .join("");
+};
+// renderBooks(currentDisplayBooks)
+
+
+const filterBooks = () => {
+  const selectedCategory = document.getElementById("bookType").value;
+  const filteredBooks = currentDisplayBooks.filter(book => {
+    const bookFilter = selectedCategory === "" || book.category === selectedCategory
+    return bookFilter
+  })
+  console.log(filteredBooks);
+  
+  currentDisplayBooks = filteredBooks
+  renderBooks(filteredBooks)
+};
+
+addBookForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  await db.books.add({
+    name: bookName.value,
+    category: bookCategory.value,
+    file: bookPDF.files[0],
+  });
+
+  const modal = bootstrap.Modal.getInstance(addBookModal);
+
+  addBookForm.reset();
+  modal.hide();
+  renderBooks();
+});
+
+addBookModal.addEventListener("hidden.bs.modal", () => {
+  bookName.value = "";
+  bookCategory.value = "";
+  bookPDF.value = "";
+
+  submitBtn.disabled = true;
+});
+
+// Logic to Validate Form Input fields.
+const validateFormInput = () => {
+  const isFormValid =
+    bookName.value.trim() !== "" &&
+    bookPDF.value !== "" &&
+    bookCategory.value.trim() !== "";
+
+  submitBtn.disabled = !isFormValid;
+};
