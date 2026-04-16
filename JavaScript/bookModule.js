@@ -17,22 +17,23 @@ db.version(1).stores({
 
 let books;
 const renderBooks = async (category = "All") => {
-
   if (category === "All") {
     books = await db.books.toArray();
   } else {
     books = await db.books.where("category").equals(category).toArray();
   }
-  
-  if (books.length === 0) {
-    booksGrid.innerHTML = "<p class='fw-medium d-flex h4 justify-content-center align-items-center mx-auto'>No books found!</p>";
+
+  if (books.length === 0 && booksGrid) {
+    booksGrid.innerHTML =
+      "<p class='fw-medium d-flex h4 justify-content-center align-items-center mx-auto'>No books found!</p>";
     return;
   }
 
-  booksGrid.innerHTML = books
-    .map(
-      (book) =>
-                            `<div class="col-xl-2 col-lg-3 col-sm-4 col-6">
+  if (booksGrid) {
+    booksGrid.innerHTML = books
+      .map(
+        (book) =>
+          `<div class="col-xl-2 col-lg-3 col-sm-4 col-6">
                                 <div 
                                     class="card booksCard shadow cursor-pointer border-5 border-primary border-start border-bottom-0 border-top-0 border-end-0 rounded-3">
                                     <div class="card-header bg-transparent border-bottom-0 align-content-center" onclick="openBookFromId('${book.id}')">
@@ -79,8 +80,10 @@ const renderBooks = async (category = "All") => {
                                     </div>
                                 </div>
                             </div>`,
-    )
-    .join("");
+      )
+      .join("");
+  }
+
   const tooltipTriggerList = document.querySelectorAll(
     '[data-bs-toggle="tooltip"]',
   );
@@ -142,7 +145,6 @@ const openBookFromId = async (id) => {
 
   loadPDF(arrayBuffer);
 };
-
 
 let pdfDoc = null;
 let currentPage = 1;
