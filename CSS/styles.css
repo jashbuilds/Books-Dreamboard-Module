@@ -1,6 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap');
 
 :root {
-    --primary-blue: #0d6efd;
+    --primary-blue: #2B5BFC;
     /* Default Bootstrap primary blue used for active/hover text and borders */
     --bg-hover-sidebar: #eef4fc;
     /* Very light blue background used when hovering over a menu link */
@@ -9,10 +10,13 @@
     --text-sidebar: #939292;
     /* Dark gray color for readable sidebar navigation text */
     --bg-offwhite: #f0f2f5;
+    --secondary-offwhite: #e3effd;
+    --primary-white: white;
+    --text-offwhite: #999999;
 }
 
 body {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Red Hat Display', sans-serif;
     margin: 0px;
     background-color: var(--bg-offwhite);
 }
@@ -43,22 +47,32 @@ body {
 .wrapper .sidebar .nav .nav-item .nav-link {
     color: var(--text-sidebar);
     white-space: nowrap;
-    padding: 16px 24px;
-    transition: background-color 0.2s ease;
+    padding: 16px;
+    transition: all 0.2s ease-in-out;
 }
 
 
 .wrapper .sidebar .nav .nav-item .nav-link:hover {
-    background-color: var(--bg-hover-sidebar);
-    color: var(--text-sidebar);
+    background-color: var(--bg-active-sidebar);
 }
-
 
 .wrapper .sidebar .nav .nav-item .nav-link.active {
-    background-color: var(--bg-active-sidebar);
-    color: var(--text-sidebar);
-    border-right: 3px solid var(--primary-blue);
+    background-color: var(--primary-blue);
+    color: var(--bg-offwhite);
+    /* background-image: url("../Icons/flag.svg"); */
+    /* border-right: 3px solid var(--primary-blue); */
 }
+
+.wrapper .sidebar .nav .nav-item .nav-link.active svg {
+    stroke: var(--secondary-offwhite);
+    fill: var(--primary-white);
+}
+
+.wrapper .main-content .readModeSwitch {
+    width: 38px;
+    height: 21px;
+}
+
 
 .nav .nav-item .nav-link .icon-placeholder {
     width: 24px;
@@ -66,12 +80,7 @@ body {
     min-width: 24px;
 }
 
-/*
-    ======================================
-    DESKTOP: COLLAPSED SIDEBAR STATE
-    ======================================
-    When Javascript applies '.collapsed' to the sidebar.
-*/
+/* COLLAPSED SIDEBAR STATE */
 .wrapper .sidebar.collapsed {
     width: 85px;
     min-width: 85px;
@@ -92,7 +101,8 @@ body {
 }
 
 .wrapper .sidebar.collapsed .nav .nav-item .nav-link {
-    padding-left: 30px;
+    padding-right: 0px;
+    width: 55px;
 }
 
 /* Main Navbar */
@@ -103,17 +113,30 @@ body {
 
 /* Books Card Grid */
 
+.wrapper .main-content .search-box .search-input::placeholder {
+    color: var(--text-offwhite);
+}
+
 .wrapper .main-content .booksGrid .booksCard {
     height: 100%;
-    min-height: 230px;
+    min-height: 250px;
     /* transition: all 0.2s ease; */
 }
+
 .wrapper .main-content .booksGrid .booksCard .dropdown {
     display: none !important;
 }
 
 .wrapper .main-content .booksGrid .booksCard:hover .dropdown {
     display: block !important;
+}
+
+.wrapper .main-content .booksGrid .booksCard .infoBtn {
+    display: none !important;
+}
+
+.wrapper .main-content .booksGrid .booksCard:hover .infoBtn {
+    display: flex !important;
 }
 
 /* -- DESKTOP (Screens 992px wide and above) -- */
@@ -153,7 +176,9 @@ body {
     }
 
     .wrapper .sidebar .nav .nav-item .nav-link {
-        padding-left: 30px;
+        /* padding-left: 22px; */
+        padding-right: 0px;
+        width: 100%;
     }
 
     .wrapper .main-content {
@@ -172,7 +197,7 @@ body {
     pointer-events: all !important;
 }
 
- .btn-submit-custom {
+.btn-submit-custom {
     transition: all 0.2s ease-in-out;
 }
 
@@ -186,4 +211,8 @@ body {
 
 .addBtn:hover {
     transform: translateY(-2px);
+}
+
+.text-offwhite {
+    color: var(--text-offwhite) !important;
 }

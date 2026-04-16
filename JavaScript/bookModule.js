@@ -1,6 +1,8 @@
 const bookName = document.getElementById("bookName");
 const bookPDF = document.getElementById("bookPdf");
-const bookCategory = document.getElementById("bookType");
+const bookType = document.getElementById("bookType");
+
+const bookCategory = document.getElementById("categoryFilter");
 
 const booksGrid = document.getElementById("booksGrid");
 const submitBtn = document.getElementById("submitBtn");
@@ -13,77 +15,47 @@ db.version(1).stores({
   books: "++id, name, category, file",
 });
 
-let currentDisplayBooks = [];
-const availableBooks = [];
-
-// Logic to Toggle Sidebar with Responsive View.
-document.addEventListener("DOMContentLoaded", () => {
-  const sidebar = document.getElementById("sidebar");
-  const sidebarToggleBtn = document.getElementById("sidebarCollapseBtn");
-
-  if (sidebarToggleBtn) {
-    sidebarToggleBtn.addEventListener("click", () => {
-      const isMobileView = window.innerWidth < 992;
-
-      if (isMobileView) {
-        sidebar.classList.toggle("mobile-active");
-      } else {
-        sidebar.classList.toggle("collapsed");
-      }
-    });
-  }
-
-  window.addEventListener("resize", () => {
-    if (window.innerWidth >= 992) {
-      sidebar.classList.remove("mobile-active");
-    }
-  });
-
-  document.addEventListener("click", (event) => {
-    const isMobile = window.innerWidth < 992;
-
-    if (isMobile && sidebar.classList.contains("mobile-active")) {
-      const clickInsideSidebar = sidebar.contains(event.target);
-      const clickOnToggleButton = sidebarToggleBtn.contains(event.target);
-
-      if (!clickInsideSidebar && !clickOnToggleButton) {
-        sidebar.classList.remove("mobile-active");
-      }
-    }
-  });
-});
-
 // Function to generate Random book IDs.
 const randomId = () => {
   return Math.floor(Math.random() * 1000);
 };
 
-const getBooksInfo = async () => {
-  // const books = await db.books.toArray()
-  currentDisplayBooks = await db.books.toArray()
-  console.log(currentDisplayBooks);
-}
-getBooksInfo().then(() => renderBooks(currentDisplayBooks))
+// const getBooksInfo = async () => {
+//   // const books = await db.books.toArray()
+//   currentDisplayBooks = await db.books.toArray();
 
-const renderBooks = (data) => {
-  // const books = await db.books.toArray();
+// };
+// getBooksInfo().then(() => renderBooks());
 
-  booksGrid.innerHTML = data
+const renderBooks = async (category = "All") => {
+  let books;
+
+  if (category === "All") {
+    books = await db.books.toArray();
+  } else {
+    books = await db.books.where("category").equals(category).toArray();
+  }
+
+  if (books.length === 0) {
+    booksGrid.innerHTML = '<p class="fw-medium d-flex h4 justify-content-center align-items-center mx-auto">No books found!</p>';
+    return;
+  }
+
+  booksGrid.innerHTML = books
     .map(
       (book) =>
-        `
-                            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
-                                <div
-                                    class="card booksCard shadow border-5 ${book.category === "Self-help" ? "border-primary" : book.category === "Finance" ? "border-success" : book.category === "Fiction" ? "border-danger" : book.category === "Historical" ? "border-secondary" : book.category === "Sci-Fi" ? "border-warning" : ""}  border-start border-bottom-0 border-top-0 border-end-0 rounded-3">
+                            `<div class="col-xl-2 col-lg-3 col-sm-4 col-6">
+                                <div onclick="location.href='../HTML/bookPreview.html';"
+                                    class="card booksCard shadow cursor-pointer border-5 border-primary border-start border-bottom-0 border-top-0 border-end-0 rounded-3">
                                     <div class="card-body">
                                         <div
                                             class="d-flex mb-2 justify-content-between align-items-center">
                                             <p
-                                                class="card-title text-nowrap h5 w-100 ${book.category === "Self-help" ? "text-primary" : book.category === "Finance" ? "text-success" : book.category === "Fiction" ? "text-danger" : book.category === "Historical" ? "text-secondary" : book.category === "Sci-Fi" ? "text-warning" : ""} m-0">${book.category}</p>
+                                                class="card-title text-wrap h5 w-100 m-0 fw-semibold overflow-hidden ${book.category === "Self-help" ? "text-primary" : book.category === "Finance" ? "text-success" : book.category === "Fiction" ? "text-danger" : book.category === "Historical" ? "text-secondary" : book.category === "Sci-Fi" ? "text-warning" : ""} ">${book.category}</p>
                                             <div class="dropdown">
                                                 <img id="actionDropdown"
                                                     src="../Icons/three-dots-vertical.svg"
-                                                    class="dropdown-toggle cursor-pointer"
+                                                    class="dropdown-toggle"
                                                     alt="action-menu"
                                                     data-bs-offset="0,5"
                                                     data-bs-toggle="dropdown"
@@ -110,33 +82,34 @@ const renderBooks = (data) => {
                                             </div>
 
                                         </div>
-                                        <p class="fw-light fs-5">${book.name}</p>
+                                        <p class="fw-medium fs-5">${book.name}</p>
+                                    </div>
+                                    <div class="card-footer infoBtn border-top-0 bg-transparent py-2 px-3 justify-content-end align-items-center">
+                                      <img src="../Icons/info-circle-fill.svg" alt="info-icon" width="16" height="16"/>
                                     </div>
                                 </div>
                             </div>`,
     )
     .join("");
+  const tooltipTriggerList = document.querySelectorAll(
+    '[data-bs-toggle="tooltip"]',
+  );
+  [...tooltipTriggerList].map(
+    (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl),
+  );
 };
-// renderBooks(currentDisplayBooks)
-
+renderBooks();
 
 const filterBooks = () => {
-  const selectedCategory = document.getElementById("bookType").value;
-  const filteredBooks = currentDisplayBooks.filter(book => {
-    const bookFilter = selectedCategory === "" || book.category === selectedCategory
-    return bookFilter
-  })
-  console.log(filteredBooks);
-  
-  currentDisplayBooks = filteredBooks
-  renderBooks(filteredBooks)
+  const selectedCategory = bookCategory.value;
+  renderBooks(selectedCategory);
 };
 
 addBookForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   await db.books.add({
     name: bookName.value,
-    category: bookCategory.value,
+    category: bookType.value,
     file: bookPDF.files[0],
   });
 
@@ -149,10 +122,11 @@ addBookForm.addEventListener("submit", async (e) => {
 
 addBookModal.addEventListener("hidden.bs.modal", () => {
   bookName.value = "";
-  bookCategory.value = "";
+  bookCategory.value = "All";
   bookPDF.value = "";
 
   submitBtn.disabled = true;
+  renderBooks();
 });
 
 // Logic to Validate Form Input fields.
@@ -160,7 +134,10 @@ const validateFormInput = () => {
   const isFormValid =
     bookName.value.trim() !== "" &&
     bookPDF.value !== "" &&
-    bookCategory.value.trim() !== "";
+    bookType.value.trim() !== "";
 
   submitBtn.disabled = !isFormValid;
 };
+
+
+export default renderBooks;

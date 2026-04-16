@@ -1,18 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Books Module</title>
         <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
             rel="stylesheet">
         <link rel="stylesheet" href="../CSS/styles.css">
         <link rel="shortcut icon" href="../Images/books-favicon.png"
             type="image/x-icon">
+        <title>Book Preview</title>
     </head>
-
     <body>
         <div class="wrapper d-flex vh-100 overflow-hidden">
 
@@ -41,7 +39,8 @@
 
                             <div
                                 class="icon-placeholder me-3 bg-transparent d-flex align-items-center justify-content-center">
-
+                                <!-- <img src="../Icons/book-dark.svg" alt="notes"
+                                    class="img-fluid" width="24" height="24"> -->
                                 <?xml version="1.0"
                                 encoding="utf-8"?>
                                 <svg width="25" height="25"
@@ -63,6 +62,8 @@
                             class="nav-link rounded-3 d-flex align-items-center justify-content-sm-start justify-content-center">
                             <div
                                 class="icon-placeholder me-3 bg-transparent d-flex align-items-center justify-content-center">
+                                <!-- <img src="../Icons/heart.svg" alt="heart"
+                                    class="img-fluid" width="24" height="24"> -->
                                 <?xml version="1.0"
                                 encoding="utf-8"?>
                                 <svg width="25" height="25" viewBox="0 0 20 20"
@@ -159,145 +160,26 @@
 
                 <!-- Body content -->
                 <div class="container-fluid p-4">
-                    <div
-                        class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex">
-                            <p class="fs-5 m-0 fw-semibold">Book List</p>
+                    <div class="mx-3 my-3 d-flex justify-content-between">
+                        <div class="d-flex align-items-center gap-3">
+                            <a href="../HTML/bookModule.html">
+                                <img src="../Icons/arrow-left.svg" alt="arrow" width="25" height="25">
+                            </a>
+                            <p class="m-0 fw-medium h4" id="bookName"></p>
                         </div>
 
                         <div
-                            class="d-flex flex-sm-row flex-column justify-content-center align-items-sm-center align-items-end gap-3">
+                            class="d-flex justify-content-center align-items-center gap-2">
+                            <p class="m-0 fw-medium">Read Mode:</p>
                             <div
-                                class="d-flex align-items-center gap-1 order-sm-0 order-1">
-                                <p
-                                    class="fw-medium text-secondary m-0">Type:</p>
-                                <select
-                                    class="fw-semibold bg-transparent border-0 cursor-pointer w-75 form-select py-1"
-                                    id="categoryFilter"
-                                    aria-label="Default select example"
-                                    onchange="filterBooks()">
-                                    <option value="All" selected>All</option>
-                                    <option value="Self-help">Self-help</option>
-                                    <option value="Finance">Finance</option>
-                                    <option value="Fiction">Fiction</option>
-                                    <option
-                                        value="Historical">Historical</option>
-                                    <option value="Sci-Fi">Sci-Fi</option>
-                                </select>
-                            </div>
-
-                            <button
-                                class="btn btn-primary addBtn px-4 py-2 order-sm-1 order-0"
-                                data-bs-toggle="modal"
-                                data-bs-target="#addBook"><span
-                                    class="fw-medium">Add Book</span></button>
-
-                        </div>
-                    </div>
-
-                    <div class="booksGrid mt-4">
-                        <div class="row g-5" id="booksGrid"></div>
-                        <!-- Available Books will be rendered here. -->
-                    </div>
-                </div>
-
-                <!-- Modal to add new book -->
-                <div class="modal fade" id="addBook" tabindex="-1"
-                    aria-labelledby="formModalLabel" aria-hidden="true"
-                    data-bs-backdrop="static" data-bs-keyboard="false">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                        <div class="modal-content rounded-3 shadow-lg border-0">
-                            <div
-                                class="modal-header d-flex justify-content-start align-items-center border-bottom-0 px-4 py-3">
-                                <p class="modal-title h2 fw-semibold mb-0 fs-4"
-                                    id="formModalLabel">Add Book</p>
-                                <button type="button" class="btn-close"
-                                    data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body p-4">
-                                <form id="bookForm">
-                                    <div class="row g-4 py-2">
-                                        <div class="col-12">
-                                            <div>
-                                                <label
-                                                    for="bookName"
-                                                    class="form-label text-secondary">Name:</label>
-                                                <input type="text"
-                                                    oninput="validateFormInput()"
-                                                    class="form-control form-control-lg"
-                                                    id="bookName"
-                                                    placeholder="Enter book name"
-                                                    required>
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div>
-                                                <label for="productName"
-                                                    class="form-label text-secondary">PDF
-                                                    File:</label>
-                                                <input type="file"
-                                                    oninput="validateFormInput()"
-                                                    class="form-control form-control-lg"
-                                                    id="bookPdf"
-                                                    placeholder="Name"
-                                                    accept="application/pdf"
-                                                    required>
-                                                <div
-                                                    class="invalid-feedback">Please
-                                                    Upload Appropriate
-                                                    PDF!</div>
-                                            </div>
-
-                                        </div>
-                                        <div class="col-12">
-                                            <div>
-                                                <label for="bookType"
-                                                    class="form-label text-secondary">Book
-                                                    Type:</label>
-                                                <select
-                                                    class="form-select form-select-lg"
-                                                    id="bookType"
-                                                    oninput="validateFormInput()"
-                                                    aria-label="Select Type"
-                                                    required>
-                                                    <option
-                                                        selected disabled
-                                                        value>All</option>
-                                                    <option
-                                                        value="Self-help">Self-help</option>
-                                                    <option
-                                                        value="Finance">Finance</option>
-                                                    <option
-                                                        value="Fiction">Fiction</option>
-                                                    <option
-                                                        value="Historical">Historical</option>
-                                                    <option
-                                                        value="Sci-Fi">Sci-Fi</option>
-                                                </select>
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-                                    <div
-                                        class="d-flex gap-2 justify-content-end mt-5">
-                                        <button type="button" id="cancelBtn"
-                                            class="btn btn-outline-secondary px-lg-5 px-3 py-lg-2 rounded-3"
-                                            data-bs-dismiss="modal"><span
-                                                class="px-lg-4 px-2">Cancel</span></button>
-                                        <button type="submit"
-                                            class="btn btn-submit-custom bg-primary cursor-nodrop text-white px-lg-5 px-3 py-lg-2 rounded-3 fw-bold"
-                                            id="submitBtn"
-                                            disabled>
-                                            <span
-                                                class="px-lg-4 px-3">Save</span>
-                                        </button>
-                                    </div>
-                                </form>
+                                class="form-check form-switch  d-flex justify-content-center align-items-center">
+                                <input class="form-check-input readModeSwitch"
+                                    type="checkbox"
+                                    role="switch" id="readModeSwitch">
                             </div>
                         </div>
                     </div>
+                    <canvas></canvas>
                 </div>
             </main>
 
@@ -309,6 +191,6 @@
         <script src="https://www.jsdelivr.com/package/npm/pdfjs-dist"></script>
         <script type="module" src="../JavaScript/bookModule.js"></script>
         <script src="../JavaScript/toggleSidebar.js"></script>
+        <script type="module" src="../JavaScript/bookPreview.js"></script>
     </body>
-
 </html>
