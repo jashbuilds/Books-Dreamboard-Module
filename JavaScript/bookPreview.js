@@ -3,7 +3,18 @@ db.version(1).stores({
   books: "++id, name, category, file",
 });
 
+const tooltipTriggerList = document.querySelectorAll(
+  '[data-bs-toggle="tooltip"]',
+);
+const tooltipList = [...tooltipTriggerList].map(
+  (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl),
+);
+
 const pdfContainer = document.getElementById("pdfContainer");
+const bookNameEl = document.getElementById("bookName");
+const pageInput = document.getElementById("currentPageNum");
+const pageCountEl = document.getElementById("pageCount");
+const pageSizeOption = document.getElementById("pageSizeOption");
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
@@ -12,7 +23,7 @@ const bookId = localStorage.getItem("selectedBookId");
 
 let pdfDoc = null;
 let currentPage = 1;
-let bookPath = null;
+let scale = 0.7;
 
 async function loadBook() {
   if (!bookId) {
@@ -21,14 +32,13 @@ async function loadBook() {
   }
 
   const book = await db.books.get(Number(bookId));
-  bookPath = book.file
 
   if (!book) {
     document.body.innerHTML = "<h2>Book not found</h2>";
     return;
   }
 
-  document.getElementById("bookName").innerText = book.name;
+  bookNameEl.innerText = book.name;
 
   const arrayBuffer = await book.file.arrayBuffer();
 
@@ -37,152 +47,101 @@ async function loadBook() {
 
 loadBook();
 
-// ===== Load PDF =====
 async function loadPDF(data) {
   pdfDoc = await pdfjsLib.getDocument({ data }).promise;
-  currentPage = 1;
 
-  renderPage(currentPage);
+  pageCountEl.textContent = pdfDoc.numPages;
+
+  pageInput.max = pdfDoc.numPages;
+
+  for (let pageN = 1; pageN <= pdfDoc.numPages; pageN++) {
+    renderPage(pageN);
+  }
 }
 
-// ===== Render Page =====
 async function renderPage(pageNum) {
+  pdfContainer.innerHTML = "";
+
   const page = await pdfDoc.getPage(pageNum);
 
-  const canvas = document.getElementById("pdfCanvas");
-  const ctx = canvas.getContext("2d");
+  const viewport = page.getViewport({ scale });
 
-  const viewport = page.getViewport({ scale: 1.5 });
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
 
   canvas.height = viewport.height;
   canvas.width = viewport.width;
 
+  canvas.classList.add("d-block", "mx-auto");
+
+  pdfContainer.appendChild(canvas);
+
   await page.render({
-    canvasContext: ctx,
+    canvasContext: context,
     viewport,
   }).promise;
+
+  pageInput.value = currentPage;
 }
 
-// const url = "path/to/your/document.pdf";
-const container = document.getElementById("pdfContainer");
+const prevPage = () => {
+  if (currentPage <= 1) return;
 
-pdfjsLib.getDocument(bookPath).promise.then(async (pdfDoc) => {
-  for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
-    const page = await pdfDoc.getPage(pageNum);
-    const viewport = page.getViewport({ scale: 1.5 });
+  currentPage--;
 
-    // Create and append canvas for this page
-    const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d");
-    canvas.height = viewport.height;
-    canvas.width = viewport.width;
-    container.appendChild(canvas);
+  renderPage(currentPage);
+};
 
-    // Render the page content
-    await page.render({ canvasContext: context, viewport: viewport }).promise;
+const nextPage = () => {
+  if (currentPage >= pdfDoc.numPages) return;
+  currentPage++;
+  renderPage(currentPage);
+};
+
+pageInput.addEventListener("change", () => {
+  const pageInputVal = Number(pageInput.value);
+  if (pageInputVal <= pdfDoc.numPages) {
+    currentPage = pageInputVal;
+    renderPage(currentPage);
   }
 });
 
-// const loadBook = async () => {
-//   if (!bookId) {
-//     document.body.innerHTML = "<h3>No book Selected.</h3>";
-//     return;
-//   }
+const toFirstPage = () => {
+  const firstPage = (pdfDoc.numPages - pdfDoc.numPages) + 1;
+  currentPage = firstPage;
+  renderPage(firstPage);
+};
 
-//   const book = await db.books.get(Number(bookId));
-//   bookPath = book.file
+const toLastPage = () => {
+  const lastPage = pdfDoc.numPages;
+  currentPage = lastPage;
+  renderPage(currentPage);
+};
 
-//   if (!book) {
-//     document.body.innerHTML = "<h3>Book not Found!</h3>";
-//     return;
-//   }
+const zoomOut = () => {
+  scale -= 0.1;
+  renderPage(currentPage);
 
-//   document.getElementById("bookName").innerText = book.name;
+  pageSizeOption.value = "";
+};
 
-//   const arrayBuffer = await book.file.arrayBuffer();
+const zoomIn = () => {
+  scale += 0.1;
+  renderPage(currentPage);
 
-//   loadPDF(arrayBuffer);
-// };
+  pageSizeOption.value = "";
+};
 
-// loadBook();
-
-// async function loadPDF(data) {
-//   pdfDoc = await pdfjsLib.getDocument({ data }).promise;
-//   currentPage = 1
-//   renderPage(currentPage);
-// }
-
-// async function renderPage(pageNum) {
-//   const page = await pdfDoc.getPage(pageNum);
-
-//   const canvas = document.getElementById("pdfCanvas");
-//   const ctx = canvas.getContext("2d");
-
-//   const viewport = page.getViewport({ scale: 1.5 });
-
-//   canvas.height = viewport.height;
-//   canvas.width = viewport.width;
-
-//   await page.render({
-//     canvasContext: ctx,
-//     viewport,
-//   }).promise;
-// }
-
-// pdfjsLib.getDocument(bookPath).promise.then(async (pdfDoc) => {
-//   for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
-//     const page = await pdfDoc.getPage(pageNum);
-//     const viewport = page.getViewport({ scale: 1.5 });
-
-//     // Create and append canvas for this page
-//     const canvas = document.createElement('canvas');
-//     const context = canvas.getContext('2d');
-//     canvas.height = viewport.height;
-//     canvas.width = viewport.width;
-//     container.appendChild(canvas);
-
-//     // Render the page content
-//     await page.render({ canvasContext: context, viewport: viewport }).promise;
-//   }
-// });
-
-// pdfjsLib.getDocument(bookPath).promise.then(async (pdfDoc) => {
-//   for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
-//     const page = await pdfDoc.getPage(pageNum);
-//     const viewport = page.getViewport({ scale: 1.5 });
-
-//     // Create and append canvas for this page
-//     const canvas = document.createElement('canvas');
-//     const context = canvas.getContext('2d');
-//     canvas.height = viewport.height;
-//     canvas.width = viewport.width;
-//     pdfContainer.appendChild(canvas);
-
-//     // Render the page content
-//     await page.render({ canvasContext: context, viewport: viewport }).promise;
-//   }
-// });
-
-// async function renderPage(currentPage) {
-//   for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
-//     const page = await pdfDoc.getPage(pageNum);
-//     const canvas = document.createElement("canvas")
-//     document.getElementById("currentPageNum").max = pdfDoc.numPages
-//     document.getElementById("pageCount").textContent = pdfDoc.numPages
-//     canvas.classList.add("w-100", "mt-3")
-
-//     const ctx = canvas.getContext("2d");
-//     const viewport = page.getViewport({ scale: 1.5 });
-
-//     canvas.height = viewport.height;
-//     canvas.width = viewport.width;
-//     pdfContainer.appendChild(canvas)
-//     await page.render({
-//       canvasContext: ctx,
-//       viewport: viewport,
-//     }).promise;
-//   }
-// }
+const setPageSize = () => {
+  if (pageSizeOption.value === "Page-Fit") {
+    scale = 1;
+  } else if (pageSizeOption.value === "Zoom-In") {
+    scale = 1.5;
+  } else if (pageSizeOption.value === "Zoom-Out") {
+    scale = 0.5;
+  }
+  renderPage(currentPage);
+};
 
 // Validate Number Input (no "dash", "e", "+" allowed)
 const validateNumberInput = (e) => {

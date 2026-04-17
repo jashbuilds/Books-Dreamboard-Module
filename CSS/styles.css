@@ -11,7 +11,8 @@
     --text-sidebar: #939292;
     /* Dark gray color for readable sidebar navigation text */
     --bg-offwhite: #f0f2f5;
-    --bg-offwhite-secondary: #eaeaec;
+    --bg-offwhite-secondary: #eaeaeb;
+    --bg-offwhite-tertiary: #e1e1e3;
     --secondary-offwhite: #e3effd;
     --primary-white: white;
     --text-offwhite: #999999;
@@ -152,6 +153,10 @@ body {
     display: flex !important;
 }
 
+.wrapper .main-content .modal-content {
+    max-width: 85% !important;
+}
+
 /* -- DESKTOP (Screens 992px wide and above) -- */
 /* @media (min-width: 992px) {
 
@@ -197,6 +202,10 @@ body {
     .wrapper .main-content {
         width: 100%;
     }
+
+    .wrapper .main-content .modal-content {
+        width: 100% !important;
+    }
 }
 
 /* Custom Classes */
@@ -234,6 +243,19 @@ body {
     background: var(--bg-offwhite-secondary);
 }
 
+.bg-offwhite-tertiary {
+    background: var(--bg-offwhite-tertiary);
+}
+
 .vh-70 {
     max-height: 70vh !important;
+}
+
+.pdfButtons {
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+
+.pdfButtons:hover {
+    opacity: 1;
 }

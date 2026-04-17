@@ -189,15 +189,15 @@
                     </div>
 
                     <div class="border border-1 rounded-2" id="bookInfo">
-                        <div class="d-flex align-items-center p-2 bg-offwhite-secondary sticky-top shadow-sm">
+                        <div class="d-flex flex-sm-row flex-column gap-2 align-items-center justify-content-between p-2 bg-offwhite-secondary sticky-top shadow-sm">
                             <div
-                                class="d-flex align-items-center gap-1 w-50">
-                                <button class="btn border-0 p-0">
-                                    <img src="../Icons/previous-book.svg"
+                                class="d-flex align-items-center gap-2 order-sm-0 order-1 w-25">
+                                <button class="btn border-0 p-0 pdfButtons" onclick="return toFirstPage()">
+                                    <img src="../Icons/previous-book.svg" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="First page"
                                         alt="previous-book"
                                         width="35" height="35">
                                 </button>
-                                <button class="btn border-0 p-0">
+                                <button class="btn border-0 p-0 pdfButtons" onclick="return prevPage()" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Previous page">
                                     <img src="../Icons/next-page.svg"
                                         alt="previous-page" width="30"
                                         height="30">
@@ -206,14 +206,14 @@
                                 <input type="number" min="1" value="1"
                                     class="form-control w-25" id="currentPageNum"
                                     onkeydown="return validateNumberInput(event)">
-                                <p class="m-0">of &nbsp; <span id="pageCount"></span></p>
+                                <p class="m-0 text-nowrap">of &nbsp; <span id="pageCount"></span></p>
 
-                                <button class="btn border-0 p-0">
+                                <button class="btn border-0 p-0 pdfButtons" onclick="return nextPage()" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Next page">
                                     <img src="../Icons/previous-page.svg"
                                         alt="next-page"
                                         width="30" height="30">
                                 </button>
-                                <button class="btn border-0 p-0">
+                                <button class="btn border-0 p-0 pdfButtons" onclick="return toLastPage()" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Last page">
                                     <img src="../Icons/next-book.svg"
                                         alt="next-book" width="35"
                                         height="35">
@@ -221,21 +221,20 @@
                             </div>
 
                             <div
-                                class="d-flex align-items-center gap-2 w-50">
-                                <button class="btn border-0 p-0">
+                                class="d-flex align-items-center justify-content-center gap-2 order-sm-1 order-0 w-25">
+                                <button class="btn border-0 p-0" onclick="zoomOut()">
                                     <img src="../Icons/minus-icon.svg"
                                         alt="minus"
                                         width="25" height="25">
                                 </button>
-                                <button class="btn border-0 p-0">
+                                <button class="btn border-0 p-0" onclick="zoomIn()">
                                     <img src="../Icons/plus-icon.svg"
                                         alt="plus"
                                         width="25" height="25">
                                 </button>
-                                <select class="form-select w-25"
-                                    aria-label="page-view">
-                                    <option value="Page Fit" selected>Page
-                                        Fit</option>
+                                <select class="form-select w-auto" onchange="setPageSize()"
+                                    aria-label="page-view" id="pageSizeOption">
+                                    <option value="Page-Fit" selected>Page Fit</option>
                                     <option value="Zoom-In">Zoom-In</option>
                                     <option value="Zoom-Out">Zoom-Out</option>
                                 </select>
@@ -243,7 +242,7 @@
                             </div>
 
                             <div
-                                class="d-flex align-items-center gap-2">
+                                class="d-md-flex align-items-center justify-content-end gap-2 d-none order-sm-2 w-25">
                                 <button class="btn border-0 p-0">
                                     <img src="../Icons/download-icon.svg"
                                         alt="download"
@@ -257,7 +256,7 @@
                             </div>
 
                         </div>
-                        <div id="pdfContainer" class="vh-70 overflow-scroll"></div>
+                        <div id="pdfContainer" class="vh-70 overflow-scroll bg-offwhite-tertiary py-3"></div>
                     </div>
 
                 </div>
