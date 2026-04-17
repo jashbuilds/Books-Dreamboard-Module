@@ -11,7 +11,7 @@
             integrity="sha512-qbvpAGzPFbd9HG4VorZWXYAkAnbwKIxiLinTA1RW8KGJEZqYK04yjvd+Felx2HOeKPDKVLetAqg8RIJqHewaIg=="
             crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="../CSS/styles.css">
-        <link rel="shortcut icon" href="../Images/books-favicon.png"
+        <link rel="shortcut icon" href="../Icons/ebook-icon.svg"
             type="image/x-icon">
         <title>Book Preview</title>
     </head>
@@ -163,30 +163,103 @@
                 </nav>
 
                 <!-- Body content -->
-                <div class="container-fluid p-4">
-                    <div class="mx-3 my-3 d-flex justify-content-between">
-                        <div class="d-flex align-items-center gap-3">
-                            <a href="../HTML/bookModule.html">
+                <div class="container-fluid px-4">
+                    <div class="my-4 d-flex justify-content-between">
+                        <div class="d-flex align-items-center gap-2 col-6">
+                            <a href="../HTML/bookModule.html"
+                                class="backArrow rounded-circle">
                                 <img src="../Icons/arrow-left.svg" alt="arrow"
                                     width="25" height="25">
                             </a>
-                            <p class="m-0 fw-medium h4" id="bookName"></p>
+                            <p class="m-0 fw-medium h4 text-wrap"
+                                id="bookName"></p>
                         </div>
 
                         <div
                             class="d-flex justify-content-center align-items-center gap-2">
-                            <p class="m-0 fw-medium">Read Mode:</p>
+                            <p class="m-0 fw-medium fs-5">Read Mode:</p>
                             <div
-                                class="form-check form-switch  d-flex justify-content-center align-items-center">
-                                <input class="form-check-input readModeSwitch"
+                                class="form-check form-switch d-flex justify-content-center align-items-center">
+                                <input
+                                    class="form-check-input cursor-pointer readModeSwitch"
                                     type="checkbox"
                                     role="switch" id="readModeSwitch">
                             </div>
                         </div>
                     </div>
-                    <canvas id="pdfCanvas">
-                        
-                    </canvas>
+
+                    <div class="border border-1 rounded-2" id="bookInfo">
+                        <div class="d-flex align-items-center p-2 bg-offwhite-secondary sticky-top shadow-sm">
+                            <div
+                                class="d-flex align-items-center gap-1 w-50">
+                                <button class="btn border-0 p-0">
+                                    <img src="../Icons/previous-book.svg"
+                                        alt="previous-book"
+                                        width="35" height="35">
+                                </button>
+                                <button class="btn border-0 p-0">
+                                    <img src="../Icons/next-page.svg"
+                                        alt="previous-page" width="30"
+                                        height="30">
+                                </button>
+
+                                <input type="number" min="1" value="1"
+                                    class="form-control w-25" id="currentPageNum"
+                                    onkeydown="return validateNumberInput(event)">
+                                <p class="m-0">of &nbsp; <span id="pageCount"></span></p>
+
+                                <button class="btn border-0 p-0">
+                                    <img src="../Icons/previous-page.svg"
+                                        alt="next-page"
+                                        width="30" height="30">
+                                </button>
+                                <button class="btn border-0 p-0">
+                                    <img src="../Icons/next-book.svg"
+                                        alt="next-book" width="35"
+                                        height="35">
+                                </button>
+                            </div>
+
+                            <div
+                                class="d-flex align-items-center gap-2 w-50">
+                                <button class="btn border-0 p-0">
+                                    <img src="../Icons/minus-icon.svg"
+                                        alt="minus"
+                                        width="25" height="25">
+                                </button>
+                                <button class="btn border-0 p-0">
+                                    <img src="../Icons/plus-icon.svg"
+                                        alt="plus"
+                                        width="25" height="25">
+                                </button>
+                                <select class="form-select w-25"
+                                    aria-label="page-view">
+                                    <option value="Page Fit" selected>Page
+                                        Fit</option>
+                                    <option value="Zoom-In">Zoom-In</option>
+                                    <option value="Zoom-Out">Zoom-Out</option>
+                                </select>
+
+                            </div>
+
+                            <div
+                                class="d-flex align-items-center gap-2">
+                                <button class="btn border-0 p-0">
+                                    <img src="../Icons/download-icon.svg"
+                                        alt="download"
+                                        width="25" height="25">
+                                </button>
+                                <button class="btn border-0 p-0">
+                                    <img src="../Icons/toggle-btn.svg"
+                                        alt="toggle"
+                                        width="30" height="30">
+                                </button>
+                            </div>
+
+                        </div>
+                        <div id="pdfContainer" class="vh-70 overflow-scroll"></div>
+                    </div>
+
                 </div>
             </main>
 
@@ -199,6 +272,6 @@
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://www.jsdelivr.com/package/npm/pdfjs-dist"></script>
         <script src="../JavaScript/toggleSidebar.js" defer></script>
-        <script src="../JavaScript/bookModule.js" defer></script>
+        <script src="../JavaScript/bookPreview.js" defer></script>
     </body>
 </html>
