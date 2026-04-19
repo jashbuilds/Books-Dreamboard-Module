@@ -10,6 +10,8 @@ const submitBtn = document.getElementById("submitBtn");
 const addBookModal = document.getElementById("addBook");
 const addBookForm = document.getElementById("bookForm");
 
+let selectedBookId = null;
+
 var db = new Dexie("BooksDB");
 db.version(1).stores({
   books: "++id, name, category, file",
@@ -41,8 +43,8 @@ const renderBooks = async (category = "All") => {
                                             class="d-flex py-1 justify-content-between align-items-center">
                                             <p
                                                 class="card-title text-wrap h5 w-100 m-0 fw-semibold overflow-hidden ${book.category === "Self-help" ? "text-primary" : book.category === "Finance" ? "text-success" : book.category === "Fiction" ? "text-danger" : book.category === "Historical" ? "text-secondary" : book.category === "Sci-Fi" ? "text-warning" : ""} ">${book.category}</p>
-                                            <div class="dropdown">
-                                                <img id="actionDropdown"
+                                            <div class="dropdown rounded-circle">
+                                                <img
                                                     src="../Icons/three-dots-vertical.svg"
                                                     class="dropdown-toggle"
                                                     alt="action-menu"
@@ -50,23 +52,20 @@ const renderBooks = async (category = "All") => {
                                                     data-bs-toggle="dropdown"
                                                     aria-expanded="false">
                                                 <ul
-                                                    class="dropdown-menu"
-                                                    id="actionButtons">
-                                                    <li><a onclick="openBook('${book.id}')"
-                                                            class="dropdown-item d-flex justify-content-start align-items-center gap-2"
-                                                            href="#"><img
+                                                    class="dropdown-menu">
+                                                    <li><button onclick="openBook('${book.id}')"
+                                                            class="dropdown-item d-flex justify-content-start align-items-center gap-2"><img
                                                                 src="../Icons/preview-icon.svg"
                                                                 alt="preview"
                                                                 width="20"
                                                                 height="20">
-                                                            Preview</a></li>
-                                                    <li><a
-                                                            class="dropdown-item d-flex justify-content-start align-items-center gap-2"
-                                                            href="#"><img
+                                                            Preview</button></li>
+                                                    <li><button onclick="openDeleteModal(${book.id})" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                                            class="dropdown-item d-flex justify-content-start align-items-center gap-2"><img
                                                                 src="../Icons/delete-icon.svg"
                                                                 alt="delete"
                                                                 width="20"
-                                                                height="20">Delete</a></li>
+                                                                height="20">Delete</button></li>
                                                 </ul>
                                             </div>
 
@@ -84,6 +83,8 @@ const renderBooks = async (category = "All") => {
       )
       .join("");
   }
+
+  attachDropdownCloseLogic()
 
   const tooltipTriggerList = document.querySelectorAll(
     '[data-bs-toggle="tooltip"]',
@@ -112,6 +113,7 @@ addBookForm?.addEventListener("submit", async (e) => {
   addBookForm.reset();
   modal.hide();
   renderBooks();
+  showAcknowledgeToast("Book added successfully!");
 });
 
 addBookModal?.addEventListener("hidden.bs.modal", () => {
@@ -134,8 +136,46 @@ const validateFormInput = () => {
 };
 
 const openBook = (id) => {
-  localStorage.setItem("selectedBookId", id)
-  window.location.href = "../HTML/bookPreview.html"
-}
+  localStorage.setItem("selectedBookId", id);
+  window.location.href = "../HTML/bookPreview.html";
+};
 
+const openDeleteModal = (id) => {
+  selectedBookId = id;
+};
+
+const confirmDelete = async () => {
+  if (!selectedBookId) return;
+
+  await db.books.delete(Number(selectedBookId));
+  selectedBookId = null;
+  renderBooks();
+  showAcknowledgeToast("Book deleted successfully!");
+};
+
+const showAcknowledgeToast = (message) => {
+  const toastContainer = document.getElementById("notificationToast");
+  const toastBody = toastContainer.querySelector(".toast-message");
+
+  toastBody.textContent = message;
+
+  const toast = new bootstrap.Toast(toastContainer);
+  toast.show();
+};
+
+
+const attachDropdownCloseLogic = () => {
+  const cards = document.querySelectorAll(".booksCard");
+
+  cards.forEach(card => {
+    card.addEventListener("mouseleave", () => {
+      const toggle = card.querySelector('[data-bs-toggle="dropdown"]');
+
+      if (toggle) {
+        const instance = bootstrap.Dropdown.getInstance(toggle);
+        if (instance) instance.hide();
+      }
+    });
+  });
+}
 

@@ -1,276 +1,292 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-            rel="stylesheet">
-        <link rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.4.149/pdf_viewer.min.css"
-            integrity="sha512-qbvpAGzPFbd9HG4VorZWXYAkAnbwKIxiLinTA1RW8KGJEZqYK04yjvd+Felx2HOeKPDKVLetAqg8RIJqHewaIg=="
-            crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link rel="stylesheet" href="../CSS/styles.css">
-        <link rel="shortcut icon" href="../Icons/ebook-icon.svg"
-            type="image/x-icon">
-        <title>Book Preview</title>
-    </head>
-    <body>
-        <div class="wrapper d-flex vh-100 overflow-hidden">
 
-            <!-- Sidebar -->
-            <nav id="sidebar" class="sidebar bg-white shadow">
-                <div class="sidebar-header">
-                    <div
-                        class="logo-placeholder shadow bg-info bg-gradient rounded align-items-center justify-content-center"
-                        id="logo-placeholder">
-                        <span class="text-white fw-bold">ML</span>
-                    </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.4.149/pdf_viewer.min.css"
+        integrity="sha512-qbvpAGzPFbd9HG4VorZWXYAkAnbwKIxiLinTA1RW8KGJEZqYK04yjvd+Felx2HOeKPDKVLetAqg8RIJqHewaIg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../CSS/styles.css">
+    <link rel="shortcut icon" href="../Icons/ebook-icon.svg" type="image/x-icon">
+    <title>Book Preview</title>
+</head>
 
-                    <p
-                        class="mb-0 fw-bold d-flex justify-content-center align-items-center logo-text text-uppercase">
-                        <img src="../Icons/Logo.svg" alt="Logo"
-                            class="img-fluid">
-                    </p>
+<body>
+    <div class="wrapper d-flex vh-100 overflow-hidden">
+
+        <!-- Sidebar -->
+        <nav id="sidebar" class="sidebar bg-white shadow">
+            <div class="sidebar-header">
+                <div class="logo-placeholder shadow bg-info bg-gradient rounded align-items-center justify-content-center"
+                    id="logo-placeholder">
+                    <span class="text-white fw-bold">ML</span>
                 </div>
 
-                <!-- List of navigation items -->
-                <ul class="nav flex-column mt-3 gap-1">
-                    <li class="nav-item mx-3" data-bs-toggle="tooltip"
-                        data-bs-placement="right" data-bs-title="Books">
-                        <a href="../HTML/bookModule.html"
-                            class="nav-link rounded-3 d-flex align-items-center justify-content-sm-start justify-content-center active">
+                <p class="mb-0 fw-bold d-flex justify-content-center align-items-center logo-text text-uppercase">
+                    <img src="../Icons/Logo.svg" alt="Logo" class="img-fluid">
+                </p>
+            </div>
 
-                            <div
-                                class="icon-placeholder me-3 bg-transparent d-flex align-items-center justify-content-center">
-                                <!-- <img src="../Icons/book-dark.svg" alt="notes"
-                                    class="img-fluid" width="24" height="24"> -->
-                                <?xml version="1.0"
-                                encoding="utf-8"?>
-                                <svg width="25" height="25"
-                                    viewBox="0 0 24 24" fill="none"
-                                    stroke="#9b9898"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M4 19V6.2C4 5.0799 4 4.51984 4.21799 4.09202C4.40973 3.71569 4.71569 3.40973 5.09202 3.21799C5.51984 3 6.0799 3 7.2 3H16.8C17.9201 3 18.4802 3 18.908 3.21799C19.2843 3.40973 19.5903 3.71569 19.782 4.09202C20 4.51984 20 5.0799 20 6.2V17H6C4.89543 17 4 17.8954 4 19ZM4 19C4 20.1046 4.89543 21 6 21H20M9 7H15M9 11H15M19 17V21"
-                                        stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" />
-                                </svg>
-                            </div>
-                            <span class="menu-text fw-medium">Books</span>
-                        </a>
-                    </li>
-                    <li class="nav-item mx-3" data-bs-toggle="tooltip"
-                        data-bs-placement="right" data-bs-title="Dreamboard">
-                        <a href="#"
-                            class="nav-link rounded-3 d-flex align-items-center justify-content-sm-start justify-content-center">
-                            <div
-                                class="icon-placeholder me-3 bg-transparent d-flex align-items-center justify-content-center">
-                                <!-- <img src="../Icons/heart.svg" alt="heart"
-                                    class="img-fluid" width="24" height="24"> -->
-                                <?xml version="1.0"
-                                encoding="utf-8"?>
-                                <svg width="25" height="25" viewBox="0 0 20 20"
-                                    fill="none" stroke="#9b9898"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <g clip-path="url(#clip0_2007_11517)">
-                                        <path
-                                            d="M10.517 17.3423C10.2337 17.4423 9.76699 17.4423 9.48366 17.3423C7.06699 16.5173 1.66699 13.0757 1.66699 7.24232C1.66699 4.66732 3.74199 2.58398 6.30033 2.58398C7.81699 2.58398 9.15866 3.31732 10.0003 4.45065C10.842 3.31732 12.192 2.58398 13.7003 2.58398C16.2587 2.58398 18.3337 4.66732 18.3337 7.24232C18.3337 13.0757 12.9337 16.5173 10.517 17.3423Z"
-                                            stroke-width="1.2"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round" />
-                                    </g>
-                                    <defs>
-                                        <clippath id="clip0_2007_11517">
-                                            <rect width="20" height="20"
-                                                fill="white" />
-                                        </clippath>
-                                    </defs>
-                                </svg>
-
-                            </div>
-                            <span class="menu-text fw-medium">Dreamboard</span>
-                        </a>
-                    </li>
-
-                </ul>
-            </nav>
-
-            <!-- Main body content -->
-            <main
-                class="main-content flex-grow-1 overflow-y-auto overflow-x-hidden">
-
-                <!-- Top Navbar -->
-                <nav id="main-navbar"
-                    class="navbar navbar-expand main-navbar sticky-top bg-white shadow-sm py-3 px-2">
-                    <div
-                        class="container-fluid p-0 d-flex justify-content-between">
-
-                        <!-- Left Section: Toggle Button & Search -->
-                        <div class="d-flex align-items-center">
-                            <button id="sidebarCollapseBtn"
-                                class="btn border-0 me-2 d-flex align-items-center justify-content-center">
-                                <div class="hamburger-placeholder">
-                                    <img src="../Icons/toggle-btn.svg"
-                                        alt="toggle-btn" class="img-fluid"
-                                        width="25"
-                                        height="25">
-                                </div>
-                            </button>
-                            <div
-                                class="search-box input-group d-none d-md-flex px-2">
-                                <span
-                                    class="input-group-text bg-light border-0">
-                                    <img src="../Icons/Search.svg" alt="search">
-                                </span>
-                                <input type="text"
-                                    class="form-control search-input fw-normal p-0 bg-light border-0 py-2 rounded-3"
-                                    placeholder="Search">
-                            </div>
-                        </div>
-
-                        <!-- Right Section: Actions & Profile -->
-                        <div class="d-flex align-items-center me-3">
-                            <div class="d-flex  d-none d-sm-flex">
-                                <div
-                                    class="me-3 d-flex justify-content-center align-items-center">
-                                    <img src="../Icons/theme-switcher.svg"
-                                        alt="theme-toggle" width="40"
-                                        height="40">
-                                </div>
-                                <div
-                                    class="me-3 d-flex justify-content-center align-items-center">
-                                    <img src="../Icons/sms-notified.svg"
-                                        alt="sms" width="25" height="25">
-                                </div>
-                                <div
-                                    class="me-3 d-flex justify-content-center align-items-center">
-                                    <img src="../Icons/notification.svg"
-                                        alt="notification" width="25"
-                                        height="25">
-                                </div>
-                            </div>
-                            <div
-                                class="d-flex justify-content-center align-items-center">
-                                <div>
-                                    <img src="../Icons/profile.svg"
-                                        alt="profile">
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </nav>
-
-                <!-- Body content -->
-                <div class="container-fluid px-4">
-                    <div class="my-4 d-flex justify-content-between">
-                        <div class="d-flex align-items-center gap-2 col-6">
-                            <a href="../HTML/bookModule.html"
-                                class="backArrow rounded-circle">
-                                <img src="../Icons/arrow-left.svg" alt="arrow"
-                                    width="25" height="25">
-                            </a>
-                            <p class="m-0 fw-medium h4 text-wrap"
-                                id="bookName"></p>
-                        </div>
+            <!-- List of navigation items -->
+            <ul class="nav flex-column mt-3 gap-1">
+                <li class="nav-item mx-3" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Books">
+                    <a href="../HTML/bookModule.html"
+                        class="nav-link rounded-3 d-flex align-items-center justify-content-sm-start justify-content-center active">
 
                         <div
-                            class="d-flex justify-content-center align-items-center gap-2">
-                            <p class="m-0 fw-medium fs-5">Read Mode:</p>
-                            <div
-                                class="form-check form-switch d-flex justify-content-center align-items-center">
-                                <input
-                                    class="form-check-input cursor-pointer readModeSwitch"
-                                    type="checkbox"
-                                    role="switch" id="readModeSwitch">
+                            class="icon-placeholder me-3 bg-transparent d-flex align-items-center justify-content-center">
+                            <!-- <img src="../Icons/book-dark.svg" alt="notes"
+                                    class="img-fluid" width="24" height="24"> -->
+                            <?xml version="1.0"
+                                encoding="utf-8"?>
+                            <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#9b9898"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M4 19V6.2C4 5.0799 4 4.51984 4.21799 4.09202C4.40973 3.71569 4.71569 3.40973 5.09202 3.21799C5.51984 3 6.0799 3 7.2 3H16.8C17.9201 3 18.4802 3 18.908 3.21799C19.2843 3.40973 19.5903 3.71569 19.782 4.09202C20 4.51984 20 5.0799 20 6.2V17H6C4.89543 17 4 17.8954 4 19ZM4 19C4 20.1046 4.89543 21 6 21H20M9 7H15M9 11H15M19 17V21"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <span class="menu-text fw-medium">Books</span>
+                    </a>
+                </li>
+                <li class="nav-item mx-3" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Dreamboard">
+                    <a href="#"
+                        class="nav-link rounded-3 d-flex align-items-center justify-content-sm-start justify-content-center">
+                        <div
+                            class="icon-placeholder me-3 bg-transparent d-flex align-items-center justify-content-center">
+                            <!-- <img src="../Icons/heart.svg" alt="heart"
+                                    class="img-fluid" width="24" height="24"> -->
+                            <?xml version="1.0"
+                                encoding="utf-8"?>
+                            <svg width="25" height="25" viewBox="0 0 20 20" fill="none" stroke="#9b9898"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0_2007_11517)">
+                                    <path
+                                        d="M10.517 17.3423C10.2337 17.4423 9.76699 17.4423 9.48366 17.3423C7.06699 16.5173 1.66699 13.0757 1.66699 7.24232C1.66699 4.66732 3.74199 2.58398 6.30033 2.58398C7.81699 2.58398 9.15866 3.31732 10.0003 4.45065C10.842 3.31732 12.192 2.58398 13.7003 2.58398C16.2587 2.58398 18.3337 4.66732 18.3337 7.24232C18.3337 13.0757 12.9337 16.5173 10.517 17.3423Z"
+                                        stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                                </g>
+                                <defs>
+                                    <clippath id="clip0_2007_11517">
+                                        <rect width="20" height="20" fill="white" />
+                                    </clippath>
+                                </defs>
+                            </svg>
+
+                        </div>
+                        <span class="menu-text fw-medium">Dreamboard</span>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+
+        <!-- Main body content -->
+        <main class="main-content flex-grow-1 overflow-y-auto overflow-x-hidden">
+
+            <!-- Top Navbar -->
+            <nav id="main-navbar" class="navbar navbar-expand main-navbar sticky-top bg-white shadow-sm py-3 px-2">
+                <div class="container-fluid p-0 d-flex justify-content-between">
+
+                    <!-- Left Section: Toggle Button & Search -->
+                    <div class="d-flex align-items-center">
+                        <button id="sidebarCollapseBtn"
+                            class="btn border-0 me-2 d-flex align-items-center justify-content-center">
+                            <div class="hamburger-placeholder">
+                                <img src="../Icons/toggle-btn.svg" alt="toggle-btn" class="img-fluid" width="25"
+                                    height="25">
                             </div>
+                        </button>
+                        <div class="search-box input-group d-none d-md-flex px-2">
+                            <span class="input-group-text bg-light border-0">
+                                <img src="../Icons/Search.svg" alt="search">
+                            </span>
+                            <input type="text"
+                                class="form-control search-input fw-normal p-0 bg-light border-0 py-2 rounded-3"
+                                placeholder="Search">
                         </div>
                     </div>
 
-                    <div class="border border-1 rounded-2" id="bookInfo">
-                        <div class="d-flex flex-sm-row flex-column gap-2 align-items-center justify-content-between p-2 bg-offwhite-secondary sticky-top shadow-sm">
-                            <div
-                                class="d-flex align-items-center gap-2 order-sm-0 order-1 w-25">
-                                <button class="btn border-0 p-0 pdfButtons" onclick="return toFirstPage()">
-                                    <img src="../Icons/previous-book.svg" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="First page"
-                                        alt="previous-book"
-                                        width="35" height="35">
-                                </button>
-                                <button class="btn border-0 p-0 pdfButtons" onclick="return prevPage()" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Previous page">
-                                    <img src="../Icons/next-page.svg"
-                                        alt="previous-page" width="30"
-                                        height="30">
-                                </button>
-
-                                <input type="number" min="1" value="1"
-                                    class="form-control w-25" id="currentPageNum"
-                                    onkeydown="return validateNumberInput(event)">
-                                <p class="m-0 text-nowrap">of &nbsp; <span id="pageCount"></span></p>
-
-                                <button class="btn border-0 p-0 pdfButtons" onclick="return nextPage()" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Next page">
-                                    <img src="../Icons/previous-page.svg"
-                                        alt="next-page"
-                                        width="30" height="30">
-                                </button>
-                                <button class="btn border-0 p-0 pdfButtons" onclick="return toLastPage()" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Last page">
-                                    <img src="../Icons/next-book.svg"
-                                        alt="next-book" width="35"
-                                        height="35">
-                                </button>
+                    <!-- Right Section: Actions & Profile -->
+                    <div class="d-flex align-items-center me-3">
+                        <div class="d-flex  d-none d-sm-flex">
+                            <div class="me-3 d-flex justify-content-center align-items-center">
+                                <img src="../Icons/theme-switcher.svg" alt="theme-toggle" width="40" height="40">
                             </div>
-
-                            <div
-                                class="d-flex align-items-center justify-content-center gap-2 order-sm-1 order-0 w-25">
-                                <button class="btn border-0 p-0" onclick="zoomOut()">
-                                    <img src="../Icons/minus-icon.svg"
-                                        alt="minus"
-                                        width="25" height="25">
-                                </button>
-                                <button class="btn border-0 p-0" onclick="zoomIn()">
-                                    <img src="../Icons/plus-icon.svg"
-                                        alt="plus"
-                                        width="25" height="25">
-                                </button>
-                                <select class="form-select w-auto" onchange="setPageSize()"
-                                    aria-label="page-view" id="pageSizeOption">
-                                    <option value="Page-Fit" selected>Page Fit</option>
-                                    <option value="Zoom-In">Zoom-In</option>
-                                    <option value="Zoom-Out">Zoom-Out</option>
-                                </select>
-
+                            <div class="me-3 d-flex justify-content-center align-items-center">
+                                <img src="../Icons/sms-notified.svg" alt="sms" width="25" height="25">
                             </div>
-
-                            <div
-                                class="d-md-flex align-items-center justify-content-end gap-2 d-none order-sm-2 w-25">
-                                <button class="btn border-0 p-0">
-                                    <img src="../Icons/download-icon.svg"
-                                        alt="download"
-                                        width="25" height="25">
-                                </button>
-                                <button class="btn border-0 p-0">
-                                    <img src="../Icons/toggle-btn.svg"
-                                        alt="toggle"
-                                        width="30" height="30">
-                                </button>
+                            <div class="me-3 d-flex justify-content-center align-items-center">
+                                <img src="../Icons/notification.svg" alt="notification" width="25" height="25">
                             </div>
-
                         </div>
-                        <div id="pdfContainer" class="vh-70 overflow-scroll bg-offwhite-tertiary py-3"></div>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <div>
+                                <img src="../Icons/profile.svg" alt="profile">
+                            </div>
+                        </div>
                     </div>
 
                 </div>
-            </main>
+            </nav>
 
-        </div>
+            <!-- Body content -->
+            <div class="container-fluid px-4">
+                <div class="my-4 d-flex justify-content-between">
+                    <div class="d-flex align-items-center gap-2 col-6">
+                        <a href="../HTML/bookModule.html" class="backArrow rounded-circle">
+                            <img src="../Icons/arrow-left.svg" alt="arrow" width="25" height="25">
+                        </a>
+                        <p class="m-0 fw-medium h4 text-wrap" id="bookName"></p>
+                    </div>
 
-        <script src="https://unpkg.com/dexie/dist/dexie.js"></script>
-        <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-        <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="https://www.jsdelivr.com/package/npm/pdfjs-dist"></script>
-        <script src="../JavaScript/toggleSidebar.js" defer></script>
-        <script src="../JavaScript/bookPreview.js" defer></script>
-    </body>
+                    <div class="d-flex justify-content-center align-items-center gap-2">
+                        <p class="m-0 fw-medium fs-5">Read Mode:</p>
+                        <div class="form-check form-switch d-flex justify-content-center align-items-center">
+                            <input class="form-check-input cursor-pointer readModeSwitch" type="checkbox" role="switch"
+                                id="readModeSwitch">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border border-1 rounded-2" id="bookInfo">
+                    <div
+                        class="d-flex flex-sm-row flex-column gap-2 align-items-center justify-content-between p-2 bg-offwhite-secondary sticky-top shadow-sm">
+                        <div class="d-flex align-items-center gap-2 order-sm-0 order-1 w-25">
+                            <button class="btn border-0 p-0 pdfButtons" onclick="return toFirstPage()">
+                                <img src="../Icons/previous-book.svg" data-bs-toggle="tooltip" data-bs-placement="top"
+                                    data-bs-title="First page" alt="previous-book" width="35" height="35">
+                            </button>
+                            <button class="btn border-0 p-0 pdfButtons" onclick="return prevPage()"
+                                data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Previous page">
+                                <img src="../Icons/next-page.svg" alt="previous-page" width="30" height="30">
+                            </button>
+
+                            <input type="number" min="1" value="1" class="form-control w-25" id="currentPageNum"
+                                onkeydown="return validateNumberInput(event)">
+                            <p class="m-0 text-nowrap">of &nbsp; <span id="pageCount"></span></p>
+
+                            <button class="btn border-0 p-0 pdfButtons" onclick="return nextPage()"
+                                data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Next page">
+                                <img src="../Icons/previous-page.svg" alt="next-page" width="30" height="30">
+                            </button>
+                            <button class="btn border-0 p-0 pdfButtons" onclick="return toLastPage()"
+                                data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Last page">
+                                <img src="../Icons/next-book.svg" alt="next-book" width="35" height="35">
+                            </button>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-center gap-2 order-sm-1 order-0 w-25">
+                            <button class="btn border-0 p-0" onclick="zoomOut()">
+                                <img src="../Icons/minus-icon.svg" alt="minus" width="25" height="25">
+                            </button>
+                            <button class="btn border-0 p-0" onclick="zoomIn()">
+                                <img src="../Icons/plus-icon.svg" alt="plus" width="25" height="25">
+                            </button>
+                            <select class="form-select w-auto" onchange="setPageSize()" aria-label="page-view"
+                                id="pageSizeOption">
+                                <option value="Page-Fit" selected>Page Fit</option>
+                                <option value="Zoom-In">Zoom-In</option>
+                                <option value="Zoom-Out">Zoom-Out</option>
+                            </select>
+
+                        </div>
+
+                        <div class="d-md-flex align-items-center justify-content-end gap-2 d-none order-sm-2 w-25">
+                            <button class="btn border-0 p-0">
+                                <img src="../Icons/download-icon.svg" alt="download" width="25" height="25">
+                            </button>
+                            <button class="btn border-0 p-0">
+                                <img src="../Icons/toggle-btn.svg" alt="toggle" width="30" height="30">
+                            </button>
+                        </div>
+
+                    </div>
+                    <div id="pdfContainer" class="vh-70 overflow-scroll bg-offwhite-tertiary py-3"></div>
+                </div>
+            </div>
+            <div id="readModeContainer"
+                class="row d-none text-center mx-2 d-flex flex-column justify-content-center align-items-center">
+                <div
+                    class="col-sm-6 vh-75 bg-white d-flex justify-content-center align-items-center border border-1 px-3">
+                    <p id="readText" class="fw-bold fs-5"></p>
+                </div>
+                <div
+                    class="col-sm-3 bg-primary rounded-5 mt-5 mw-60 mx-auto py-2 d-flex justify-content-between align-items-center">
+                    <div class="ps-1 d-flex gap-2">
+                        <button class="btn p-0 border-0" onclick="prevChunk()"><img src="../Icons/prev-icon.svg" alt="previous"
+                                width="16" height="16"></button>
+                        <button class="btn p-0 border-0" onclick="toggleReading()"><img id="playBtn"
+                                src="../Icons/play-icon.svg" alt="play" width="20" height="20"></button>
+                        <button class="btn p-0 border-0" onclick="nextChunk()"><img src="../Icons/next-icon.svg" alt="next"
+                                width="16" height="16"></button>
+                    </div>
+                    <div class="pe-1 cursor-pointer border-0" data-bs-toggle="modal" data-bs-target="#preferencesModal">
+                        <img src="../Icons/settings-icon.svg" alt="preferences" width="20" height="20">
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Preferences Modal -->
+            <div class="modal fade" id="preferencesModal" tabindex="-1" aria-labelledby="preferencesModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header border-bottom-0">
+                            <h5 class="modal-title" id="preferencesModalLabel">Preferences</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body my-3">
+                            <form id="bookForm">
+                                <div class="row g-4 py-2">
+                                    <div class="col-12">
+                                        <div>
+                                            <label for="wpm" class="form-label fw-medium text-secondary">Words per
+                                                minute:</label>
+                                            <input type="number" min="1" max="300" onkeydown="validateNumberInput(event)" onKeyPress="if(this.value.length==4) return false;" class="form-control form-control-lg" id="wpmCount"
+                                                value="200" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div>
+                                            <label for="bookType" class="form-label fw-medium text-secondary">Chunk size
+                                                (words):</label>
+                                            <select class="form-select form-select-lg" id="chunkSize"
+                                                aria-label="Select Type" required>
+                                                <option selected value="3">3</option>
+                                                <option value="5">5</option>
+                                                <option value="10">10</option>
+                                                <option value="15">15</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer border-top-0 d-flex justify-content-between">
+                            <button type="button" class="btn btn-outline-primary px-4" id="restoreDefaults" onclick="restoreDefault()">Restore
+                                Defaults</button>
+                            <button type="button" class="btn btn-primary px-5" data-bs-dismiss="modal"
+                                id="savePreferences" onclick="applyPreferences()">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <script src="https://unpkg.com/dexie/dist/dexie.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://www.jsdelivr.com/package/npm/pdfjs-dist"></script>
+    <script src="../JavaScript/toggleSidebar.js" defer></script>
+    <script src="../JavaScript/bookPreview.js" defer></script>
+</body>
+
 </html>

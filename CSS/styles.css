@@ -134,11 +134,16 @@ body {
 .wrapper .main-content .booksGrid .booksCard {
     height: 100%;
     min-height: 250px;
-    /* transition: all 0.2s ease; */
 }
 
 .wrapper .main-content .booksGrid .booksCard .dropdown {
     display: none !important;
+    opacity: 0.6;
+    transition: all 0.5s ease;
+}
+
+.wrapper .main-content .booksGrid .booksCard .dropdown:hover {
+    opacity: 1;
 }
 
 .wrapper .main-content .booksGrid .booksCard:hover .dropdown {
@@ -153,9 +158,6 @@ body {
     display: flex !important;
 }
 
-.wrapper .main-content .modal-content {
-    max-width: 85% !important;
-}
 
 /* -- DESKTOP (Screens 992px wide and above) -- */
 /* @media (min-width: 992px) {
@@ -249,6 +251,20 @@ body {
 
 .vh-70 {
     max-height: 70vh !important;
+}
+
+.vh-75 {
+    height: 100% !important;
+    min-height: 60vh !important;
+}
+
+.mw-60 {
+    max-width: 60% !important;
+}
+
+.w-80 {
+    width: 100% !important;
+    max-width: 80% !important;
 }
 
 .pdfButtons {
