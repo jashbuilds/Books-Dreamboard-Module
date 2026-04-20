@@ -1,0 +1,126 @@
+:root {
+    --primary-blue: #2B5BFC;
+    --secondary-blue: #dbe2ff;
+    --bg-hover-sidebar: #eef4fc;
+    --bg-active-sidebar: #e3effd;
+    --text-sidebar: #939292;
+    --bg-offwhite: #f0f2f5;
+    --bg-offwhite-secondary: #eaeaeb;
+    --bg-offwhite-tertiary: #e1e1e3;
+    --secondary-offwhite: #e3effd;
+    --primary-white: white;
+    --text-offwhite: #999999;
+}
+
+.wrapper .sidebar {
+    width: 280px;
+    min-width: 280px;
+    height: 100%;
+    z-index: 1030;
+    overflow-x: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+.wrapper .sidebar .sidebar-header {
+    height: 72px;
+    padding: 24px;
+    transition: all 0.3s ease-in-out;
+}
+
+.wrapper .sidebar .sidebar-header .logo-placeholder {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    display: none !important;
+}
+
+.wrapper .sidebar .nav .nav-item .nav-link {
+    color: var(--text-sidebar);
+    white-space: nowrap;
+    padding: 16px;
+    transition: all 0.2s ease-in-out;
+}
+
+.wrapper .sidebar .nav .nav-item .nav-link:hover {
+    background-color: var(--bg-active-sidebar);
+}
+
+.wrapper .sidebar .nav .nav-item .nav-link.active {
+    background-color: var(--primary-blue);
+    color: var(--bg-offwhite);
+}
+
+.wrapper .sidebar .nav .nav-item .nav-link.active svg {
+    stroke: var(--secondary-offwhite);
+    fill: var(--primary-white);
+}
+
+
+.wrapper .sidebar .nav .nav-item .nav-link .icon-placeholder {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+}
+
+/* COLLAPSED SIDEBAR STATE */
+.wrapper .sidebar.collapsed {
+    width: 85px;
+    min-width: 85px;
+}
+
+.wrapper .sidebar.collapsed .sidebar-header .logo-placeholder {
+    display: flex !important;
+}
+
+.wrapper .sidebar.collapsed .sidebar-header .logo-text,
+.wrapper .sidebar.collapsed .nav .nav-item .nav-link .menu-text {
+    visibility: hidden;
+}
+
+.wrapper .sidebar.collapsed .nav .nav-item .nav-link .icon-placeholder,
+.wrapper .sidebar.collapsed .sidebar-header .logo-placeholder {
+    margin-right: 0px;
+}
+
+.wrapper .sidebar.collapsed .nav .nav-item .nav-link {
+    padding-right: 0px;
+    width: 55px;
+}
+
+/* Main Navbar */
+
+.wrapper .main-navbar .search-box {
+    width: 300px;
+}
+
+@media (max-width: 991px) {
+    .wrapper .sidebar {
+        margin-left: -85px;
+        position: fixed;
+        width: 85px;
+        min-width: 85px;
+    }
+
+    .wrapper .sidebar.mobile-active {
+        margin-left: 0px;
+    }
+
+    .wrapper .sidebar .sidebar-header .logo-text,
+    .wrapper .sidebar .nav .nav-item .nav-link .menu-text {
+        display: none !important;
+    }
+
+    .wrapper .sidebar .sidebar-header .logo-placeholder {
+        display: flex !important;
+    }
+
+    .wrapper .sidebar .sidebar-header {
+        padding-left: 22px;
+    }
+
+    .wrapper .sidebar .nav .nav-item .nav-link {
+        padding-right: 0px;
+        width: 100%;
+    }
+
+}

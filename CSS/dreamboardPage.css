@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700;800;900&display=swap');
+
+
+.wrapper .main-content .dreamBoardGrid .dreamCard .pinIcon,
+.wrapper .main-content .dreamBoardGrid .dreamCard .imgText {
+    transition: 0.5s ease;
+    opacity: 0;
+}
+
+.wrapper .main-content .dreamBoardGrid .dreamCard:hover .pinIcon,
+.wrapper .main-content .dreamBoardGrid .dreamCard:hover .imgText {
+    opacity: 1;
+}
+
+.wrapper .main-content .dreamBoardGrid .dreamCard .img-fluid {
+    transition: 0.5 ease;
+    opacity: 1;
+}
+
+.wrapper .main-content .dreamBoardGrid .dreamCard:hover .img-fluid {
+    opacity: 0.8;
+}
+
+
+/* Custom Classes */
+
+.cursor-pointer {
+    cursor: pointer;
+}

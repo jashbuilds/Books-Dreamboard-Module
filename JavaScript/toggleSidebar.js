@@ -1,4 +1,4 @@
-// Logic to Toggle Sidebar with Responsive View.
+// Logic to Toggle Sidebar.
 document.addEventListener("DOMContentLoaded", () => {
   const sidebar = document.getElementById("sidebar");
   const sidebarToggleBtn = document.getElementById("sidebarCollapseBtn");
@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
         sidebar.classList.toggle("mobile-active");
       } else {
         sidebar.classList.toggle("collapsed");
+        
       }
     });
   }

@@ -1,0 +1,109 @@
+:root {
+    --primary-blue: #2B5BFC;
+    --secondary-blue: #dbe2ff;
+    --bg-hover-sidebar: #eef4fc;
+    --bg-active-sidebar: #e3effd;
+    --text-sidebar: #939292;
+    --bg-offwhite: #f0f2f5;
+    --bg-offwhite-secondary: #eaeaeb;
+    --bg-offwhite-tertiary: #e1e1e3;
+    --secondary-offwhite: #e3effd;
+    --primary-white: white;
+    --text-offwhite: #999999;
+}
+
+.wrapper .main-content .addBtn {
+    transition: all 0.2s ease-in-out;
+}
+
+.wrapper .main-content .addBtn:hover {
+    transform: translateY(-2px);
+}
+
+.wrapper .main-content .readModeSwitch {
+    width: 38px;
+    height: 21px;
+}
+
+.wrapper .main-content .pdfButtons {
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+
+.wrapper .main-content .pdfButtons:hover {
+    opacity: 1;
+}
+
+.wrapper .main-content .backArrow {
+    opacity: 0.7;
+    padding: 8px;
+    transition: all 0.5s ease;
+}
+
+.wrapper .main-content .backArrow:hover {
+    opacity: 1;
+    background-color: var(--secondary-blue);
+}
+
+.wrapper .main-content .preferencesModal {
+    max-width: 35% !important;
+}
+
+
+/* Books Card Grid */
+
+.wrapper .main-content .search-box .search-input::placeholder {
+    color: var(--text-offwhite);
+}
+
+.wrapper .main-content .booksGrid .booksCard {
+    height: 100%;
+    min-height: 250px;
+}
+
+.wrapper .main-content .booksGrid .booksCard .dropdown {
+    display: none !important;
+}
+
+.wrapper .main-content .booksGrid .booksCard .dropdown .dropdown-toggle {
+    opacity: 0.6;
+    transition: all 0.5s ease;
+}
+
+.wrapper .main-content .booksGrid .booksCard .dropdown .dropdown-toggle:hover {
+    opacity: 1;
+}
+
+.wrapper .main-content .booksGrid .booksCard:hover .dropdown {
+    display: block !important;
+}
+
+.wrapper .main-content .booksGrid .booksCard .infoBtn {
+    display: none !important;
+}
+
+.wrapper .main-content .booksGrid .booksCard:hover .infoBtn {
+    display: flex !important;
+}
+
+
+/* -- MOBILE & TABLET (Screens 991px wide and below) -- */
+@media (max-width: 991px) {
+    .wrapper .main-content {
+        width: 100%;
+    }
+
+    .wrapper .main-content .modal-content {
+        width: 100% !important;
+    }
+
+    .wrapper .main-content .preferencesModal {
+        max-width: 60% !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .wrapper .main-content .preferencesModal {
+        max-width: 100% !important;
+    }
+}
