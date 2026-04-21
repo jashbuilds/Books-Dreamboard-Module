@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700;800;900&display=swap');
 
+:root{
+    --blue-primary: #92aaf9;
+    --blue-secondary: #eef2fd;
+}
 
 .wrapper .main-content .dreamBoardGrid .dreamCard .pinIcon,
 .wrapper .main-content .dreamBoardGrid .dreamCard .imgText {
@@ -19,6 +23,47 @@
 
 .wrapper .main-content .dreamBoardGrid .dreamCard:hover .img-fluid {
     opacity: 0.8;
+}
+
+.wrapper .main-content .drop-area {
+    border: 2px dashed var(--blue-primary) !important;
+    border-radius: 5px;
+    background: var(--blue-secondary);
+}
+
+
+@media (max-width: 1400px) {
+    .wrapper .main-content .dreamBoardGrid .dreamCard .cardPara {
+        font-size: 15px !important;
+    }
+    .wrapper .main-content .dreamBoardGrid .dreamCard .cardSubpara {
+        font-size: 13px !important;
+    }
+}
+
+@media (max-width: 1200px) {
+    .wrapper .main-content .dreamBoardGrid .dreamCard .cardPara {
+        font-size: 13px !important;
+    }
+    .wrapper .main-content .dreamBoardGrid .dreamCard .cardSubpara {
+        font-size: 12px !important;
+    }
+}
+
+@media (max-width: 991px) {
+    .wrapper .main-content .dreamBoardGrid .dreamCard .cardPara {
+        font-size: 16px !important;
+    }
+    .wrapper .main-content .dreamBoardGrid .dreamCard .cardSubpara {
+        font-size: 15px !important;
+    }
+
+    .wrapper .main-content .imgCriteriaHead {
+        font-size: 16px !important;
+    }
+    .wrapper .main-content .imgCriteriaSubHead {
+        font-size: 14px !important;
+    }
 }
 
 
