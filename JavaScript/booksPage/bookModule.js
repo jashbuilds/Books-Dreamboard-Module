@@ -119,10 +119,21 @@ addBookModal?.addEventListener("hidden.bs.modal", () => {
   bookName.value = "";
   bookCategory.value = "All";
   bookPDF.value = "";
+  bookName.classList.remove("is-invalid");
 
   submitBtn.disabled = true;
   renderBooks();
 });
+
+const validateName = () => {
+  if (/^\s|\d+/.test(bookName.value) || bookName.value === "") {
+    bookName.classList.add("is-invalid");
+    submitBtn.disabled = true;
+  } else {
+    bookName.classList.remove("is-invalid");
+    submitBtn.disabled = false;
+  }
+};
 
 // Logic to Validate Form Input fields.
 const validateFormInput = () => {
@@ -166,6 +177,21 @@ const showAcknowledgeToast = (message, background = "text-bg-success") => {
 window.onload = () => {
   showAcknowledgeToast("Welcome.", "text-bg-primary");
 };
+
+bookPDF.addEventListener("change", () => {
+  const file = bookPDF.files[0];
+
+  const isPdf =
+    file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+
+  if (!isPdf) {
+    bookPDF.classList.add("is-invalid");
+    submitBtn.disabled = true;
+  } else {
+    bookPDF.classList.remove("is-invalid");
+    submitBtn.disabled = false;
+  }
+});
 
 const attachDropdownCloseLogic = () => {
   const cards = document.querySelectorAll(".booksCard");

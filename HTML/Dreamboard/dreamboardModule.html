@@ -175,23 +175,17 @@
                             <div
                                 class="d-flex align-items-center gap-1 order-sm-0 order-1">
                                 <p
-                                    class="fw-medium text-secondary m-0 w-100">Sort
+                                    class="fw-medium text-secondary m-0 w-100 text-nowrap">Sort
                                     by:</p>
                                 <select
                                     class="fw-semibold bg-transparent border-0 cursor-pointer form-select py-1 ps-2"
                                     id="categoryFilter"
-                                    aria-label="Default select example"
-                                    onchange="filterBooks()">
+                                    aria-label="Default select example">
                                     <option value="All" selected>All</option>
-                                    <option value="Self-help">Self-help</option>
-                                    <option value="Finance">Finance</option>
-                                    <option value="Fiction">Fiction</option>
-                                    <option
-                                        value="Historical">Historical</option>
-                                    <option value="Sci-Fi">Sci-Fi</option>
                                 </select>
                             </div>
 
+                            <!-- Add Dream button -->
                             <button
                                 class="btn btn-primary addBtn px-5 py-2 order-sm-1 order-0"
                                 data-bs-toggle="modal"
@@ -201,71 +195,10 @@
                         </div>
                     </div>
 
-                    <div class="dreamBoardGrid mt-5">
-                        <div class="row g-3">
-                            <div class="col-sm-6 col-md-4 col-lg-3">
-                                <div class="position-relative dreamCard">
-                                    <img
-                                        src="../../Images/bailey-zindel-NRQV-hBF10M-unsplash.jpg"
-                                        alt="nature"
-                                        class="img-fluid object-fit-cover rounded cursor-pointer">
-                                    <img src="../../Icons/pin-outlined.svg"
-                                        class="pinIcon cursor-pointer position-absolute top-0 start-0 ps-3 pt-3"
-                                        alt="pin" width="35" height="35">
-                                    <div
-                                        class="dropdown rounded-circle pinIcon cursor-pointer position-absolute top-0 end-0 pe-3 pt-3">
-                                        <img
-                                            src="../../Icons/three-dots-vertical-filled.svg"
-                                            class="dropdown-toggle"
-                                            alt="action-menu" width="30"
-                                            height="30"
-                                            data-bs-offset="0,5"
-                                            data-bs-toggle="dropdown"
-                                            aria-expanded="false">
-                                        <ul
-                                            class="dropdown-menu">
-                                            <li><button
-                                                    class="dropdown-item d-flex justify-content-start align-items-center gap-1"><img
-                                                        src="../../Icons/edit.svg"
-                                                        alt="preview"
-                                                        width="25"
-                                                        height="25">
-                                                    Rename</button></li>
-                                            <li><button
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#deleteModal"
-                                                    class="dropdown-item d-flex justify-content-start align-items-center gap-2"><img
-                                                        src="../../Icons/upload-image.svg"
-                                                        alt="delete"
-                                                        width="20"
-                                                        height="20">Upload
-                                                    Image</button></li>
-                                            <li><button
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#deleteModal"
-                                                    class="dropdown-item d-flex justify-content-start align-items-center gap-2"><img
-                                                        src="../../Icons/delete-icon.svg"
-                                                        alt="delete"
-                                                        width="20"
-                                                        height="20">Delete
-                                                    Dream</button></li>
-                                        </ul>
-                                    </div>
-
-                                    <div
-                                        class="position-absolute bottom-0 p-xl-3 p-md-2 p-3 imgText">
-                                        <span
-                                            class="fw-semibold text-white mb-1 fs-5 cardPara">Paragraphs
-                                            are the building blocks of
-                                            Papers.</span> <br>
-                                        <span
-                                            class="fw-semibold text-white fs-6 cardSubpara">Created
-                                            by, Jash Vadgama</span>
-                                    </div>
-
-                                </div>
-                            </div>
-
+                    <!-- All Dreamboard -->
+                    <div class="mt-5">
+                        <div class="row g-4 dreamBoardGrid" id="dreamBoardGrid">
+                            <!-- Dreamboards will be available here. -->
                         </div>
                     </div>
 
@@ -313,7 +246,7 @@
                                                         class="form-control form-control-lg"
                                                         id="addDreamImage"
                                                         placeholder="Name"
-                                                        accept="image/*"
+                                                        accept="image/jpg, image/png, image/webp"
                                                         required hidden
                                                         multiple>
                                                     <div id="img-view" class="d-flex gap-1 flex-column justify-content-center align-items-center rounded">

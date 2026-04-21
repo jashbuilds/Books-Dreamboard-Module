@@ -5,6 +5,7 @@
     --blue-secondary: #eef2fd;
 }
 
+
 .wrapper .main-content .dreamBoardGrid .dreamCard .pinIcon,
 .wrapper .main-content .dreamBoardGrid .dreamCard .imgText {
     transition: 0.5s ease;
