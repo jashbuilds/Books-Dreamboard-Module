@@ -100,6 +100,14 @@
     .wrapper .main-content .preferencesModal {
         max-width: 60% !important;
     }
+
+    .wrapper .main-content .booksGrid .booksCard .dropdown {
+        display: block !important;
+    }
+
+    .wrapper .main-content .booksGrid .booksCard .infoBtn {
+        display: flex !important;
+    }
 }
 
 @media (max-width: 576px) {

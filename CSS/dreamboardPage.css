@@ -1,18 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700;800;900&display=swap');
 
-:root{
+:root {
     --blue-primary: #92aaf9;
     --blue-secondary: #eef2fd;
 }
 
 
-.wrapper .main-content .dreamBoardGrid .dreamCard .pinIcon,
+.wrapper .main-content .dreamBoardGrid .dreamCard .dropdownIcon,
 .wrapper .main-content .dreamBoardGrid .dreamCard .imgText {
     transition: 0.5s ease;
     opacity: 0;
 }
 
-.wrapper .main-content .dreamBoardGrid .dreamCard:hover .pinIcon,
+.wrapper .main-content .dreamBoardGrid .dreamCard:hover .dropdownIcon,
 .wrapper .main-content .dreamBoardGrid .dreamCard:hover .imgText {
     opacity: 1;
 }
@@ -37,6 +37,7 @@
     .wrapper .main-content .dreamBoardGrid .dreamCard .cardPara {
         font-size: 15px !important;
     }
+
     .wrapper .main-content .dreamBoardGrid .dreamCard .cardSubpara {
         font-size: 13px !important;
     }
@@ -46,6 +47,7 @@
     .wrapper .main-content .dreamBoardGrid .dreamCard .cardPara {
         font-size: 13px !important;
     }
+
     .wrapper .main-content .dreamBoardGrid .dreamCard .cardSubpara {
         font-size: 12px !important;
     }
@@ -55,6 +57,7 @@
     .wrapper .main-content .dreamBoardGrid .dreamCard .cardPara {
         font-size: 16px !important;
     }
+
     .wrapper .main-content .dreamBoardGrid .dreamCard .cardSubpara {
         font-size: 15px !important;
     }
@@ -62,6 +65,7 @@
     .wrapper .main-content .imgCriteriaHead {
         font-size: 16px !important;
     }
+
     .wrapper .main-content .imgCriteriaSubHead {
         font-size: 14px !important;
     }
@@ -72,4 +76,43 @@
 
 .cursor-pointer {
     cursor: pointer;
+}
+
+/* Carousel CSS (Splide.js) */
+
+.splide {
+    margin: 0 auto;
+}
+
+.thumbnails {
+    display: flex;
+    margin: 1rem auto 0;
+    padding: 0;
+    justify-content: center;
+}
+
+.thumbnail {
+    width: 70px;
+    height: 70px;
+    overflow: hidden;
+    list-style: none;
+    margin: 0 0.2rem;
+    cursor: pointer;
+    opacity: 0.3;
+}
+
+.thumbnail.is-active {
+    opacity: 1;
+}
+
+.thumbnail img {
+    width: 100%;
+    height: auto;
+}
+
+.splide__slide,
+.splide__list,
+.splide__track {
+    width: 200px !important;
+    height: 400px !important;
 }

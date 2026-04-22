@@ -19,7 +19,12 @@ const dreamName = document.getElementById("dreamName");
 
 const dreamBoardGrid = document.getElementById("dreamBoardGrid");
 
+const carouselContainer = document.getElementById("imageCarousel");
+
+submitBtn.disabled = true;
 let dreamData;
+
+let selectedDreamId;
 
 // array that stores images selected by user from modal
 let uploadedImages = [];
@@ -48,15 +53,6 @@ function getDreamsData(key) {
 }
 getDreamsData();
 
-// function resultData(res) {
-//   dreamData = res;
-//   if (dreamData.length === 0) {
-//     dreamBoardGrid.innerHTML = "<p class='text-center fs-4 fw-semibold'>No Dreams Created!</p>";
-//     return;
-//   }
-//   renderDreamboard();
-// }
-
 // function to render Dreamboards from Dexie
 function renderDreamboard(res) {
   if (res.length === 0) {
@@ -70,16 +66,16 @@ function renderDreamboard(res) {
 
       return `
        <div class="col-sm-6 col-md-4 col-lg-3">
-                                <div class="position-relative dreamCard h-100">
-                                    <img
+                                <div class="position-relative dreamCard h-100" >
+                                    <img data-bs-toggle="modal" data-bs-target="#carouselGallery" onclick="renderCarousel(${d.id})"
                                         src="${url}"
                                         alt="nature"
                                         class="img-fluid object-fit-cover rounded cursor-pointer h-100">
                                     <img src="../../Icons/pin-outlined.svg"
-                                        class="pinIcon cursor-pointer position-absolute top-0 start-0 ps-3 pt-3"
+                                        class="cursor-pointer position-absolute top-0 start-0 ps-3 pt-3"
                                         alt="pin" width="35" height="35">
                                     <div
-                                        class="dropdown rounded-circle pinIcon cursor-pointer position-absolute top-0 end-0 pe-3 pt-3">
+                                        class="dropdown rounded-circle dropdownIcon cursor-pointer position-absolute top-0 end-0 pe-3 pt-3">
                                         <img
                                             src="../../Icons/three-dots-vertical-filled.svg"
                                             class="dropdown-toggle"
@@ -105,7 +101,7 @@ function renderDreamboard(res) {
                                                         width="20"
                                                         height="20">Upload
                                                     Image</button></li>
-                                            <li><button onclick="deleteDream(${d.id})"
+                                            <li><button onclick="openDeleteModal(${d.id})" data-bs-toggle="modal" data-bs-target="#deleteModal"
 
                                                     class="dropdown-item d-flex justify-content-start align-items-center gap-2"><img
                                                         src="../../Icons/delete-icon.svg"
@@ -129,6 +125,62 @@ function renderDreamboard(res) {
     `;
     })
     .join("");
+  attachDropdownCloseLogic();
+}
+
+async function renderCarousel(dreamId) {
+  if (!carouselContainer) return;
+
+  const dream = await db.dreams.get(dreamId);
+  if (!dream || !dream.images) return;
+
+  const imageListHtml = dream.images
+    .map((img) => {
+      const url = URL.createObjectURL(img);
+
+      return `
+                                                <li class="splide__slide">
+                                                    <img
+                                                        src="${url}"
+                                                        alt="carousel-img1"
+                                                        class="img-fluid object-fit-cover rounded cursor-pointer h-100" />
+                                                </li>`;
+    })
+    .join("");
+
+  const imageThumbnails = dream.images
+    .map((img) => {
+      const url = URL.createObjectURL(img);
+
+      return `                          <li class="thumbnail">
+                                            <img
+                                                src="${url}"
+                                                alt="thumbnail-img1" width="100"
+                                                height="100"
+                                                class="img-fluid object-fit-cover rounded cursor-pointer h-100" />
+                                        </li>`;
+    })
+    .join("");
+
+  carouselContainer.innerHTML = `
+    <div class="splideContainer overflow-hidden">
+      <section id="main-slider" class="splide">
+        <div class="splide__track mx-auto border border-2 border-primary rounded shadow">
+          <ul class="splide__list">
+            ${imageListHtml}
+          </ul>
+        </div>
+      </section>
+      <ul id="thumbnails" class="thumbnails d-flex gap-2">
+          ${imageThumbnails}
+      </ul>
+    </div>`;
+
+    
+    new Splide("#main-slider", {
+      pagination: false,
+      fade: true
+    }).mount();
 }
 
 // Common function to render selected images
@@ -156,7 +208,6 @@ const renderImages = () => {
     dropArea.classList.remove("d-none");
   }
 };
-attachDropdownCloseLogic();
 
 inputFile.addEventListener("change", uploadImage);
 
@@ -167,6 +218,15 @@ function uploadImage() {
   }
 
   const files = Array.from(inputFile.files);
+
+  for (let file of files) {
+    if (!file.type.startsWith("image/")) {
+      document.getElementById("img-view").classList.add("is-invalid");
+      return;
+    } else {
+      document.getElementById("img-view").classList.remove("is-invalid");
+    }
+  }
 
   files.forEach((file) => {
     if (uploadedImages.length < 5) {
@@ -224,18 +284,34 @@ document.getElementById("dreamForm").addEventListener("submit", async (e) => {
   modal.hide();
 
   getDreamsData();
+
+  showAcknowledgeToast("Dream Added.");
 });
 
-const deleteDream = async (id) => {
-  await db.dreams.delete(id);
-  getDreamsData();
-  console.log(id);
+const openDeleteModal = (id) => {
+  selectedDreamId = id;
 };
+
+const deleteDream = async () => {
+  await db.dreams.delete(selectedDreamId);
+  getDreamsData();
+
+  showAcknowledgeToast("Dream Deleted!");
+};
+
+function validateNameInput() {
+  if (/^\s|\d+/.test(dreamName.value) || dreamName.value === "") {
+    dreamName.classList.add("is-invalid");
+    submitBtn.disabled = true;
+  } else {
+    dreamName.classList.remove("is-invalid");
+  }
+}
 
 // function to validate form input
 const validateFormInput = () => {
   const isFormValid =
-    dreamName.value.trim() !== "" && uploadedImages.length <= 5;
+    dreamName.value.trim() !== "" && uploadedImages.length > 0;
 
   submitBtn.disabled = !isFormValid;
 };
@@ -248,6 +324,8 @@ addDreamModal.addEventListener("hidden.bs.modal", () => {
   availableImages.innerHTML = "";
   dropArea.classList.remove("d-none");
   submitBtn.disabled = true;
+  document.getElementById("img-view").classList.remove("is-invalid");
+  dreamName.classList.remove("is-invalid");
 });
 
 // function to close dreamboard action dropdown when mouseleave
@@ -265,3 +343,49 @@ function attachDropdownCloseLogic() {
     });
   });
 }
+
+const showAcknowledgeToast = (message, background = "text-bg-success") => {
+  const toastContainer = document.getElementById("notificationToast");
+  const toastBody = toastContainer.querySelector(".toast-message");
+
+  toastBody.textContent = message;
+  toastContainer.classList.add(background);
+
+  const toast = new bootstrap.Toast(toastContainer);
+  toast.show();
+};
+
+/* Carousel Logic (Splide.js) */
+
+var splide = new Splide("#main-carousel", {
+  pagination: false,
+  cover: false,
+});
+
+var thumbnails = document.getElementsByClassName("thumbnail");
+var current;
+
+for (var i = 0; i < thumbnails.length; i++) {
+  initThumbnail(thumbnails[i], i);
+}
+
+function initThumbnail(thumbnail, index) {
+  thumbnail.addEventListener("click", function () {
+    splide.go(index);
+  });
+}
+
+splide.on("mounted move", function () {
+  var thumbnail = thumbnails[splide.index];
+
+  if (thumbnail) {
+    if (current) {
+      current.classList.remove("is-active");
+    }
+
+    thumbnail.classList.add("is-active");
+    current = thumbnail;
+  }
+});
+
+splide.mount();

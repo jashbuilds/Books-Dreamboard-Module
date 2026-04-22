@@ -47,8 +47,7 @@
 
                             <div
                                 class="icon-placeholder me-3 bg-transparent d-flex align-items-center justify-content-center">
-                                <!-- <img src="../Icons/book-dark.svg" alt="notes"
-                                    class="img-fluid" width="24" height="24"> -->
+
                                 <?xml version="1.0"
                                 encoding="utf-8"?>
                                 <svg width="25" height="25" viewBox="0 0 24 24"
@@ -65,12 +64,11 @@
                     </li>
                     <li class="nav-item mx-3" data-bs-toggle="tooltip"
                         data-bs-placement="right" data-bs-title="Dreamboard">
-                        <a href="../../HTML/Dreamboard/dreamboardModule.html"
+                        <a href="../../HTML/Dreamboard/dreamboardModule.html" id="dbMenu"
                             class="nav-link rounded-3 d-flex align-items-center justify-content-sm-start justify-content-center">
                             <div
                                 class="icon-placeholder me-3 bg-transparent d-flex align-items-center justify-content-center">
-                                <!-- <img src="../Icons/heart.svg" alt="heart"
-                                    class="img-fluid" width="24" height="24"> -->
+
                                 <?xml version="1.0"
                                 encoding="utf-8"?>
                                 <svg width="25" height="25" viewBox="0 0 20 20"
@@ -308,7 +306,7 @@
                                     width="16" height="16"></button>
                         </div>
                         <div class="pe-1 cursor-pointer border-0"
-                            data-bs-toggle="modal"
+                            data-bs-toggle="modal" onclick="stopReading()"
                             data-bs-target="#preferencesModal">
                             <img src="../../Icons/settings-icon.svg"
                                 alt="preferences" width="20" height="20">
@@ -330,8 +328,7 @@
                                     id="preferencesModalLabel">Preferences</h4>
                                 <button type="button" class="btn-close"
                                     data-bs-dismiss="modal"
-                                    aria-label="Close"
-                                    onclick="restoreDefault()"></button>
+                                    aria-label="Close"></button>
                             </div>
                             <div class="modal-body px-3 py-0">
                                 <form>

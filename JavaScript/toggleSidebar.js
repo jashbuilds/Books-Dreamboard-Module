@@ -1,7 +1,13 @@
-// Logic to Toggle Sidebar.
+
 document.addEventListener("DOMContentLoaded", () => {
   const sidebar = document.getElementById("sidebar");
   const sidebarToggleBtn = document.getElementById("sidebarCollapseBtn");
+  
+  const savedState = localStorage.getItem('sidebarState');
+  
+  if (savedState === 'collapsed' && window.innerWidth >= 992) {
+    sidebar.classList.add("collapsed");
+  }
 
   if (sidebarToggleBtn) {
     sidebarToggleBtn.addEventListener("click", () => {
@@ -12,6 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         sidebar.classList.toggle("collapsed");
         
+        const currentState = sidebar.classList.contains("collapsed") ? 'collapsed' : 'expanded';
+        localStorage.setItem('sidebarState', currentState);
       }
     });
   }
@@ -24,11 +32,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.addEventListener("click", (event) => {
     const isMobile = window.innerWidth < 992;
-
     if (isMobile && sidebar.classList.contains("mobile-active")) {
       const clickInsideSidebar = sidebar.contains(event.target);
       const clickOnToggleButton = sidebarToggleBtn.contains(event.target);
-
       if (!clickInsideSidebar && !clickOnToggleButton) {
         sidebar.classList.remove("mobile-active");
       }

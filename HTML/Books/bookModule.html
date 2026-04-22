@@ -161,7 +161,7 @@
                 </nav>
 
                 <!-- Body content -->
-                <div class="container-fluid p-4">
+                <div class="container-fluid p-sm-4 p-3">
                     <div class="d-flex justify-content-between">
                         <div class="d-flex">
                             <p class="fs-5 m-0 fw-semibold">Book List</p>
@@ -198,7 +198,7 @@
                     </div>
 
                     <div class="booksGrid mt-4">
-                        <div class="row g-5" id="booksGrid">
+                        <div class="row g-sm-4 g-md-5 g-lg-4 g-3" id="booksGrid">
                             <!-- Available Books will be rendered here. -->
                         </div>
                     </div>
@@ -206,8 +206,7 @@
 
                 <!-- Modal to add new book -->
                 <div class="modal fade" id="addBook" tabindex="-1"
-                    aria-labelledby="formModalLabel" aria-hidden="true"
-                    data-bs-backdrop="static" data-bs-keyboard="false">
+                    aria-labelledby="formModalLabel" aria-hidden="true">
                     <div
                         class="modal-dialog modal-dialog-centered modal-lg justify-content-center">
                         <div
@@ -228,7 +227,7 @@
                                                 <label for="bookName"
                                                     class="form-label fw-medium text-secondary">Name:</label>
                                                 <input type="text"
-                                                    oninput="validateFormInput()"
+                                                    oninput="validateFormInput(); validateName()"
                                                     class="form-control form-control-lg"
                                                     id="bookName"
                                                     placeholder="Enter book name"
@@ -243,6 +242,7 @@
                                                     File:</label>
                                                 <input type="file"
                                                     oninput="validateFormInput()"
+                                                    onchange="validateFileType()"
                                                     class="form-control form-control-lg"
                                                     id="bookPdf"
                                                     placeholder="Name"

@@ -12,6 +12,8 @@ const addBookForm = document.getElementById("bookForm");
 
 let selectedBookId = null;
 
+submitBtn.disabled = true;
+
 var db = new Dexie("BooksDB");
 db.version(1).stores({
   books: "++id, name, category, file",
@@ -120,6 +122,7 @@ addBookModal?.addEventListener("hidden.bs.modal", () => {
   bookCategory.value = "All";
   bookPDF.value = "";
   bookName.classList.remove("is-invalid");
+  bookPDF.classList.remove("is-invalid");
 
   submitBtn.disabled = true;
   renderBooks();
@@ -131,19 +134,15 @@ const validateName = () => {
     submitBtn.disabled = true;
   } else {
     bookName.classList.remove("is-invalid");
-    submitBtn.disabled = false;
   }
 };
 
 // Logic to Validate Form Input fields.
-const validateFormInput = () => {
-  const isFormValid =
-    bookName.value.trim() !== "" &&
-    bookPDF.value !== "" &&
-    bookType.value.trim() !== "";
+function validateFormInput() {
+  const isFormValid = bookName.value.trim() !== "" && bookPDF.value !== "" && isValidPDF(bookPDF.files[0]);
 
   submitBtn.disabled = !isFormValid;
-};
+}
 
 const openBook = (id) => {
   localStorage.setItem("selectedBookId", id);
@@ -174,24 +173,24 @@ const showAcknowledgeToast = (message, background = "text-bg-success") => {
   toast.show();
 };
 
-window.onload = () => {
-  showAcknowledgeToast("Welcome.", "text-bg-primary");
-};
+// bookPDF.addEventListener("change", validateFileType);
 
-bookPDF.addEventListener("change", () => {
+function validateFileType() {
   const file = bookPDF.files[0];
 
-  const isPdf =
-    file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
-
-  if (!isPdf) {
+  if (!isValidPDF(file)) {
     bookPDF.classList.add("is-invalid");
     submitBtn.disabled = true;
+    return;
   } else {
     bookPDF.classList.remove("is-invalid");
-    submitBtn.disabled = false;
+    // submitBtn.disabled = false;
   }
-});
+
+  validateFormInput();
+}
+
+// bookPDF.addEventListener("change", () => {});
 
 const attachDropdownCloseLogic = () => {
   const cards = document.querySelectorAll(".booksCard");
@@ -207,3 +206,7 @@ const attachDropdownCloseLogic = () => {
     });
   });
 };
+
+function isValidPDF(file) {
+  return file && file.type === "application/pdf";
+}

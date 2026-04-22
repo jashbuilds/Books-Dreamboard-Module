@@ -13,6 +13,8 @@ let readingSettings = {
   wordsPerChunk: 3,
 };
 
+const controlBtn = document.getElementById("playBtn");
+
 var db = new Dexie("BooksDB");
 db.version(1).stores({
   books: "++id, name, category, file",
@@ -76,7 +78,7 @@ async function loadBook() {
   loadPDF(arrayBuffer);
 
   // Read mode switch will be "Enabled" when the PDF is loaded successfully!
-  document.getElementById("readModeSwitch").disabled = false
+  document.getElementById("readModeSwitch").disabled = false;
 }
 
 loadBook();
@@ -134,12 +136,22 @@ function nextChunk() {
     currentChunkIndex++;
     showChunk(currentChunkIndex);
   }
+  if (isPlaying) {
+    stopReading();
+    isPlaying = false;
+    controlBtn.src = "../../Icons/play-icon.svg";
+  }
 }
 
 function prevChunk() {
   if (currentChunkIndex > 0) {
     currentChunkIndex--;
     showChunk(currentChunkIndex);
+  }
+  if (isPlaying) {
+    stopReading();
+    isPlaying = false;
+    controlBtn.src = "../../Icons/play-icon.svg";
   }
 }
 
@@ -168,16 +180,14 @@ function stopReading() {
 }
 
 const toggleReading = () => {
-  const btn = document.getElementById("playBtn");
-
   if (isPlaying) {
     stopReading();
     isPlaying = false;
-    btn.src = "../../Icons/play-icon.svg";
+    controlBtn.src = "../../Icons/play-icon.svg";
   } else {
     startReading();
     isPlaying = true;
-    btn.src = "../../Icons/pause-icon.svg";
+    controlBtn.src = "../../Icons/pause-icon.svg";
   }
 };
 
@@ -223,8 +233,6 @@ const applyPreferences = async () => {
 
     readChunks = createChunks(text, readingSettings.wordsPerChunk);
 
-    currentChunkIndex = 0;
-
     showChunk(currentChunkIndex);
   }
 };
@@ -233,7 +241,7 @@ const restoreDefault = () => {
   wpmCount.value = 200;
   chunkSizeInput.value = 3;
 
-  applyPreferences()
+  applyPreferences();
 };
 
 function disableReadMode() {
@@ -249,10 +257,15 @@ document
   .addEventListener("change", async (e) => {
     if (e.target.checked) {
       await enableReadMode();
-
+      restoreDefault();
+      stopReading();
+      
       showReadModeState("Read Mode Enabled!");
     } else {
       disableReadMode();
+      restoreDefault();
+      stopReading();
+      controlBtn.src = "../../Icons/play-icon.svg";
 
       showReadModeState("Read Mode Disabled!");
     }
@@ -364,3 +377,11 @@ const validateWPMCount = () => {
     savePreferencesBtn.classList.add("cursor-nodrop");
   }
 };
+
+preferencesModal.addEventListener("show.bs.modal", () => {
+  if (isPlaying) {
+    stopReading();
+    isPlaying = false;
+    controlBtn.src = "../../Icons/play-icon.svg";
+  }
+});
