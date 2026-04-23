@@ -3,6 +3,7 @@
 :root {
     --blue-primary: #92aaf9;
     --blue-secondary: #eef2fd;
+    --dark-transparent: rgba(0,0,0, 0.5);
 }
 
 
@@ -92,8 +93,8 @@
 }
 
 .thumbnail {
-    width: 70px;
-    height: 70px;
+    width: 120px;
+    height: 120px;
     overflow: hidden;
     list-style: none;
     margin: 0 0.2rem;
@@ -113,6 +114,22 @@
 .splide__slide,
 .splide__list,
 .splide__track {
+    width: 320px !important;
+    height: 500px !important;
+}
+
+.actionBtnGrp {
     width: 200px !important;
-    height: 400px !important;
+}
+
+.top-7{
+    top: 7% !important;
+}
+
+.bg-dark-transparent {
+    background: var(--dark-transparent);
+}
+
+.font-14 {
+    font-size: 14px !important;
 }

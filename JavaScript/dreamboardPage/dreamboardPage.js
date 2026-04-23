@@ -21,8 +21,13 @@ const dreamBoardGrid = document.getElementById("dreamBoardGrid");
 
 const carouselContainer = document.getElementById("imageCarousel");
 
+const renameDreamInput = document.getElementById("renameDreamInput");
+
+let rotationDegrees = 0;
+
+let totalImages;
+
 submitBtn.disabled = true;
-let dreamData;
 
 let selectedDreamId;
 
@@ -37,17 +42,10 @@ function getDreamsData(key) {
     const transaction = db.transaction("dreams");
     const store = transaction.objectStore("dreams");
 
-    let getRequest;
-
-    if (key) {
-      getRequest = store.get(key);
-    } else {
-      getRequest = store.getAll();
-    }
+    const getRequest = store.getAll();
 
     getRequest.onsuccess = () => {
-      const response = getRequest.result;
-      renderDreamboard(response);
+      renderDreamboard(getRequest.result);
     };
   };
 }
@@ -86,10 +84,10 @@ function renderDreamboard(res) {
                                             aria-expanded="false">
                                         <ul
                                             class="dropdown-menu">
-                                            <li><button
+                                            <li><button onclick="renameDream('${d.name}')" data-bs-toggle="modal" data-bs-target="#renameModal"
                                                     class="dropdown-item d-flex justify-content-start align-items-center gap-1"><img
                                                         src="../../Icons/edit.svg"
-                                                        alt="preview"
+                                                        alt="rename"
                                                         width="25"
                                                         height="25">
                                                     Rename</button></li>
@@ -97,7 +95,7 @@ function renderDreamboard(res) {
                                                     
                                                     class="dropdown-item d-flex justify-content-start align-items-center gap-2"><img
                                                         src="../../Icons/upload-image.svg"
-                                                        alt="delete"
+                                                        alt="upload"
                                                         width="20"
                                                         height="20">Upload
                                                     Image</button></li>
@@ -125,6 +123,23 @@ function renderDreamboard(res) {
     `;
     })
     .join("");
+
+  // renameDreamInput.innerHTML = res.map(
+  //   (d) => `
+  //     <label for="dreamName"
+  //                                                   class="form-label fw-medium text-secondary">Name:</label>
+  //                                               <input type="text"
+  //                                                   oninput="validateFormInput(); validateNameInput()"
+  //                                                   class="form-control form-control-lg"
+  //                                                   placeholder="Enter name" value="${d.name}"
+  //                                                   required>
+  //                                               <div
+  //                                                   class="invalid-feedback">Should
+  //                                                   not be empty & No leading
+  //                                                   Spaces!</div>
+  //   `,
+  // ).join("");
+
   attachDropdownCloseLogic();
 }
 
@@ -132,6 +147,7 @@ async function renderCarousel(dreamId) {
   if (!carouselContainer) return;
 
   const dream = await db.dreams.get(dreamId);
+  totalImages = dream.images.length;
   if (!dream || !dream.images) return;
 
   const imageListHtml = dream.images
@@ -163,24 +179,71 @@ async function renderCarousel(dreamId) {
     .join("");
 
   carouselContainer.innerHTML = `
-    <div class="splideContainer overflow-hidden">
-      <section id="main-slider" class="splide">
+    <div class="splideContainer">
+      <section id="main-slider" class="splide ">
         <div class="splide__track mx-auto border border-2 border-primary rounded shadow">
+          <span id="imageCounter" class="font-14 text-white bg-dark-transparent px-2 py-0 rounded mt-1 text-center position-absolute z-3 top-0 start-50 translate-middle-x"></span>
+          <span id="dreamName" class="fs-6 text-white bg-dark-transparent px-1 rounded mt-1 text-center position-absolute z-3 top-7 start-50 translate-middle-x text-nowrap">${dream.name}</span>
           <ul class="splide__list">
             ${imageListHtml}
           </ul>
         </div>
       </section>
-      <ul id="thumbnails" class="thumbnails d-flex gap-2">
+      <div class="bg-dark d-flex gap-3 justify-content-center text-center mx-auto actionBtnGrp py-1 rounded">
+        <button class="btn btn-light rounded px-1 py-0 d-flex justify-content-center align-items-center" onclick="rotateLeft(${dreamId})">
+          <img src="../../Icons/rotate-left.svg" alt="rotate-btn" class="img-fluid" width="16" height="16">
+        </button>
+        <button class="btn btn-light rounded px-1 py-0 d-flex justify-content-center align-items-center" onclick="rotateRight(${dreamId})">
+          <img src="../../Icons/rotate-right.svg" alt="rotate-btn" class="img-fluid" width="16" height="16">
+        </button>
+        <button class="btn btn-light rounded p-0 d-flex justify-content-center align-items-center" onclick="downloadCurrentImage()">
+          <img src="../../Icons/download-img-icon.svg" alt="download-btn" class="img-fluid" width="25" height="25">
+        </button>
+        <button class="btn btn-light rounded px-1 py-0 d-flex justify-content-center align-items-center" onclick="deleteCurrentImage(${dreamId})">
+          <img src="../../Icons/delete-img-icon.svg" alt="delete-btn" class="img-fluid" width="16" height="16">
+        </button>
+      </div>
+      <ul id="thumbnails" class="thumbnails d-flex gap-2 mt-5">
           ${imageThumbnails}
       </ul>
     </div>`;
+  const counter = document.getElementById("imageCounter");
 
-    
-    new Splide("#main-slider", {
-      pagination: false,
-      fade: true
-    }).mount();
+  function updateCounter(index) {
+    counter.innerText = `${index + 1} / ${totalImages}`;
+  }
+
+  updateCounter(0);
+
+  const splide = new Splide("#main-slider", {
+    pagination: false,
+  });
+
+  splide.mount();
+
+  const thumbnails = document.querySelectorAll("#thumbnails .thumbnail");
+
+  let current;
+
+  thumbnails.forEach((thumb, index) => {
+    thumb.addEventListener("click", () => {
+      splide.go(index);
+    });
+  });
+
+  splide.on("move", () => {
+    currentRotation = 0;
+    updateCounter(splide.index);
+  });
+
+  splide.on("mounted move", () => {
+    const thumb = thumbnails[splide.index];
+    if (thumb) {
+      if (current) current.classList.remove("is-active");
+      thumb.classList.add("is-active");
+      current = thumb;
+    }
+  });
 }
 
 // Common function to render selected images
@@ -202,11 +265,7 @@ const renderImages = () => {
     )
     .join("");
 
-  if (uploadedImages.length >= 5) {
-    dropArea.classList.add("d-none");
-  } else {
-    dropArea.classList.remove("d-none");
-  }
+  dropArea.classList.toggle("d-none", uploadedImages.length >= 5);
 };
 
 inputFile.addEventListener("change", uploadImage);
@@ -280,8 +339,7 @@ document.getElementById("dreamForm").addEventListener("submit", async (e) => {
 
   document.getElementById("dreamForm").reset();
 
-  const modal = bootstrap.Modal.getInstance(addDreamModal);
-  modal.hide();
+  bootstrap.Modal.getInstance(addDreamModal).hide();
 
   getDreamsData();
 
@@ -355,37 +413,80 @@ const showAcknowledgeToast = (message, background = "text-bg-success") => {
   toast.show();
 };
 
-/* Carousel Logic (Splide.js) */
+// function to rotate image to left
+function rotateLeft() {
+  const activeSlide = document.querySelector(
+    "#main-slider .splide__slide.is-active img",
+  );
 
-var splide = new Splide("#main-carousel", {
-  pagination: false,
-  cover: false,
-});
+  if (activeSlide) {
+    rotationDegrees -= 90;
 
-var thumbnails = document.getElementsByClassName("thumbnail");
-var current;
-
-for (var i = 0; i < thumbnails.length; i++) {
-  initThumbnail(thumbnails[i], i);
-}
-
-function initThumbnail(thumbnail, index) {
-  thumbnail.addEventListener("click", function () {
-    splide.go(index);
-  });
-}
-
-splide.on("mounted move", function () {
-  var thumbnail = thumbnails[splide.index];
-
-  if (thumbnail) {
-    if (current) {
-      current.classList.remove("is-active");
-    }
-
-    thumbnail.classList.add("is-active");
-    current = thumbnail;
+    activeSlide.style.transform = `rotate(${rotationDegrees}deg)`;
+    activeSlide.style.transition = "transform 0.3s ease";
   }
-});
+}
 
-splide.mount();
+// function to rotate image to right
+function rotateRight() {
+  const activeSlide = document.querySelector(
+    "#main-slider .splide__slide.is-active img",
+  );
+
+  if (activeSlide) {
+    rotationDegrees += 90;
+
+    activeSlide.style.transform = `rotate(${rotationDegrees}deg)`;
+    activeSlide.style.transition = "transform 0.3s ease";
+  }
+}
+
+// function to download current carousel image
+function downloadCurrentImage() {
+  const activeSlideImg = document.querySelector(
+    "#main-slider .splide__slide.is-active img",
+  );
+
+  if (activeSlideImg && activeSlideImg.src) {
+    const imageUrl = activeSlideImg.src;
+
+    const link = document.createElement("a");
+    link.href = imageUrl;
+
+    link.download = `dream-image-${Date.now()}.png`;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+}
+
+async function deleteCurrentImage(dreamId) {
+  const activeSlide = document.querySelector(
+    "#main-slider .splide__slide.is-active",
+  );
+  if (!activeSlide) return;
+
+  const allSlides = Array.from(
+    document.querySelectorAll("#main-slider .splide__slide"),
+  );
+  const currentIndex = allSlides.indexOf(activeSlide);
+
+  const dream = await db.dreams.get(dreamId);
+
+  if (dream && dream.images) {
+    dream.images.splice(currentIndex, 1);
+
+    if (dream.images.length === 0) {
+      await db.dreams.delete(dreamId);
+      location.reload();
+    } else {
+      await db.dreams.put(dream);
+      renderCarousel(dreamId);
+    }
+  }
+}
+
+function renameDream(name) {
+  console.log(name);
+}
