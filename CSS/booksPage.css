@@ -25,6 +25,13 @@
     height: 21px;
 }
 
+/* Maintain square aspect ratio for the read mode text container */
+.wrapper .main-content .read-mode-box {
+    aspect-ratio: 1 / 1;
+    max-height: 50vh;
+    height: auto;
+}
+
 .wrapper .main-content .pdfButtons {
     opacity: 0.6;
     transition: all 0.3s ease;
@@ -91,10 +98,6 @@
 @media (max-width: 991px) {
     .wrapper .main-content {
         width: 100%;
-    }
-
-    .wrapper .main-content .modal-content {
-        width: 100% !important;
     }
 
     .wrapper .main-content .preferencesModal {

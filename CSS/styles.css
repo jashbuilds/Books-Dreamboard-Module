@@ -22,6 +22,11 @@ body {
 
 /* Custom Classes */
 
+/* Prevent UI animation jitter/flash on page load */
+.preload-transitions * {
+    transition: none !important;
+}
+
 .cursor-pointer {
     cursor: pointer !important;
 }

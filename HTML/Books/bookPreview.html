@@ -16,10 +16,11 @@
         <link rel="stylesheet" href="../../CSS/booksPage.css">
         <link rel="shortcut icon" href="../../Icons/ebook-icon.svg"
             type="image/x-icon">
+        <script src="../../JavaScript/themeInit.js"></script>
         <title>Book Preview</title>
     </head>
 
-    <body>
+    <body class="preload-transitions">
         <div class="wrapper d-flex vh-100 overflow-hidden">
 
             <!-- Sidebar -->
@@ -284,8 +285,7 @@
                 </div>
                 <div id="readModeContainer"
                     class="row d-none text-center mx-2 d-flex flex-column justify-content-center align-items-center">
-                    <div
-                        class="col-md-6 col-sm-8 vh-75 bg-white d-flex justify-content-center align-items-center border border-1 px-3">
+                    <div class="col-md-6 col-sm-8 bg-white d-flex justify-content-center align-items-center border border-1 px-3 read-mode-box">
                         <p id="readText" class="fw-bold fs-5"></p>
                     </div>
                     <div
@@ -346,6 +346,7 @@
                                                     class="form-control form-control-lg"
                                                     id="wpmCount"
                                                     value="200" required>
+                                                <div class="invalid-feedback">Words per minute cannot be empty!</div>
                                             </div>
                                         </div>
                                         <div class="col-12">

@@ -24,7 +24,16 @@ const tooltipTriggerList = document.querySelectorAll(
   '[data-bs-toggle="tooltip"]',
 );
 const tooltipList = [...tooltipTriggerList].map(
-  (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl),
+  (tooltipTriggerEl) => {
+    // Prevent tooltips from showing when the sidebar is expanded to avoid UI clutter
+    tooltipTriggerEl.addEventListener('show.bs.tooltip', (e) => {
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar && sidebar.contains(tooltipTriggerEl) && !sidebar.classList.contains('collapsed')) {
+        e.preventDefault();
+      }
+    });
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  }
 );
 
 const bookPdfContainer = document.getElementById("bookInfo");
@@ -131,30 +140,34 @@ function showChunk(index) {
   readText.innerText = readChunks[index];
 }
 
+// Centralized helper to stop reading and reset the UI icons
+const pauseReading = () => {
+  if (isPlaying) {
+    stopReading();
+    isPlaying = false;
+    controlBtn.src = "../../Icons/play-icon.svg";
+  }
+};
+
+// Shows the next chunk of words and stops playback
 function nextChunk() {
   if (currentChunkIndex < readChunks.length - 1) {
     currentChunkIndex++;
     showChunk(currentChunkIndex);
   }
-  if (isPlaying) {
-    stopReading();
-    isPlaying = false;
-    controlBtn.src = "../../Icons/play-icon.svg";
-  }
+  pauseReading();
 }
 
+// Shows the previous chunk of words and stops playback
 function prevChunk() {
   if (currentChunkIndex > 0) {
     currentChunkIndex--;
     showChunk(currentChunkIndex);
   }
-  if (isPlaying) {
-    stopReading();
-    isPlaying = false;
-    controlBtn.src = "../../Icons/play-icon.svg";
-  }
+  pauseReading();
 }
 
+// Begins the automatic playback based on the set reading speed
 function startReading() {
   stopReading();
 
@@ -164,7 +177,7 @@ function startReading() {
     currentChunkIndex++;
 
     if (currentChunkIndex >= readChunks.length) {
-      stopReading();
+      pauseReading();
       return;
     }
 
@@ -172,6 +185,7 @@ function startReading() {
   }, speed);
 }
 
+// Only clears the reading interval timer explicitly
 function stopReading() {
   if (readInterval) {
     clearInterval(readInterval);
@@ -179,11 +193,10 @@ function stopReading() {
   }
 }
 
+// Toggles between play and pause reading modes updating UI
 const toggleReading = () => {
   if (isPlaying) {
-    stopReading();
-    isPlaying = false;
-    controlBtn.src = "../../Icons/play-icon.svg";
+    pauseReading();
   } else {
     startReading();
     isPlaying = true;
@@ -240,6 +253,9 @@ const applyPreferences = async () => {
 const restoreDefault = () => {
   wpmCount.value = 200;
   chunkSizeInput.value = 3;
+
+  // Re-validate to ensure the 'Save' button state is updated
+  validateWPMCount();
 
   applyPreferences();
 };
@@ -371,17 +387,17 @@ const validateNumberInput = (e) => {
 // Validate input field "Words per Minute" to prevent empty input.
 const validateWPMCount = () => {
   if (wpmCount.value !== "") {
+    wpmCount.classList.remove("is-invalid");
     savePreferencesBtn.disabled = false;
+    savePreferencesBtn.classList.remove("cursor-nodrop");
   } else {
+    // Show visual validation error and disable save button
+    wpmCount.classList.add("is-invalid");
     savePreferencesBtn.disabled = true;
     savePreferencesBtn.classList.add("cursor-nodrop");
   }
 };
 
 preferencesModal.addEventListener("show.bs.modal", () => {
-  if (isPlaying) {
-    stopReading();
-    isPlaying = false;
-    controlBtn.src = "../../Icons/play-icon.svg";
-  }
+  pauseReading();
 });

@@ -91,7 +91,16 @@ const renderBooks = async (category = "All") => {
     '[data-bs-toggle="tooltip"]',
   );
   [...tooltipTriggerList].map(
-    (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl),
+    (tooltipTriggerEl) => {
+      // Hide tooltips on the sidebar items unless the sidebar is collapsed
+      tooltipTriggerEl.addEventListener('show.bs.tooltip', (e) => {
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar && sidebar.contains(tooltipTriggerEl) && !sidebar.classList.contains('collapsed')) {
+          e.preventDefault();
+        }
+      });
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    }
   );
 };
 renderBooks();
@@ -173,8 +182,6 @@ const showAcknowledgeToast = (message, background = "text-bg-success") => {
   toast.show();
 };
 
-// bookPDF.addEventListener("change", validateFileType);
-
 function validateFileType() {
   const file = bookPDF.files[0];
 
@@ -189,8 +196,6 @@ function validateFileType() {
 
   validateFormInput();
 }
-
-// bookPDF.addEventListener("change", () => {});
 
 const attachDropdownCloseLogic = () => {
   const cards = document.querySelectorAll(".booksCard");

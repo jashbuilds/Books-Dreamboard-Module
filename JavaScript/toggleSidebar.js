@@ -1,5 +1,10 @@
-
 document.addEventListener("DOMContentLoaded", () => {
+  // Re-enable CSS transitions and clean up initialization classes after the DOM is ready
+  setTimeout(() => {
+    document.body.classList.remove("preload-transitions");
+    document.documentElement.classList.remove("sidebar-collapsed-init");
+  }, 100);
+
   const sidebar = document.getElementById("sidebar");
   const sidebarToggleBtn = document.getElementById("sidebarCollapseBtn");
   

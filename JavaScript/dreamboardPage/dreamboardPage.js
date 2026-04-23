@@ -31,20 +31,9 @@ let newUploadedImages = [];
 submitBtn.disabled = true;
 
 // get dreams data from Dexie.
-function getDreamsData() {
-  const request = indexedDB.open("Dreamboard", 10);
-
-  request.onsuccess = (event) => {
-    const db = event.target.result;
-    const transaction = db.transaction("dreams");
-    const store = transaction.objectStore("dreams");
-
-    const getRequest = store.getAll();
-
-    getRequest.onsuccess = () => {
-      renderDreamboard(getRequest.result);
-    };
-  };
+async function getDreamsData() {
+  const dreams = await db.dreams.toArray();
+  renderDreamboard(dreams);
 }
 getDreamsData();
 
@@ -552,12 +541,13 @@ function uploadNewImage() {
   }
 
   files.forEach((file) => {
-    if (newUploadedImages.length < 5) {
+    if (newUploadedImages.length < availableSlots) {
       newUploadedImages.push({ file });
     }
   });
 
   renderNewImages();
+  updateUploadUI();
   validateFormInput();
 }
 
@@ -579,30 +569,27 @@ const renderNewImages = () => {
     )
     .join("");
 
-  // if(availableSlots === 0){
-  //   document.getElementById("newDrop-area").classList.add("d-none")
-  // } else {
-  //   document.getElementById("newDrop-area").classList.remove("d-none")
-  // }
+  document.getElementById("submitNewImgUpload").disabled =
+    newUploadedImages.length === 0;
 
-  // document
-  //   .getElementById("newDrop-area")
-  //   .classList.toggle("d-none", availableSlots.length >= 5);
-
-  // if (newUploadedImages.length >= availableSlots) {
-  //   document.getElementById("submitNewImgUpload").disabled = true;
-  // } else {
-  //   document.getElementById("submitNewImgUpload").disabled = false;
-  // }
 };
 
 function removeNewImg(id) {
   newUploadedImages.splice(id, 1);
   renderNewImages();
+  updateUploadUI();
 }
 
-function openUploadModal(id) {
+async function openUploadModal(id) {
   selectedDreamId = id;
+
+  const dream = await db.dreams.get(id);
+
+  if (!dream) return;
+
+  availableSlots = 5 - dream.images.length;
+
+  updateUploadUI();
 }
 
 document
@@ -659,4 +646,31 @@ document
     document.getElementById("newDrop-area").classList.remove("d-none");
 
     document.getElementById("submitNewImgUpload").disabled = true;
+
+    document.getElementById("uploadMessage").classList.add("d-none");
   });
+
+
+function updateUploadUI() {
+  const dropArea = document.getElementById("newDrop-area");
+  const messageBox = document.getElementById("uploadMessage");
+  const submitBtn = document.getElementById("submitNewImgUpload");
+
+  const remainingSlots = availableSlots - newUploadedImages.length;
+
+  if (remainingSlots <= 0) {
+    dropArea.classList.add("d-none");
+
+    messageBox.innerText =
+      "You have reached maximum upload limit (5 images).";
+    messageBox.classList.remove("d-none");
+  } else {
+    dropArea.classList.remove("d-none");
+
+    messageBox.innerText = `You can upload ${remainingSlots} more image(s).`;
+    messageBox.classList.remove("d-none");
+  }
+
+
+  submitBtn.disabled = newUploadedImages.length === 0;
+}

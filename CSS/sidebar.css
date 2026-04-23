@@ -63,25 +63,32 @@
 }
 
 /* COLLAPSED SIDEBAR STATE */
+html.sidebar-collapsed-init .wrapper .sidebar,
 .wrapper .sidebar.collapsed {
     width: 85px;
     min-width: 85px;
 }
 
+html.sidebar-collapsed-init .wrapper .sidebar .sidebar-header .logo-placeholder,
 .wrapper .sidebar.collapsed .sidebar-header .logo-placeholder {
     display: flex !important;
 }
 
+html.sidebar-collapsed-init .wrapper .sidebar .sidebar-header .logo-text,
+html.sidebar-collapsed-init .wrapper .sidebar .nav .nav-item .nav-link .menu-text,
 .wrapper .sidebar.collapsed .sidebar-header .logo-text,
 .wrapper .sidebar.collapsed .nav .nav-item .nav-link .menu-text {
     visibility: hidden;
 }
 
+html.sidebar-collapsed-init .wrapper .sidebar .nav .nav-item .nav-link .icon-placeholder,
+html.sidebar-collapsed-init .wrapper .sidebar .sidebar-header .logo-placeholder,
 .wrapper .sidebar.collapsed .nav .nav-item .nav-link .icon-placeholder,
 .wrapper .sidebar.collapsed .sidebar-header .logo-placeholder {
     margin-right: 0px;
 }
 
+html.sidebar-collapsed-init .wrapper .sidebar .nav .nav-item .nav-link,
 .wrapper .sidebar.collapsed .nav .nav-item .nav-link {
     padding-right: 0px;
     width: 55px;
