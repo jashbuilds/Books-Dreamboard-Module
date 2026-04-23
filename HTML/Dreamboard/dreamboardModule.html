@@ -257,7 +257,7 @@
                                                         id="addDreamImage"
                                                         placeholder="Name"
                                                         accept="image/jpeg, image/png, image/webp, .jpg, .jpeg, .png, .webp"
-                                                        required hidden
+                                                        hidden
                                                         multiple>
                                                     <div id="img-view"
                                                         class="d-flex gap-1 flex-column justify-content-center align-items-center rounded">
@@ -408,8 +408,18 @@
                                 <form id="dreamForm">
                                     <div class="row g-4 py-2">
                                         <div class="col-12">
-                                            <div id="renameDreamInput">
-                                                
+                                            <div>
+                                                <label for="dreamName"
+                                                    class="form-label fw-medium text-secondary">Name:</label>
+                                                <input type="text"
+                                                    oninput="validateNameInput()"
+                                                    class="form-control form-control-lg"
+                                                    placeholder="Enter name" id="renameDreamInput"
+                                                    required>
+                                                <div
+                                                    class="invalid-feedback">Should
+                                                    not be empty & No leading
+                                                    Spaces!</div>
                                             </div>
                                         </div>
                                     </div>
@@ -418,12 +428,108 @@
                             <div class="modal-footer border-top-0">
                                 <button type="button"
                                     class="btn btn-outline-primary px-5"
-                                    data-bs-dismiss="modal">No</button>
+                                    data-bs-dismiss="modal">Cancel</button>
                                 <button type="button"
                                     class="btn btn-primary px-5"
                                     data-bs-dismiss="modal"
-                                    id="confirmDelete"
-                                    onclick="deleteDream()">Yes</button>
+                                    id="confirmRename"
+                                    onclick="updateDreamName()" disabled>Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal to Upload new Image -->
+                <div class="modal fade" id="uploadNewImage" tabindex="-1"
+                    aria-labelledby="formModalLabel" aria-hidden="true">
+                    <div
+                        class="modal-dialog modal-dialog-centered modal-lg justify-content-center">
+                        <div
+                            class="modal-content w-80 rounded-3 shadow-lg border-0">
+                            <div
+                                class="modal-header d-flex justify-content-start align-items-center border-bottom-0 px-4 py-3">
+                                <p class="modal-title h2 fw-semibold mb-0 fs-4"
+                                    id="formModalLabel">Upload Image</p>
+                                <button type="button" class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body p-4">
+                                <form id="newImgUploadForm">
+                                    <div class="row g-4 py-2">
+                                        <div class="col-12">
+                                            <div
+                                                class="d-flex flex-column justify-content-center align-items-center"
+                                                id="selectImage">
+                                                <label for="addNewImage"
+                                                    id="newDrop-area"
+                                                    class="cursor-pointer drop-area px-3 pt-2 w-80">
+                                                    <input type="file"
+                                                        oninput="validateFormInput()"
+                                                        class="form-control form-control-lg"
+                                                        id="addNewImage"
+                                                        placeholder="Name"
+                                                        accept="image/jpeg, image/png, image/webp, .jpg, .jpeg, .png, .webp"
+                                                        required hidden
+                                                        multiple>
+                                                    <div id="uploadedImg-view"
+                                                        class="d-flex gap-1 flex-column justify-content-center align-items-center rounded">
+                                                        <img
+                                                            src="../../Icons/dropImage-icon.svg"
+                                                            alt="drop-icon"
+                                                            width="75"
+                                                            height="75">
+                                                        <p
+                                                            class="fw-bold text-center fs-5 imgCriteriaHead">Drag
+                                                            & drop your Image,
+                                                            or <span
+                                                                class="text-primary">Browse</span></p>
+                                                        <p
+                                                            class="fw-semibold text-center text-secondary imgCriteriaSubHead">File
+                                                            Supported: JPG, PNG,
+                                                            WebP <br> Maximum
+                                                            size: 25 MB</p>
+                                                        <p
+                                                            class="fw-semibold text-center text-secondary imgCriteriaSubHead">You
+                                                            can upload upto 5
+                                                            Images.</p>
+                                                    </div>
+                                                    <div
+                                                        class="invalid-feedback">
+                                                        <div
+                                                            class="fw-semibold text-center h6 d-flex justify-content-center align-items-center gap-2">
+                                                            <img
+                                                                src="../../Icons/exclamation-circle-fill.svg"
+                                                                alt="exclamation"
+                                                                width="16"
+                                                                height="16">File
+                                                            type should be
+                                                            JPG/PNG/WebP!
+                                                        </div>
+                                                    </div>
+                                                </label>
+
+                                            </div>
+                                            <div id="addedImages"
+                                                class="mt-3">
+                                                <!-- Added images will be shown here. -->
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <div
+                                        class="d-flex gap-2 justify-content-end mt-3">
+                                        <button type="button" id="cancelBtn"
+                                            class="btn btn-outline-primary px-lg-5 px-3 py-lg-2 rounded-3"
+                                            data-bs-dismiss="modal"><span>Cancel</span></button>
+                                        <button type="submit"
+                                            class="btn btn-submit-custom bg-primary cursor-nodrop text-white px-lg-5 px-3 py-lg-2 rounded-3 fw-bold"
+                                            id="submitBtn" >
+                                            <span>Save</span>
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>

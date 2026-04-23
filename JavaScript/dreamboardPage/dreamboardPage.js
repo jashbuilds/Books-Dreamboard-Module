@@ -8,33 +8,29 @@ db.version(1).stores({
 const dropArea = document.getElementById("drop-area");
 const inputFile = document.getElementById("addDreamImage");
 const imageView = document.getElementById("imgFile");
-
 const addDreamModal = document.getElementById("addDream");
-
 const submitBtn = document.getElementById("submitBtn");
-
 const availableImages = document.getElementById("availableImages");
-
 const dreamName = document.getElementById("dreamName");
-
 const dreamBoardGrid = document.getElementById("dreamBoardGrid");
-
 const carouselContainer = document.getElementById("imageCarousel");
-
 const renameDreamInput = document.getElementById("renameDreamInput");
+const addNewImageInput = document.getElementById("addNewImage");
 
+// initial rotation degree for carousel images
 let rotationDegrees = 0;
 
 let totalImages;
-
-submitBtn.disabled = true;
-
 let selectedDreamId;
 
 // array that stores images selected by user from modal
 let uploadedImages = [];
+let newUploadedImages = [];
 
-function getDreamsData(key) {
+submitBtn.disabled = true;
+
+// get dreams data from Dexie.
+function getDreamsData() {
   const request = indexedDB.open("Dreamboard", 10);
 
   request.onsuccess = (event) => {
@@ -84,7 +80,7 @@ function renderDreamboard(res) {
                                             aria-expanded="false">
                                         <ul
                                             class="dropdown-menu">
-                                            <li><button onclick="renameDream('${d.name}')" data-bs-toggle="modal" data-bs-target="#renameModal"
+                                            <li><button onclick="renameDream(${d.id}, '${d.name}')" data-bs-toggle="modal" data-bs-target="#renameModal"
                                                     class="dropdown-item d-flex justify-content-start align-items-center gap-1"><img
                                                         src="../../Icons/edit.svg"
                                                         alt="rename"
@@ -92,7 +88,7 @@ function renderDreamboard(res) {
                                                         height="25">
                                                     Rename</button></li>
                                             <li><button
-                                                    
+                                                      data-bs-toggle="modal" data-bs-target="#uploadNewImage"
                                                     class="dropdown-item d-flex justify-content-start align-items-center gap-2"><img
                                                         src="../../Icons/upload-image.svg"
                                                         alt="upload"
@@ -115,7 +111,7 @@ function renderDreamboard(res) {
                                             class="fw-semibold text-white mb-1 fs-5 cardPara">${d.name}</span> <br>
                                         <span
                                             class="fw-semibold text-white fs-6 cardSubpara">Created
-                                            by, Jash Vadgama</span>
+                                            by, User</span>
                                     </div>
 
                                 </div>
@@ -124,25 +120,10 @@ function renderDreamboard(res) {
     })
     .join("");
 
-  // renameDreamInput.innerHTML = res.map(
-  //   (d) => `
-  //     <label for="dreamName"
-  //                                                   class="form-label fw-medium text-secondary">Name:</label>
-  //                                               <input type="text"
-  //                                                   oninput="validateFormInput(); validateNameInput()"
-  //                                                   class="form-control form-control-lg"
-  //                                                   placeholder="Enter name" value="${d.name}"
-  //                                                   required>
-  //                                               <div
-  //                                                   class="invalid-feedback">Should
-  //                                                   not be empty & No leading
-  //                                                   Spaces!</div>
-  //   `,
-  // ).join("");
-
   attachDropdownCloseLogic();
 }
 
+// function to render carousel with available images
 async function renderCarousel(dreamId) {
   if (!carouselContainer) return;
 
@@ -180,10 +161,10 @@ async function renderCarousel(dreamId) {
 
   carouselContainer.innerHTML = `
     <div class="splideContainer">
-      <section id="main-slider" class="splide ">
+      <section id="main-slider" class="splide">
+      <span id="dreamName" class="fs-6 text-white bg-dark-transparent px-1 rounded mt-1 text-center position-absolute z-3 top-7 start-50 translate-middle-x text-wrap">${dream.name}</span>
         <div class="splide__track mx-auto border border-2 border-primary rounded shadow">
           <span id="imageCounter" class="font-14 text-white bg-dark-transparent px-2 py-0 rounded mt-1 text-center position-absolute z-3 top-0 start-50 translate-middle-x"></span>
-          <span id="dreamName" class="fs-6 text-white bg-dark-transparent px-1 rounded mt-1 text-center position-absolute z-3 top-7 start-50 translate-middle-x text-nowrap">${dream.name}</span>
           <ul class="splide__list">
             ${imageListHtml}
           </ul>
@@ -307,6 +288,15 @@ dropArea.addEventListener("drop", (e) => {
   e.preventDefault();
 
   const files = Array.from(e.dataTransfer.files);
+
+  for (let file of files) {
+    if (!file.type.startsWith("image/")) {
+      document.getElementById("img-view").classList.add("is-invalid");
+      return;
+    } else {
+      document.getElementById("img-view").classList.remove("is-invalid");
+    }
+  }
   files.forEach((file) => {
     if (uploadedImages.length < 5) {
       uploadedImages.push({ file });
@@ -346,10 +336,12 @@ document.getElementById("dreamForm").addEventListener("submit", async (e) => {
   showAcknowledgeToast("Dream Added.");
 });
 
+// Store id of Selected dream which is going to be deleted
 const openDeleteModal = (id) => {
   selectedDreamId = id;
 };
 
+// function to delete dream
 const deleteDream = async () => {
   await db.dreams.delete(selectedDreamId);
   getDreamsData();
@@ -357,12 +349,21 @@ const deleteDream = async () => {
   showAcknowledgeToast("Dream Deleted!");
 };
 
+// function to validate name input
 function validateNameInput() {
   if (/^\s|\d+/.test(dreamName.value) || dreamName.value === "") {
     dreamName.classList.add("is-invalid");
     submitBtn.disabled = true;
   } else {
     dreamName.classList.remove("is-invalid");
+  }
+
+  if (/^\s|\d+/.test(renameDreamInput.value) || renameDreamInput.value === "") {
+    renameDreamInput.classList.add("is-invalid");
+    document.getElementById("confirmRename").disabled = true;
+  } else {
+    renameDreamInput.classList.remove("is-invalid");
+    document.getElementById("confirmRename").disabled = false;
   }
 }
 
@@ -374,7 +375,7 @@ const validateFormInput = () => {
   submitBtn.disabled = !isFormValid;
 };
 
-// function to reset form when closed
+// function to reset form values when closed
 addDreamModal.addEventListener("hidden.bs.modal", () => {
   dreamName.value = "";
   uploadedImages = [];
@@ -383,6 +384,8 @@ addDreamModal.addEventListener("hidden.bs.modal", () => {
   dropArea.classList.remove("d-none");
   submitBtn.disabled = true;
   document.getElementById("img-view").classList.remove("is-invalid");
+  renameDreamInput.classList.remove("is-invalid");
+
   dreamName.classList.remove("is-invalid");
 });
 
@@ -402,6 +405,7 @@ function attachDropdownCloseLogic() {
   });
 }
 
+// Show toast message for acknowledgement.
 const showAcknowledgeToast = (message, background = "text-bg-success") => {
   const toastContainer = document.getElementById("notificationToast");
   const toastBody = toastContainer.querySelector(".toast-message");
@@ -413,7 +417,7 @@ const showAcknowledgeToast = (message, background = "text-bg-success") => {
   toast.show();
 };
 
-// function to rotate image to left
+// function to rotate carousel image to left
 function rotateLeft() {
   const activeSlide = document.querySelector(
     "#main-slider .splide__slide.is-active img",
@@ -427,7 +431,7 @@ function rotateLeft() {
   }
 }
 
-// function to rotate image to right
+// function to rotate carousel image to right
 function rotateRight() {
   const activeSlide = document.querySelector(
     "#main-slider .splide__slide.is-active img",
@@ -461,6 +465,7 @@ function downloadCurrentImage() {
   }
 }
 
+// Delete currently active image of carousel
 async function deleteCurrentImage(dreamId) {
   const activeSlide = document.querySelector(
     "#main-slider .splide__slide.is-active",
@@ -485,8 +490,119 @@ async function deleteCurrentImage(dreamId) {
       renderCarousel(dreamId);
     }
   }
+  getDreamsData();
 }
 
-function renameDream(name) {
-  console.log(name);
+// Save id & name of the Dream which is going to be renamed
+function renameDream(id, name) {
+  selectedDreamId = id;
+  renameDreamInput.value = name;
 }
+
+// Rename dream name and reflect changes on UI
+async function updateDreamName() {
+  const newName = renameDreamInput.value.trim();
+
+  await db.dreams.update(selectedDreamId, {
+    name: renameDreamInput.value,
+  });
+
+  getDreamsData();
+
+  const modalEl = document.getElementById("renameModal");
+
+  let modal = bootstrap.Modal.getInstance(modalEl);
+
+  if (!modal) {
+    modal = new bootstrap.Modal(modalEl);
+  }
+
+  modal.hide();
+  validateNameInput();
+  showAcknowledgeToast("Dream renamed!");
+}
+
+// Rename name input fields when rename modal closes
+document
+  .getElementById("renameModal")
+  .addEventListener("hidden.bs.modal", () => {
+    renameDreamInput.classList.remove("is-invalid");
+    dreamName.classList.remove("is-invalid");
+  });
+
+addNewImageInput.addEventListener("change", uploadNewImage);
+
+function uploadNewImage() {
+  if (!addNewImageInput.files || addNewImageInput.files.length === 0) {
+    return;
+  }
+
+  const files = Array.from(addNewImageInput.files);  
+
+  for (let file of files) {
+    if (!file.type.startsWith("image/")) {
+      document.getElementById("uploadedImg-view").classList.add("is-invalid");
+      return;
+    } else {
+      document
+        .getElementById("uploadedImg-view")
+        .classList.remove("is-invalid");
+    }
+  }  
+
+  files.forEach((file) => {
+    if (newUploadedImages.length < 5) {
+      newUploadedImages.push({ file });
+    }
+  });
+
+  renderNewImages();
+  validateFormInput();
+}
+
+const renderNewImages = () => {
+  document.getElementById("addedImages").innerHTML = newUploadedImages
+    .map(
+      (img, i) => `
+        <table class="table table-hover">
+            <tbody>
+                <tr>
+                    <th scope="row" class="col-1">${i + 1}</th>
+                    <td class="col-10">${img.file.name}</td>
+                    <td class="col-1">
+                        <button type="button" class="btn-close" aria-label="Close" onclick="removeNewImg(${i})"></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>`,
+    )
+    .join("");
+
+  document.getElementById("newDrop-area").classList.toggle("d-none", newUploadedImages.length);
+};
+
+function removeNewImg(id) {
+  newUploadedImages.splice(id, 1)
+  renderNewImages()
+}
+
+document.getElementById("newImgUploadForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const imageFiles = newUploadedImages.map((img) => img.file);
+
+  await db.dreams.add({
+    images: imageFiles,
+  });
+
+  // const data = await db.dreams.get(selectedDreamId)
+  // console.log(data);
+  
+  document.getElementById("newImgUploadForm").reset();
+
+  bootstrap.Modal.getInstance(document.getElementById("uploadNewImage")).hide();
+
+  getDreamsData();
+
+  showAcknowledgeToast("Image Added.");
+});

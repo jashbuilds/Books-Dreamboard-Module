@@ -114,7 +114,7 @@
 .splide__slide,
 .splide__list,
 .splide__track {
-    width: 320px !important;
+    max-width: 290px !important;
     height: 500px !important;
 }
 
