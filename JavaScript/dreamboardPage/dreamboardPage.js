@@ -22,6 +22,7 @@ let rotationDegrees = 0;
 
 let totalImages;
 let selectedDreamId;
+let availableSlots;
 
 // array that stores images selected by user from modal
 let uploadedImages = [];
@@ -87,7 +88,7 @@ function renderDreamboard(res) {
                                                         width="25"
                                                         height="25">
                                                     Rename</button></li>
-                                            <li><button
+                                            <li><button onclick="openUploadModal(${d.id})"
                                                       data-bs-toggle="modal" data-bs-target="#uploadNewImage"
                                                     class="dropdown-item d-flex justify-content-start align-items-center gap-2"><img
                                                         src="../../Icons/upload-image.svg"
@@ -537,7 +538,7 @@ function uploadNewImage() {
     return;
   }
 
-  const files = Array.from(addNewImageInput.files);  
+  const files = Array.from(addNewImageInput.files);
 
   for (let file of files) {
     if (!file.type.startsWith("image/")) {
@@ -548,7 +549,7 @@ function uploadNewImage() {
         .getElementById("uploadedImg-view")
         .classList.remove("is-invalid");
     }
-  }  
+  }
 
   files.forEach((file) => {
     if (newUploadedImages.length < 5) {
@@ -578,31 +579,84 @@ const renderNewImages = () => {
     )
     .join("");
 
-  document.getElementById("newDrop-area").classList.toggle("d-none", newUploadedImages.length);
+  // if(availableSlots === 0){
+  //   document.getElementById("newDrop-area").classList.add("d-none")
+  // } else {
+  //   document.getElementById("newDrop-area").classList.remove("d-none")
+  // }
+
+  // document
+  //   .getElementById("newDrop-area")
+  //   .classList.toggle("d-none", availableSlots.length >= 5);
+
+  // if (newUploadedImages.length >= availableSlots) {
+  //   document.getElementById("submitNewImgUpload").disabled = true;
+  // } else {
+  //   document.getElementById("submitNewImgUpload").disabled = false;
+  // }
 };
 
 function removeNewImg(id) {
-  newUploadedImages.splice(id, 1)
-  renderNewImages()
+  newUploadedImages.splice(id, 1);
+  renderNewImages();
 }
 
-document.getElementById("newImgUploadForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
+function openUploadModal(id) {
+  selectedDreamId = id;
+}
 
-  const imageFiles = newUploadedImages.map((img) => img.file);
+document
+  .getElementById("newImgUploadForm")
+  .addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  await db.dreams.add({
-    images: imageFiles,
+    const dream = await db.dreams.get(selectedDreamId);
+
+    // availableSlots = 5 - dream.images.length;
+    // console.log(availableSlots);
+    // availableSlots = 5 - newUploadedImages.length
+
+    const imageFiles = newUploadedImages.map((img) => img.file);
+
+    if (!dream) {
+      alert("Dream not found");
+      return;
+    }
+
+    const updatedImages = [...dream.images, ...imageFiles];
+
+    if (updatedImages.length > 5) {
+      alert("Maximum 5 images allowed per dream");
+      return;
+    }
+
+    // Update existing dream (NOT create new)
+    await db.dreams.put({
+      ...dream,
+      images: updatedImages,
+    });
+
+    newUploadedImages = [];
+
+    document.getElementById("newImgUploadForm").reset();
+
+    bootstrap.Modal.getInstance(
+      document.getElementById("uploadNewImage"),
+    ).hide();
+
+    getDreamsData();
+
+    showAcknowledgeToast("Images added successfully!");
   });
 
-  // const data = await db.dreams.get(selectedDreamId)
-  // console.log(data);
-  
-  document.getElementById("newImgUploadForm").reset();
+document
+  .getElementById("uploadNewImage")
+  .addEventListener("hidden.bs.modal", () => {
+    newUploadedImages = [];
 
-  bootstrap.Modal.getInstance(document.getElementById("uploadNewImage")).hide();
+    document.getElementById("addedImages").innerHTML = "";
 
-  getDreamsData();
+    document.getElementById("newDrop-area").classList.remove("d-none");
 
-  showAcknowledgeToast("Image Added.");
-});
+    document.getElementById("submitNewImgUpload").disabled = true;
+  });
