@@ -23,18 +23,19 @@ db.version(1).stores({
 const tooltipTriggerList = document.querySelectorAll(
   '[data-bs-toggle="tooltip"]',
 );
-const tooltipList = [...tooltipTriggerList].map(
-  (tooltipTriggerEl) => {
-    // Prevent tooltips from showing when the sidebar is expanded to avoid UI clutter
-    tooltipTriggerEl.addEventListener('show.bs.tooltip', (e) => {
-      const sidebar = document.getElementById('sidebar');
-      if (sidebar && sidebar.contains(tooltipTriggerEl) && !sidebar.classList.contains('collapsed')) {
-        e.preventDefault();
-      }
-    });
-    return new bootstrap.Tooltip(tooltipTriggerEl);
-  }
-);
+const tooltipList = [...tooltipTriggerList].map((tooltipTriggerEl) => {
+  tooltipTriggerEl.addEventListener("show.bs.tooltip", (e) => {
+    const sidebar = document.getElementById("sidebar");
+    if (
+      sidebar &&
+      sidebar.contains(tooltipTriggerEl) &&
+      !sidebar.classList.contains("collapsed")
+    ) {
+      e.preventDefault();
+    }
+  });
+  return new bootstrap.Tooltip(tooltipTriggerEl);
+});
 
 const bookPdfContainer = document.getElementById("bookInfo");
 const pdfContainer = document.getElementById("pdfContainer");
@@ -86,7 +87,6 @@ async function loadBook() {
 
   loadPDF(arrayBuffer);
 
-  // Read mode switch will be "Enabled" when the PDF is loaded successfully!
   document.getElementById("readModeSwitch").disabled = false;
 }
 
@@ -250,11 +250,10 @@ const applyPreferences = async () => {
   }
 };
 
-const restoreDefault = () => {
+const restoreDefaultPreferences = () => {
   wpmCount.value = 200;
   chunkSizeInput.value = 3;
 
-  // Re-validate to ensure the 'Save' button state is updated
   validateWPMCount();
 
   applyPreferences();
@@ -273,13 +272,13 @@ document
   .addEventListener("change", async (e) => {
     if (e.target.checked) {
       await enableReadMode();
-      restoreDefault();
+      restoreDefaultPreferences();
       stopReading();
-      
+
       showReadModeState("Read Mode Enabled!");
     } else {
       disableReadMode();
-      restoreDefault();
+      restoreDefaultPreferences();
       stopReading();
       controlBtn.src = "../../Icons/play-icon.svg";
 
@@ -386,18 +385,34 @@ const validateNumberInput = (e) => {
 
 // Validate input field "Words per Minute" to prevent empty input.
 const validateWPMCount = () => {
-  if (wpmCount.value !== "") {
+  if (wpmCount.value !== "" && !/^0+$/.test(wpmCount.value)) {
     wpmCount.classList.remove("is-invalid");
     savePreferencesBtn.disabled = false;
     savePreferencesBtn.classList.remove("cursor-nodrop");
   } else {
-    // Show visual validation error and disable save button
     wpmCount.classList.add("is-invalid");
     savePreferencesBtn.disabled = true;
     savePreferencesBtn.classList.add("cursor-nodrop");
+  }
+
+  if (wpmCount.value === "") {
+    document.getElementById("countValidationMessage").textContent =
+      "Words per minute is required!";
+  }
+  if (/^0+$/.test(wpmCount.value)) {
+    document.getElementById("countValidationMessage").textContent =
+      "Please enter a valid Words per minute!";
   }
 };
 
 preferencesModal.addEventListener("show.bs.modal", () => {
   pauseReading();
+});
+
+preferencesModal.addEventListener("hidden.bs.modal", () => {
+  pauseReading();
+  if(wpmCount.value === "" || /^0+$/.test(wpmCount.value)) {
+    restoreDefaultPreferences()
+  }
+  wpmCount.classList.remove("is-invalid");
 });

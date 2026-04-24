@@ -1,3 +1,5 @@
+
+/* COMMON COLOR VARIABLES */
 :root {
     --primary-blue: #2B5BFC;
     --secondary-blue: #dbe2ff;
@@ -11,6 +13,8 @@
     --primary-white: white;
     --text-offwhite: #999999;
 }
+
+/* SIDEBAR CSS */
 
 .wrapper .sidebar {
     width: 280px;
@@ -94,7 +98,7 @@ html.sidebar-collapsed-init .wrapper .sidebar .nav .nav-item .nav-link,
     width: 55px;
 }
 
-/* Main Navbar */
+/* MAIN NAVBAR CSS */
 
 .wrapper .main-navbar .search-box {
     width: 300px;

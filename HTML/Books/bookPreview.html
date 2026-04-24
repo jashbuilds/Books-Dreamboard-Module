@@ -346,7 +346,7 @@
                                                     class="form-control form-control-lg"
                                                     id="wpmCount"
                                                     value="200" required>
-                                                <div class="invalid-feedback">Words per minute cannot be empty!</div>
+                                                <div class="invalid-feedback" id="countValidationMessage"></div>
                                             </div>
                                         </div>
                                         <div class="col-12">
@@ -380,7 +380,7 @@
                                 <button type="button"
                                     class="btn btn-outline-primary px-5"
                                     id="restoreDefaults"
-                                    onclick="restoreDefault()">Restore
+                                    onclick="restoreDefaultPreferences()">Restore
                                     Defaults</button>
                                 <button type="button"
                                     class="btn btn-primary px-5"

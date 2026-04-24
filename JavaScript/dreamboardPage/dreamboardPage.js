@@ -1,11 +1,12 @@
 // Initialize Dexie.
 var db = new Dexie("Dreamboard");
-db.version(1).stores({
-  dreams: "++id, name",
+db.version(2).stores({
+  dreams: "++id, name, isPinned",
 });
 
 // DOM Elements
 const dropArea = document.getElementById("drop-area");
+const newDropArea = document.getElementById("newDrop-area");
 const inputFile = document.getElementById("addDreamImage");
 const imageView = document.getElementById("imgFile");
 const addDreamModal = document.getElementById("addDream");
@@ -33,6 +34,7 @@ submitBtn.disabled = true;
 // get dreams data from Dexie.
 async function getDreamsData() {
   const dreams = await db.dreams.toArray();
+  dreams.sort((a, b) => b.isPinned - a.isPinned);
   renderDreamboard(dreams);
 }
 getDreamsData();
@@ -55,8 +57,9 @@ function renderDreamboard(res) {
                                         src="${url}"
                                         alt="nature"
                                         class="img-fluid object-fit-cover rounded cursor-pointer h-100">
-                                    <img src="../../Icons/pin-outlined.svg"
-                                        class="cursor-pointer position-absolute top-0 start-0 ps-3 pt-3"
+                                    <img src="${d.isPinned ? "../../Icons/pin-filled.svg" : "../../Icons/pin-outlined.svg"}"
+                                          onclick="togglePin(${d.id})"
+                                        class="cursor-pointer position-absolute top-0 start-0 ps-3 pt-3 pinIcon"
                                         alt="pin" width="35" height="35">
                                     <div
                                         class="dropdown rounded-circle dropdownIcon cursor-pointer position-absolute top-0 end-0 pe-3 pt-3">
@@ -111,6 +114,23 @@ function renderDreamboard(res) {
     .join("");
 
   attachDropdownCloseLogic();
+
+  const tooltipTriggerList = document.querySelectorAll(
+    '[data-bs-toggle="tooltip"]',
+  );
+  [...tooltipTriggerList].map((tooltipTriggerEl) => {
+    tooltipTriggerEl.addEventListener("show.bs.tooltip", (e) => {
+      const sidebar = document.getElementById("sidebar");
+      if (
+        sidebar &&
+        sidebar.contains(tooltipTriggerEl) &&
+        !sidebar.classList.contains("collapsed")
+      ) {
+        e.preventDefault();
+      }
+    });
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
 }
 
 // function to render carousel with available images
@@ -130,7 +150,7 @@ async function renderCarousel(dreamId) {
                                                     <img
                                                         src="${url}"
                                                         alt="carousel-img1"
-                                                        class="img-fluid object-fit-cover rounded cursor-pointer h-100" />
+                                                        class="img-fluid w-100 h-100 cursor-pointer object-fit-cover border border-2 border-primary rounded shadow" />
                                                 </li>`;
     })
     .join("");
@@ -153,7 +173,7 @@ async function renderCarousel(dreamId) {
     <div class="splideContainer">
       <section id="main-slider" class="splide">
       <span id="dreamName" class="fs-6 text-white bg-dark-transparent px-1 rounded mt-1 text-center position-absolute z-3 top-7 start-50 translate-middle-x text-wrap">${dream.name}</span>
-        <div class="splide__track mx-auto border border-2 border-primary rounded shadow">
+        <div class="splide__track mx-auto ">
           <span id="imageCounter" class="font-14 text-white bg-dark-transparent px-2 py-0 rounded mt-1 text-center position-absolute z-3 top-0 start-50 translate-middle-x"></span>
           <ul class="splide__list">
             ${imageListHtml}
@@ -315,6 +335,7 @@ document.getElementById("dreamForm").addEventListener("submit", async (e) => {
   await db.dreams.add({
     name: name,
     images: imageFiles,
+    isPinned: false,
   });
 
   document.getElementById("dreamForm").reset();
@@ -416,8 +437,10 @@ function rotateLeft() {
   if (activeSlide) {
     rotationDegrees -= 90;
 
+    // activeSlide.classList.add("overflow-x-auto")
     activeSlide.style.transform = `rotate(${rotationDegrees}deg)`;
     activeSlide.style.transition = "transform 0.3s ease";
+    activeSlide.classList.add("w-auto", "h-auto")
   }
 }
 
@@ -551,6 +574,39 @@ function uploadNewImage() {
   validateFormInput();
 }
 
+// handler function that handles dragover event
+newDropArea.addEventListener("dragover", (e) => {
+  e.preventDefault();
+});
+
+// handler function that handles drop event
+newDropArea.addEventListener("drop", (e) => {
+  e.preventDefault();
+
+  const files = Array.from(e.dataTransfer.files);
+
+  for (let file of files) {
+    if (!file.type.startsWith("image/")) {
+      document.getElementById("uploadedImg-view").classList.add("is-invalid");
+      return;
+    } else {
+      document
+        .getElementById("uploadedImg-view")
+        .classList.remove("is-invalid");
+    }
+  }
+
+  files.forEach((file) => {
+    if (newUploadedImages.length < availableSlots) {
+      newUploadedImages.push({ file });
+    }
+  });
+
+  renderNewImages();
+  updateUploadUI();
+  validateFormInput();
+});
+
 const renderNewImages = () => {
   document.getElementById("addedImages").innerHTML = newUploadedImages
     .map(
@@ -571,7 +627,6 @@ const renderNewImages = () => {
 
   document.getElementById("submitNewImgUpload").disabled =
     newUploadedImages.length === 0;
-
 };
 
 function removeNewImg(id) {
@@ -599,23 +654,9 @@ document
 
     const dream = await db.dreams.get(selectedDreamId);
 
-    // availableSlots = 5 - dream.images.length;
-    // console.log(availableSlots);
-    // availableSlots = 5 - newUploadedImages.length
-
     const imageFiles = newUploadedImages.map((img) => img.file);
 
-    if (!dream) {
-      alert("Dream not found");
-      return;
-    }
-
     const updatedImages = [...dream.images, ...imageFiles];
-
-    if (updatedImages.length > 5) {
-      alert("Maximum 5 images allowed per dream");
-      return;
-    }
 
     // Update existing dream (NOT create new)
     await db.dreams.put({
@@ -650,7 +691,6 @@ document
     document.getElementById("uploadMessage").classList.add("d-none");
   });
 
-
 function updateUploadUI() {
   const dropArea = document.getElementById("newDrop-area");
   const messageBox = document.getElementById("uploadMessage");
@@ -661,8 +701,7 @@ function updateUploadUI() {
   if (remainingSlots <= 0) {
     dropArea.classList.add("d-none");
 
-    messageBox.innerText =
-      "You have reached maximum upload limit (5 images).";
+    messageBox.innerText = "You have reached maximum upload limit (5 images).";
     messageBox.classList.remove("d-none");
   } else {
     dropArea.classList.remove("d-none");
@@ -671,6 +710,17 @@ function updateUploadUI() {
     messageBox.classList.remove("d-none");
   }
 
-
   submitBtn.disabled = newUploadedImages.length === 0;
+}
+
+async function togglePin(id) {
+  const dream = await db.dreams.get(id);
+
+  if (!dream) return;
+
+  await db.dreams.update(id, {
+    isPinned: !dream.isPinned,
+  });
+
+  getDreamsData();
 }

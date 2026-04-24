@@ -1,9 +1,19 @@
+/* GOOGLE FONTS URL */
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700;800;900&display=swap');
 
+/* COMMON COLOR VARIABLES */
 :root {
     --blue-primary: #92aaf9;
     --blue-secondary: #eef2fd;
     --dark-transparent: rgba(0, 0, 0, 0.5);
+}
+
+.wrapper .main-content .dreamBoardGrid .dreamCard .pinIcon {
+    transition: all 0.2s ease-in-out;
+}
+
+.wrapper .main-content .dreamBoardGrid .dreamCard .pinIcon:hover {
+    transform: translateY(-3px);
 }
 
 
@@ -73,7 +83,7 @@
 }
 
 
-/* Custom Classes */
+/* CUSTOM CLASSES */
 
 .cursor-pointer {
     cursor: pointer;
@@ -84,7 +94,27 @@
     pointer-events: all !important;
 }
 
-/* Carousel CSS (Splide.js) */
+.actionBtnGrp {
+    width: 200px !important;
+}
+
+.top-7 {
+    top: 7% !important;
+}
+
+.bg-dark-transparent {
+    background: var(--dark-transparent);
+}
+
+.font-14 {
+    font-size: 14px !important;
+}
+
+.w-85 {
+    width: 85% !important;
+}
+
+/* CAROUSEL CSS (Splide.js) */
 
 .splide {
     margin: 0 auto;
@@ -116,27 +146,10 @@
     height: auto;
 }
 
-.splide__slide,
-.splide__list,
-.splide__track {
-    max-width: 350px !important;
-    height: 500px !important;
-}
 
-.actionBtnGrp {
-    width: 200px !important;
-}
-
-.top-7 {
-    top: 7% !important;
-}
-
-.bg-dark-transparent {
-    background: var(--dark-transparent);
-}
-
-.font-14 {
-    font-size: 14px !important;
+.splide__list{
+    width: 500px !important;
+    max-height: fit-content !important;
 }
 
 @media (max-width: 1024px) {

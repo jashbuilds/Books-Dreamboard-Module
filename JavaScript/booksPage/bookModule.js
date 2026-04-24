@@ -92,7 +92,6 @@ const renderBooks = async (category = "All") => {
   );
   [...tooltipTriggerList].map(
     (tooltipTriggerEl) => {
-      // Hide tooltips on the sidebar items unless the sidebar is collapsed
       tooltipTriggerEl.addEventListener('show.bs.tooltip', (e) => {
         const sidebar = document.getElementById('sidebar');
         if (sidebar && sidebar.contains(tooltipTriggerEl) && !sidebar.classList.contains('collapsed')) {
@@ -191,7 +190,6 @@ function validateFileType() {
     return;
   } else {
     bookPDF.classList.remove("is-invalid");
-    // submitBtn.disabled = false;
   }
 
   validateFormInput();
