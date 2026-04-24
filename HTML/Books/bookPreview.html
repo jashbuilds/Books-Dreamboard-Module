@@ -65,7 +65,8 @@
                     </li>
                     <li class="nav-item mx-3" data-bs-toggle="tooltip"
                         data-bs-placement="right" data-bs-title="Dreamboard">
-                        <a href="../../HTML/Dreamboard/dreamboardModule.html" id="dbMenu"
+                        <a href="../../HTML/Dreamboard/dreamboardModule.html"
+                            id="dbMenu"
                             class="nav-link rounded-3 d-flex align-items-center justify-content-sm-start justify-content-center">
                             <div
                                 class="icon-placeholder me-3 bg-transparent d-flex align-items-center justify-content-center">
@@ -279,13 +280,24 @@
                             </div>
 
                         </div>
+                        <div class="card" aria-hidden="true" id="skeleton">
+                            <div class="card-body ">
+                                <h5 class="placeholder-glow w-100 d-flex justify-content-center align-items-center mx-auto">
+                                    <span class="placeholder vh-30 col-6 bg-secondary"></span>
+                                </h5>
+                                <h5 class="placeholder-glow w-100 d-flex justify-content-center align-items-center mx-auto">
+                                    <div class="placeholder vh-30 col-6 bg-secondary"></div>
+                                </h5>
+                            </div>
+                        </div>
                         <div id="pdfContainer"
                             class="vh-70 overflow-scroll bg-offwhite-tertiary py-3"></div>
                     </div>
                 </div>
                 <div id="readModeContainer"
                     class="row d-none text-center mx-2 d-flex flex-column justify-content-center align-items-center">
-                    <div class="col-md-6 col-sm-8 bg-white d-flex justify-content-center align-items-center border border-1 px-3 read-mode-box">
+                    <div
+                        class="col-md-6 col-sm-8 bg-white d-flex justify-content-center align-items-center border border-1 px-3 read-mode-box">
                         <p id="readText" class="fw-bold fs-5"></p>
                     </div>
                     <div
@@ -339,14 +351,15 @@
                                                     class="form-label fw-medium text-secondary">Words
                                                     per
                                                     minute:</label>
-                                                <input type="number" min="1"
+                                                <input type="number" min="1" inputmode="numeric"
                                                     onkeydown="validateNumberInput(event)"
                                                     onKeyPress="if(this.value.length==4) return false;"
                                                     oninput="validateWPMCount()"
                                                     class="form-control form-control-lg"
                                                     id="wpmCount"
                                                     value="200" required>
-                                                <div class="invalid-feedback" id="countValidationMessage"></div>
+                                                <div class="invalid-feedback"
+                                                    id="countValidationMessage"></div>
                                             </div>
                                         </div>
                                         <div class="col-12">

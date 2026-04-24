@@ -58,9 +58,12 @@ function renderDreamboard(res) {
                                         alt="nature"
                                         class="img-fluid object-fit-cover rounded cursor-pointer h-100">
                                     <img src="${d.isPinned ? "../../Icons/pin-filled.svg" : "../../Icons/pin-outlined.svg"}"
-                                          onclick="togglePin(${d.id})"
-                                        class="cursor-pointer position-absolute top-0 start-0 ps-3 pt-3 pinIcon"
+                                          onclick="togglePin(event, ${d.id})"
+                                        class="cursor-pointer position-absolute top-0 start-0 ps-3 pt-3 pinIcon" id="pinIcon"
                                         alt="pin" width="35" height="35">
+                                    <div id="loadingIcon-${d.id}" class="spinner-border spinner-border-sm text-white position-absolute top-0 start-0 ps-3 pt-3 mt-3 ms-3 d-none" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
                                     <div
                                         class="dropdown rounded-circle dropdownIcon cursor-pointer position-absolute top-0 end-0 pe-3 pt-3">
                                         <img
@@ -131,10 +134,21 @@ function renderDreamboard(res) {
     });
     return new bootstrap.Tooltip(tooltipTriggerEl);
   });
+
+  [...tooltipTriggerList].map(
+    (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl),
+  );
 }
 
 // function to render carousel with available images
 async function renderCarousel(dreamId) {
+  const tooltipTriggerList = document.querySelectorAll(
+    '[data-bs-toggle="tooltip"]',
+  );
+  const tooltipList = [...tooltipTriggerList].map(
+    (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl),
+  );
+
   if (!carouselContainer) return;
 
   const dream = await db.dreams.get(dreamId);
@@ -150,7 +164,7 @@ async function renderCarousel(dreamId) {
                                                     <img
                                                         src="${url}"
                                                         alt="carousel-img1"
-                                                        class="img-fluid w-100 h-100 cursor-pointer object-fit-cover border border-2 border-primary rounded shadow" />
+                                                        class="img-fluid w-100 h-100 cursor-pointer object-fit-cover rounded-2" />
                                                 </li>`;
     })
     .join("");
@@ -172,16 +186,16 @@ async function renderCarousel(dreamId) {
   carouselContainer.innerHTML = `
     <div class="splideContainer">
       <section id="main-slider" class="splide">
-      <span id="dreamName" class="fs-6 text-white bg-dark-transparent px-1 rounded mt-1 text-center position-absolute z-3 top-7 start-50 translate-middle-x text-wrap">${dream.name}</span>
-        <div class="splide__track mx-auto ">
+        <span id="dreamName" class="fs-6 text-white bg-dark-transparent px-1 rounded mt-1 text-center position-absolute z-3 top-7 start-50 translate-middle-x text-wrap">${dream.name}</span>
+        <div class="splide__track mx-auto">
           <span id="imageCounter" class="font-14 text-white bg-dark-transparent px-2 py-0 rounded mt-1 text-center position-absolute z-3 top-0 start-50 translate-middle-x"></span>
-          <ul class="splide__list">
+          <ul class="splide__list rounded">
             ${imageListHtml}
           </ul>
         </div>
       </section>
-      <div class="bg-dark d-flex gap-3 justify-content-center text-center mx-auto actionBtnGrp py-1 rounded">
-        <button class="btn btn-light rounded px-1 py-0 d-flex justify-content-center align-items-center" onclick="rotateLeft(${dreamId})">
+      <div class="bg-dark d-flex gap-3 justify-content-center text-center mx-auto actionBtnGrp py-1 mt-2 rounded">
+        <button class="btn btn-light rounded px-1 py-0 d-flex justify-content-center align-items-center " onclick="rotateLeft(${dreamId})">
           <img src="../../Icons/rotate-left.svg" alt="rotate-btn" class="img-fluid" width="16" height="16">
         </button>
         <button class="btn btn-light rounded px-1 py-0 d-flex justify-content-center align-items-center" onclick="rotateRight(${dreamId})">
@@ -190,7 +204,7 @@ async function renderCarousel(dreamId) {
         <button class="btn btn-light rounded p-0 d-flex justify-content-center align-items-center" onclick="downloadCurrentImage()">
           <img src="../../Icons/download-img-icon.svg" alt="download-btn" class="img-fluid" width="25" height="25">
         </button>
-        <button class="btn btn-light rounded px-1 py-0 d-flex justify-content-center align-items-center" onclick="deleteCurrentImage(${dreamId})">
+        <button class="btn btn-light rounded px-1 py-0 d-flex justify-content-center align-items-center deleteImg" onclick="deleteCurrentImage(${dreamId})" >
           <img src="../../Icons/delete-img-icon.svg" alt="delete-btn" class="img-fluid" width="16" height="16">
         </button>
       </div>
@@ -198,6 +212,16 @@ async function renderCarousel(dreamId) {
           ${imageThumbnails}
       </ul>
     </div>`;
+
+  const firstImg = document.querySelector(".splide__list .splide__slide img");
+  firstImg.classList.add("border", "border-3", "border-primary", "rounded-3");
+
+  // const firstSlide = document.querySelector(".splide__list .splide__slide");
+
+  // const thumbnails1 = document.querySelector(".thumbnails");
+  // const firstThumbnail = thumbnails1.querySelector("li");
+  // console.log(firstThumbnail);
+
   const counter = document.getElementById("imageCounter");
 
   function updateCounter(index) {
@@ -209,8 +233,19 @@ async function renderCarousel(dreamId) {
   const splide = new Splide("#main-slider", {
     pagination: false,
   });
-
   splide.mount();
+
+  const deleteBtn = document.querySelector(".deleteImg");
+
+  splide.on("moved", (index) => {
+    if (deleteBtn) {
+      deleteBtn.disabled = index === 0;
+    }
+  });
+
+  if (deleteBtn) {
+    deleteBtn.disabled = splide.index === 0;
+  }
 
   const thumbnails = document.querySelectorAll("#thumbnails .thumbnail");
 
@@ -223,7 +258,30 @@ async function renderCarousel(dreamId) {
   });
 
   splide.on("move", () => {
-    currentRotation = 0;
+    rotationDegrees = 0;
+
+    // Reset all images to original state
+    document
+      .querySelectorAll("#main-slider .splide__slide img")
+      .forEach((img) => {
+        img.style.transform = "rotate(0deg)";
+        img.style.width = "";
+        img.style.height = "";
+        img.style.maxWidth = "";
+        img.style.maxHeight = "";
+        img.style.objectFit = "";
+      });
+
+    // Reset slide containers
+    document
+      .querySelectorAll("#main-slider .splide__slide")
+      .forEach((slide) => {
+        slide.style.display = "";
+        slide.style.justifyContent = "";
+        slide.style.alignItems = "";
+        slide.style.overflow = "";
+      });
+
     updateCounter(splide.index);
   });
 
@@ -437,10 +495,13 @@ function rotateLeft() {
   if (activeSlide) {
     rotationDegrees -= 90;
 
-    // activeSlide.classList.add("overflow-x-auto")
     activeSlide.style.transform = `rotate(${rotationDegrees}deg)`;
     activeSlide.style.transition = "transform 0.3s ease";
-    activeSlide.classList.add("w-auto", "h-auto")
+    activeSlide.style.width = "auto";
+    activeSlide.style.height = "auto";
+    activeSlide.style.maxWidth = "100%";
+    activeSlide.style.maxHeight = "100%";
+    activeSlide.style.objectFit = "contain";
   }
 }
 
@@ -455,6 +516,11 @@ function rotateRight() {
 
     activeSlide.style.transform = `rotate(${rotationDegrees}deg)`;
     activeSlide.style.transition = "transform 0.3s ease";
+    activeSlide.style.width = "auto";
+    activeSlide.style.height = "auto";
+    activeSlide.style.maxWidth = "100%";
+    activeSlide.style.maxHeight = "100%";
+    activeSlide.style.objectFit = "contain";
   }
 }
 
@@ -694,6 +760,7 @@ document
 function updateUploadUI() {
   const dropArea = document.getElementById("newDrop-area");
   const messageBox = document.getElementById("uploadMessage");
+  const limitMessage = document.getElementById("limitMessage");
   const submitBtn = document.getElementById("submitNewImgUpload");
 
   const remainingSlots = availableSlots - newUploadedImages.length;
@@ -701,10 +768,12 @@ function updateUploadUI() {
   if (remainingSlots <= 0) {
     dropArea.classList.add("d-none");
 
-    messageBox.innerText = "You have reached maximum upload limit (5 images).";
-    messageBox.classList.remove("d-none");
+    limitMessage.innerText =
+      "You have reached maximum upload limit (5 images).";
+    limitMessage.classList.remove("d-none");
   } else {
     dropArea.classList.remove("d-none");
+    limitMessage.classList.add("d-none");
 
     messageBox.innerText = `You can upload ${remainingSlots} more image(s).`;
     messageBox.classList.remove("d-none");
@@ -713,14 +782,23 @@ function updateUploadUI() {
   submitBtn.disabled = newUploadedImages.length === 0;
 }
 
-async function togglePin(id) {
-  const dream = await db.dreams.get(id);
+async function togglePin(event, id) {
+  const pinIcon = event.currentTarget;
+  const loadingIcon = document.getElementById(`loadingIcon-${id}`);
 
-  if (!dream) return;
+  pinIcon.classList.add("d-none");
+  loadingIcon.classList.remove("d-none");
 
-  await db.dreams.update(id, {
-    isPinned: !dream.isPinned,
-  });
+  try {
+    const dream = await db.dreams.get(id);
+    const newPinnedStatus = !dream.isPinned;
 
-  getDreamsData();
+    await db.dreams.update(id, { isPinned: newPinnedStatus });
+
+    await getDreamsData();
+  } catch (error) {
+    console.error("Failed to toggle pin:", error);
+    pinIcon.classList.remove("d-none");
+    loadingIcon.classList.add("d-none");
+  }
 }

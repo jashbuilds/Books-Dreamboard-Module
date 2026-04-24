@@ -118,3 +118,9 @@
         max-width: 100% !important;
     }
 }
+
+/* CUSTOM CLASSES */
+
+.vh-30{
+    height: 30vh;
+}

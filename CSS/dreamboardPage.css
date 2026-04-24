@@ -138,18 +138,21 @@
 }
 
 .thumbnail.is-active {
-    opacity: 1;
+    opacity: 1 !important;
 }
 
 .thumbnail img {
     width: 100%;
     height: auto;
+    /* opacity: 1 !important; */
 }
 
-
-.splide__list{
+.splide__slide,
+.splide__list,
+.splide__track {
     width: 500px !important;
     max-height: fit-content !important;
+    aspect-ratio: 1/1;
 }
 
 @media (max-width: 1024px) {
@@ -157,7 +160,7 @@
     .splide__slide,
     .splide__list,
     .splide__track {
-        max-width: 250px !important;
-        height: 350px !important;
+        max-width: 350px !important;
+        height: 450px !important;
     }
 }

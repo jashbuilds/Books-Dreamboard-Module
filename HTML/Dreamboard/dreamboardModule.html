@@ -170,7 +170,7 @@
                 <div class="container-fluid p-4">
                     <div class="d-flex justify-content-between gap-2">
                         <div class="d-flex">
-                            <p class="fs-5 m-0 fw-semibold">Dreamboard</p>
+                            <p class="fs-4 m-0 fw-semibold">Dreamboard</p>
                         </div>
 
                         <div
@@ -495,11 +495,8 @@
                                                             Supported: JPG, PNG,
                                                             WebP <br> Maximum
                                                             size: 25 MB</p>
-                                                        <p
-                                                            class="fw-semibold text-center text-secondary imgCriteriaSubHead">
-                                                            You
-                                                            can upload upto 5
-                                                            Images.</p>
+                                                        <p id="uploadMessage"
+                                                            class="fw-semibold d-none text-center text-secondary imgCriteriaSubHead"></p>
                                                     </div>
                                                     <div
                                                         class="invalid-feedback">
@@ -516,7 +513,7 @@
                                                     </div>
                                                 </label>
                                             </div>
-                                            <p id="uploadMessage"
+                                            <p id="limitMessage"
                                                 class="text-success d-none mt-2 text-center"></p>
                                             <div id="addedImages" class="mt-3">
                                                 <!-- Added images will be shown here. -->

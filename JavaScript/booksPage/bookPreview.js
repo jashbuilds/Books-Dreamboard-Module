@@ -93,14 +93,19 @@ async function loadBook() {
 loadBook();
 
 async function loadPDF(data) {
-  pdfDoc = await pdfjsLib.getDocument({ data }).promise;
+  const skeleton = document.getElementById("skeleton")
+  // skeleton.classList.remove("d-none")
 
-  pageCountEl.textContent = pdfDoc.numPages;
-
-  pageInput.max = pdfDoc.numPages;
-
-  for (let pageN = 1; pageN <= pdfDoc.numPages; pageN++) {
-    renderPage(pageN);
+  try {
+    pdfDoc = await pdfjsLib.getDocument({ data }).promise;
+    pageCountEl.textContent = pdfDoc.numPages;
+    pageInput.max = pdfDoc.numPages;
+    for (let pageN = 1; pageN <= pdfDoc.numPages; pageN++) {
+      renderPage(pageN);
+    }
+    skeleton.classList.add("d-none")
+  } catch(error) {
+    console.log(error);
   }
 }
 
@@ -380,12 +385,12 @@ const setPageSize = () => {
 
 // Validate Number Input (no "dash", "e", "+" allowed)
 const validateNumberInput = (e) => {
-  if (e.key === "-" || e.key === "e" || e.key === "+") e.preventDefault();
+  if (e.key === "-" || e.key === "e" || e.key === "+" || e.key === ".") e.preventDefault();
 };
 
 // Validate input field "Words per Minute" to prevent empty input.
 const validateWPMCount = () => {
-  if (wpmCount.value !== "" && !/^0+$/.test(wpmCount.value)) {
+  if (wpmCount.value !== "" && !/^0+$/.test(wpmCount.value) && /^[1-9]\d*$/.test(wpmCount.value)) {
     wpmCount.classList.remove("is-invalid");
     savePreferencesBtn.disabled = false;
     savePreferencesBtn.classList.remove("cursor-nodrop");
