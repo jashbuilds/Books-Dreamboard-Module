@@ -8,6 +8,19 @@
     --dark-transparent: rgba(0, 0, 0, 0.5);
 }
 
+.wrapper .main-content .dreamBoardGrid .dreamCard {
+    width: 100% !important;
+    aspect-ratio: 1 / 0.75 !important;
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.wrapper .main-content .dreamBoardGrid .dreamCard:hover {
+    transform: translateY(-2px)
+}
+
 .wrapper .main-content .dreamBoardGrid .dreamCard .pinIcon {
     transition: all 0.2s ease-in-out;
 }
@@ -29,12 +42,15 @@
 }
 
 .wrapper .main-content .dreamBoardGrid .dreamCard .img-fluid {
-    transition: 0.5 ease;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    transition: all 0.5s ease;
     opacity: 1;
 }
 
 .wrapper .main-content .dreamBoardGrid .dreamCard:hover .img-fluid {
-    opacity: 0.8;
+    filter: brightness(0.6);
 }
 
 .wrapper .main-content .drop-area {
@@ -80,10 +96,21 @@
     .wrapper .main-content .imgCriteriaSubHead {
         font-size: 14px !important;
     }
+
+    .wrapper .main-content .dreamBoardGrid .dreamCard .dropdownIcon,
+    .wrapper .main-content .dreamBoardGrid .dreamCard .imgText {
+        opacity: 1;
+    }
 }
 
-
 /* CUSTOM CLASSES */
+.cardPara {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 .cursor-pointer {
     cursor: pointer;
@@ -135,6 +162,7 @@
     margin: 0 0.2rem;
     cursor: pointer;
     opacity: 0.3;
+    object-fit: cover !important;
 }
 
 .thumbnail.is-active {
@@ -142,25 +170,28 @@
 }
 
 .thumbnail img {
-    width: 100%;
-    height: auto;
-    /* opacity: 1 !important; */
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
 }
 
-.splide__slide,
-.splide__list,
-.splide__track {
-    width: 500px !important;
-    max-height: fit-content !important;
-    aspect-ratio: 1/1;
+.splide__slide {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
 }
 
-@media (max-width: 1024px) {
+.splide__slide img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
 
-    .splide__slide,
-    .splide__list,
-    .splide__track {
-        max-width: 350px !important;
-        height: 450px !important;
-    }
+.splide__track,
+.splide__list {
+    max-width: 250px;
+    height: 400px;
+    max-height: 60vh !important;
+    margin: 0 auto;
+    /* aspect-ratio: 1 / 1 !important; */
 }

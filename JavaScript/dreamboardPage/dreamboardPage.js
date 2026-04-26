@@ -52,23 +52,23 @@ function renderDreamboard(res) {
 
       return `
        <div class="col-sm-6 col-md-4 col-lg-3">
-                                <div class="position-relative dreamCard h-100" >
-                                    <img data-bs-toggle="modal" data-bs-target="#carouselGallery" onclick="renderCarousel(${d.id})"
-                                        src="${url}"
-                                        alt="nature"
-                                        class="img-fluid object-fit-cover rounded cursor-pointer h-100">
-                                    <img src="${d.isPinned ? "../../Icons/pin-filled.svg" : "../../Icons/pin-outlined.svg"}"
-                                          onclick="togglePin(event, ${d.id})"
-                                        class="cursor-pointer position-absolute top-0 start-0 ps-3 pt-3 pinIcon" id="pinIcon"
-                                        alt="pin" width="35" height="35">
+                                 <div class="position-relative dreamCard shadow-sm">
+                                     <img data-bs-toggle="modal" data-bs-target="#carouselGallery" onclick="renderCarousel(${d.id})"
+                                         src="${url}"
+                                         alt="${d.name}"
+                                         class="img-fluid cursor-pointer">
+                                     <img src="${d.isPinned ? "../../Icons/pin-filled.svg" : "../../Icons/pin-outlined.svg"}"
+                                           onclick="togglePin(event, ${d.id})"
+                                         class="cursor-pointer position-absolute top-0 start-0 m-3 pinIcon z-3" id="pinIcon"
+                                         alt="pin" width="23" height="23">
                                     <div id="loadingIcon-${d.id}" class="spinner-border spinner-border-sm text-white position-absolute top-0 start-0 ps-3 pt-3 mt-3 ms-3 d-none" role="status">
                                         <span class="visually-hidden">Loading...</span>
                                     </div>
                                     <div
-                                        class="dropdown rounded-circle dropdownIcon cursor-pointer position-absolute top-0 end-0 pe-3 pt-3">
+                                        class="dropdown position-absolute top-0 end-0 m-3 dropdownIcon z-3">
                                         <img
                                             src="../../Icons/three-dots-vertical-filled.svg"
-                                            class="dropdown-toggle"
+                                            class="dropdown-toggle cursor-pointer"
                                             alt="action-menu" width="30"
                                             height="30"
                                             data-bs-offset="0,5"
@@ -103,8 +103,8 @@ function renderDreamboard(res) {
 
                                     <div
                                         class="position-absolute bottom-0 p-xl-3 p-md-2 p-3 imgText">
-                                        <span
-                                            class="fw-semibold text-white mb-1 fs-5 cardPara">${d.name}</span> <br>
+                                        <p
+                                            class="fw-semibold text-white mb-1 fs-5 cardPara">${d.name}</p>
                                         <span
                                             class="fw-semibold text-white fs-6 cardSubpara">Created
                                             by, User</span>
@@ -142,14 +142,13 @@ function renderDreamboard(res) {
 
 // function to render carousel with available images
 async function renderCarousel(dreamId) {
+  if (!carouselContainer) return;
   const tooltipTriggerList = document.querySelectorAll(
     '[data-bs-toggle="tooltip"]',
   );
   const tooltipList = [...tooltipTriggerList].map(
     (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl),
   );
-
-  if (!carouselContainer) return;
 
   const dream = await db.dreams.get(dreamId);
   totalImages = dream.images.length;
@@ -164,7 +163,7 @@ async function renderCarousel(dreamId) {
                                                     <img
                                                         src="${url}"
                                                         alt="carousel-img1"
-                                                        class="img-fluid w-100 h-100 cursor-pointer object-fit-cover rounded-2" />
+                                                        class="img-fluid w-100 h-100 cursor-pointer object-fit-contain rounded-2" />
                                                 </li>`;
     })
     .join("");
@@ -178,7 +177,7 @@ async function renderCarousel(dreamId) {
                                                 src="${url}"
                                                 alt="thumbnail-img1" width="100"
                                                 height="100"
-                                                class="img-fluid object-fit-cover rounded cursor-pointer h-100" />
+                                                class="img-fluid object-fit-contain rounded cursor-pointer h-100" />
                                         </li>`;
     })
     .join("");
@@ -189,7 +188,7 @@ async function renderCarousel(dreamId) {
         <span id="dreamName" class="fs-6 text-white bg-dark-transparent px-1 rounded mt-1 text-center position-absolute z-3 top-7 start-50 translate-middle-x text-wrap">${dream.name}</span>
         <div class="splide__track mx-auto">
           <span id="imageCounter" class="font-14 text-white bg-dark-transparent px-2 py-0 rounded mt-1 text-center position-absolute z-3 top-0 start-50 translate-middle-x"></span>
-          <ul class="splide__list rounded">
+          <ul class="splide__list rounded d-flex gap-3">
             ${imageListHtml}
           </ul>
         </div>
@@ -214,13 +213,11 @@ async function renderCarousel(dreamId) {
     </div>`;
 
   const firstImg = document.querySelector(".splide__list .splide__slide img");
-  firstImg.classList.add("border", "border-3", "border-primary", "rounded-3");
 
-  // const firstSlide = document.querySelector(".splide__list .splide__slide");
+  if (firstImg) {
+    firstImg.classList.add("border", "border-3", "border-primary", "rounded-3");
+  }
 
-  // const thumbnails1 = document.querySelector(".thumbnails");
-  // const firstThumbnail = thumbnails1.querySelector("li");
-  // console.log(firstThumbnail);
 
   const counter = document.getElementById("imageCounter");
 
@@ -230,9 +227,22 @@ async function renderCarousel(dreamId) {
 
   updateCounter(0);
 
+  const thumbnails = document.querySelectorAll("#thumbnails .thumbnail");
+  let current;
+
   const splide = new Splide("#main-slider", {
     pagination: false,
   });
+
+  splide.on("mounted move", () => {
+    const thumb = thumbnails[splide.index];
+    if (thumb) {
+      if (current) current.classList.remove("is-active");
+      thumb.classList.add("is-active");
+      current = thumb;
+    }
+  });
+
   splide.mount();
 
   const deleteBtn = document.querySelector(".deleteImg");
@@ -246,10 +256,6 @@ async function renderCarousel(dreamId) {
   if (deleteBtn) {
     deleteBtn.disabled = splide.index === 0;
   }
-
-  const thumbnails = document.querySelectorAll("#thumbnails .thumbnail");
-
-  let current;
 
   thumbnails.forEach((thumb, index) => {
     thumb.addEventListener("click", () => {
@@ -285,18 +291,11 @@ async function renderCarousel(dreamId) {
     updateCounter(splide.index);
   });
 
-  splide.on("mounted move", () => {
-    const thumb = thumbnails[splide.index];
-    if (thumb) {
-      if (current) current.classList.remove("is-active");
-      thumb.classList.add("is-active");
-      current = thumb;
-    }
-  });
+
 }
 
 // Common function to render selected images
-const renderImages = () => {
+function renderImages() {
   availableImages.innerHTML = uploadedImages
     .map(
       (img, i) => `
@@ -315,7 +314,7 @@ const renderImages = () => {
     .join("");
 
   dropArea.classList.toggle("d-none", uploadedImages.length >= 5);
-};
+}
 
 inputFile.addEventListener("change", uploadImage);
 
@@ -376,12 +375,12 @@ dropArea.addEventListener("drop", (e) => {
 });
 
 // function to remove image from modal
-const removeImg = (id) => {
+function removeImg(id) {
   uploadedImages.splice(id, 1);
   renderImages();
 
   validateFormInput();
-};
+}
 
 // Logic to add form data to Dexie
 document.getElementById("dreamForm").addEventListener("submit", async (e) => {
@@ -406,17 +405,17 @@ document.getElementById("dreamForm").addEventListener("submit", async (e) => {
 });
 
 // Store id of Selected dream which is going to be deleted
-const openDeleteModal = (id) => {
+function openDeleteModal(id) {
   selectedDreamId = id;
-};
+}
 
 // function to delete dream
-const deleteDream = async () => {
+async function deleteDream() {
   await db.dreams.delete(selectedDreamId);
   getDreamsData();
 
   showAcknowledgeToast("Dream Deleted!");
-};
+}
 
 // function to validate name input
 function validateNameInput() {
@@ -437,12 +436,12 @@ function validateNameInput() {
 }
 
 // function to validate form input
-const validateFormInput = () => {
+function validateFormInput() {
   const isFormValid =
     dreamName.value.trim() !== "" && uploadedImages.length > 0;
 
   submitBtn.disabled = !isFormValid;
-};
+}
 
 // function to reset form values when closed
 addDreamModal.addEventListener("hidden.bs.modal", () => {
@@ -475,7 +474,7 @@ function attachDropdownCloseLogic() {
 }
 
 // Show toast message for acknowledgement.
-const showAcknowledgeToast = (message, background = "text-bg-success") => {
+function showAcknowledgeToast(message, background = "text-bg-success") {
   const toastContainer = document.getElementById("notificationToast");
   const toastBody = toastContainer.querySelector(".toast-message");
 
@@ -484,7 +483,7 @@ const showAcknowledgeToast = (message, background = "text-bg-success") => {
 
   const toast = new bootstrap.Toast(toastContainer);
   toast.show();
-};
+}
 
 // function to rotate carousel image to left
 function rotateLeft() {
@@ -673,7 +672,7 @@ newDropArea.addEventListener("drop", (e) => {
   validateFormInput();
 });
 
-const renderNewImages = () => {
+function renderNewImages() {
   document.getElementById("addedImages").innerHTML = newUploadedImages
     .map(
       (img, i) => `
@@ -693,7 +692,7 @@ const renderNewImages = () => {
 
   document.getElementById("submitNewImgUpload").disabled =
     newUploadedImages.length === 0;
-};
+}
 
 function removeNewImg(id) {
   newUploadedImages.splice(id, 1);
