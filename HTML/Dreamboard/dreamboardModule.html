@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Books Module</title>
+        <title>Dreamboard</title>
         <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
             rel="stylesheet">
@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="../../CSS/styles.css">
         <link rel="stylesheet" href="../../CSS/sidebar.css">
         <link rel="stylesheet" href="../../CSS/dreamboardPage.css">
-        <link rel="shortcut icon" href="../../Icons/bookModule-icon.svg"
+        <link rel="shortcut icon" href="../../Icons/dream-favicon.svg"
             type="image/x-icon">
         <script src="../../JavaScript/themeInit.js"></script>
     </head>
@@ -283,18 +283,7 @@
                                                             can upload upto 5
                                                             Images.</p>
                                                     </div>
-                                                    <div
-                                                        class="invalid-feedback">
-                                                        <div
-                                                            class="fw-semibold text-center h6 d-flex justify-content-center align-items-center gap-2">
-                                                            <img
-                                                                src="../../Icons/exclamation-circle-fill.svg"
-                                                                alt="exclamation"
-                                                                width="16"
-                                                                height="16">Please
-                                                            upload supported
-                                                            Files!
-                                                        </div>
+                                                    <div class="invalid-feedback" id="invalidFileMsg">
                                                     </div>
                                                 </label>
 
@@ -506,17 +495,8 @@
                                                             class="fw-semibold d-none text-center text-secondary imgCriteriaSubHead"></p>
                                                     </div>
                                                     <div
-                                                        class="invalid-feedback">
-                                                        <div
-                                                            class="fw-semibold text-center h6 d-flex justify-content-center align-items-center gap-2">
-                                                            <img
-                                                                src="../../Icons/exclamation-circle-fill.svg"
-                                                                alt="exclamation"
-                                                                width="16"
-                                                                height="16">Please
-                                                            upload supported
-                                                            Files!
-                                                        </div>
+                                                        class="invalid-feedback" id="newFileUploadMsg">
+                                                        
                                                     </div>
                                                 </label>
                                             </div>

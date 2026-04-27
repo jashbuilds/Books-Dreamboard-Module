@@ -8,6 +8,14 @@
     --dark-transparent: rgba(0, 0, 0, 0.5);
 }
 
+.wrapper .main-content .addBtn {
+    transition: all 0.2s ease-in-out;
+}
+
+.wrapper .main-content .addBtn:hover {
+    transform: translateY(1px);
+}
+
 .wrapper .main-content .dreamBoardGrid .dreamCard {
     width: 100% !important;
     aspect-ratio: 1 / 0.75 !important;
@@ -81,16 +89,12 @@
 }
 
 @media (max-width: 991px) {
-    .wrapper .main-content .dreamBoardGrid .dreamCard .cardPara {
+    .wrapper .main-content .dreamBoardGrid .dreamCard .cardPara, .wrapper .main-content .imgCriteriaHead {
         font-size: 16px !important;
     }
 
     .wrapper .main-content .dreamBoardGrid .dreamCard .cardSubpara {
         font-size: 15px !important;
-    }
-
-    .wrapper .main-content .imgCriteriaHead {
-        font-size: 16px !important;
     }
 
     .wrapper .main-content .imgCriteriaSubHead {
@@ -102,17 +106,7 @@
         opacity: 1;
     }
 
-    .wrapper .main-content .addDreamModal {
-        width: 100% !important;
-        max-width: 100% !important;
-    }
-
-    .wrapper .main-content .addDreamModal .dropArea {
-        width: 100% !important;
-        max-width: 100% !important;
-    }
-
-    .wrapper .main-content .uploadNewImageModal {
+    .wrapper .main-content .addDreamModal, .wrapper .main-content .addDreamModal .dropArea, .wrapper .main-content .uploadNewImageModal {
         width: 100% !important;
         max-width: 100% !important;
     }
@@ -164,58 +158,34 @@
 }
 
 .thumbnails {
-    display: flex;
     margin: 1rem auto 0;
-    padding: 0;
-    justify-content: center;
 }
 
 .thumbnail {
     width: 120px;
     height: 120px;
-    overflow: hidden;
-    list-style: none;
     margin: 0 0.2rem;
-    cursor: pointer;
     opacity: 0.3;
-    object-fit: cover !important;
 }
 
 .thumbnail.is-active {
     opacity: 1 !important;
 }
 
-.thumbnail img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-}
-
-.splide__slide {
-    display: flex !important;
-    align-items: center;
-    justify-content: center !important;
-}
-
-.splide__slide img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-}
-
 .splide__track,
 .splide__list {
-    max-width: 100% !important;
+    width: 100% !important;
+    max-width: 50vw !important;
     height: 450px;
     max-height: 65vh !important;
     margin: 0 auto;
-    aspect-ratio: 1/1 !important;
 }
 
 @media (max-width: 1024px) {
 
     .splide__track,
     .splide__list {
+        max-width: 65vw !important;
         height: 400px !important;
         max-height: 55vh !important;
     }
@@ -223,61 +193,5 @@
     .thumbnail img {
         width: 90% !important;
         height: 90% !important;
-    }
-}
-
-
-
-/* Loading Animation CSS */
-
-.host {
-    background: #FFF;
-    width: 70px;
-    margin: auto;
-    position: absolute !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-}
-
-.loading {
-    width: 15px;
-    height: 15px;
-    /* background: #FFF; */
-    border-radius: 100%;
-    float: left;
-    margin-right: 5px;
-}
-
-.loading-0 {
-    -webkit-animation: bounce 1s infinite;
-    -webkit-animation-delay: .1s;
-    background: #2cd1fb
-}
-
-.loading-1 {
-    -webkit-animation: bounce 1s infinite;
-    -webkit-animation-delay: .3s;
-    background: #09beeb
-    
-}
-
-.loading-2 {
-    -webkit-animation: bounce 1s infinite ease;
-    -webkit-animation-delay: .5s;
-    background: #027895
-    
-}
-
-@-webkit-keyframes bounce {
-
-    0%,
-    100% {
-        opacity: 1;
-    }
-
-    60% {
-        opacity: .0;
-
     }
 }

@@ -21,6 +21,8 @@ const addNewImageInput = document.getElementById("addNewImage");
 // initial rotation degree for carousel images
 let rotationDegrees = 0;
 
+const fileSizeLimit = 5 * 1024 * 1024;
+
 let totalImages;
 let selectedDreamId;
 let availableSlots;
@@ -61,11 +63,6 @@ function renderDreamboard(res) {
       return `
                             <div class="col-sm-6 col-md-4 col-lg-3">
                                  <div class="position-relative dreamCard shadow-sm">
-                                    <div class="host bg-transparent d-none" id="host-${d.id}">
-                                      <div class="loading loading-0"></div>
-                                      <div class="loading loading-1"></div>
-                                      <div class="loading loading-2"></div>
-                                    </div>
                                      <img data-bs-toggle="modal" data-bs-target="#carouselGallery" onclick="renderCarousel(${d.id})"
                                          src="${url}"
                                          alt="${d.name}"
@@ -157,50 +154,46 @@ function renderDreamboard(res) {
 // function to render carousel with available images
 async function renderCarousel(dreamId) {
   if (!carouselContainer) return;
-  const loadingIcon = document.getElementById(`host-${dreamId}`);
 
-  loadingIcon.classList.remove("d-none");
+  const dream = await db.dreams.get(dreamId);
+  totalImages = dream.images.length;
+  if (!dream || !dream.images) return;
 
-  try {
-    const dream = await db.dreams.get(dreamId);
-    totalImages = dream.images.length;
-    if (!dream || !dream.images) return;
+  const imageListHtml = dream.images
+    .map((img) => {
+      const url = URL.createObjectURL(img);
 
-    const imageListHtml = dream.images
-      .map((img) => {
-        const url = URL.createObjectURL(img);
-
-        return `
-                                                <li class="splide__slide">
+      return `
+                                                <li class="splide__slide d-flex justify-content-center align-items-center">
                                                     <img
                                                         src="${url}"
                                                         alt="carousel-img1"
-                                                        class="img-fluid w-100 h-100 cursor-pointer object-fit-contain rounded-2" />
+                                                        class="img-fluid w-auto h-100 cursor-pointer object-fit-cover rounded-2" />
                                                 </li>`;
-      })
-      .join("");
+    })
+    .join("");
 
-    const imageThumbnails = dream.images
-      .map((img) => {
-        const url = URL.createObjectURL(img);
+  const imageThumbnails = dream.images
+    .map((img) => {
+      const url = URL.createObjectURL(img);
 
-        return `                          <li class="thumbnail">
+      return `                          <li class="thumbnail overflow-hidden object-fit-cover cursor-pointer list-unstyled">
                                             <img
                                                 src="${url}"
                                                 alt="thumbnail-img1" width="100"
                                                 height="100"
-                                                class="img-fluid object-fit-contain rounded cursor-pointer h-100" />
+                                                class="img-fluid object-fit-cover rounded cursor-pointer w-100 h-100" />
                                         </li>`;
-      })
-      .join("");
+    })
+    .join("");
 
-    carouselContainer.innerHTML = `
+  carouselContainer.innerHTML = `
     <div class="splideContainer">
       <section id="main-slider" class="splide">
         <span id="dreamName" class="fs-6 text-white bg-dark-transparent px-1 rounded mt-1 text-center position-absolute z-3 top-7 start-50 translate-middle-x text-wrap">${dream.name}</span>
         <div class="splide__track mx-auto">
           <span id="imageCounter" class="font-14 text-white bg-dark-transparent px-2 py-0 rounded mt-1 text-center position-absolute z-3 top-0 start-50 translate-middle-x"></span>
-          <ul class="splide__list rounded">
+          <ul class="splide__list rounded d-flex gap-1">
             ${imageListHtml}
           </ul>
         </div>
@@ -215,103 +208,93 @@ async function renderCarousel(dreamId) {
         <button class="btn btn-light rounded p-0 d-flex justify-content-center align-items-center" onclick="downloadCurrentImage()">
           <img src="../../Icons/download-img-icon.svg" alt="download-btn" class="img-fluid" width="25" height="25">
         </button>
-        <button class="btn btn-light rounded px-1 py-0 d-flex justify-content-center align-items-center deleteImg" onclick="deleteCurrentImage(${dreamId})" >
-          <img src="../../Icons/delete-img-icon.svg" alt="delete-btn" class="img-fluid" width="16" height="16">
+        <button class="btn btn-light rounded px-1 py-0 d-flex justify-content-center align-items-center deleteImg" onclick="deleteCurrentImage(${dreamId})">
+          <span class="spinner-border spinner-border-sm d-none" aria-hidden="true" id="deleteImgSpinner"></span>
+          <img src="../../Icons/delete-img-icon.svg" alt="delete-btn" class="img-fluid" width="16" height="16" id="deleteImgIcon">
         </button>
       </div>
-      <ul id="thumbnails" class="thumbnails d-flex gap-2 mt-5">
+      <ul id="thumbnails" class="thumbnails d-flex justify-content-center gap-2 mt-5 p-0">
           ${imageThumbnails}
       </ul>
     </div>`;
 
-    const firstImg = document.querySelector(".splide__list .splide__slide img");
+  const firstImg = document.querySelector(".splide__list .splide__slide img");
 
-    if (firstImg) {
-      firstImg.classList.add(
-        "border",
-        "border-3",
-        "border-primary",
-        "rounded-3",
-      );
-    }
-
-    const counter = document.getElementById("imageCounter");
-
-    function updateCounter(index) {
-      counter.innerText = `${index + 1} / ${totalImages}`;
-    }
-
-    updateCounter(0);
-
-    const thumbnails = document.querySelectorAll("#thumbnails .thumbnail");
-    let current;
-
-    const splide = new Splide("#main-slider", {
-      pagination: false,
-    });
-
-    splide.on("mounted move", () => {
-      const thumb = thumbnails[splide.index];
-      if (thumb) {
-        if (current) current.classList.remove("is-active");
-        thumb.classList.add("is-active");
-        current = thumb;
-      }
-    });
-
-    splide.mount();
-
-    const deleteBtn = document.querySelector(".deleteImg");
-
-    splide.on("moved", (index) => {
-      if (deleteBtn) {
-        deleteBtn.disabled = index === 0;
-      }
-    });
-
-    if (deleteBtn) {
-      deleteBtn.disabled = splide.index === 0;
-    }
-
-    thumbnails.forEach((thumb, index) => {
-      thumb.addEventListener("click", () => {
-        splide.go(index);
-      });
-    });
-
-    splide.on("move", () => {
-      rotationDegrees = 0;
-
-      // Reset all images to original state
-      document
-        .querySelectorAll("#main-slider .splide__slide img")
-        .forEach((img) => {
-          img.style.transform = "rotate(0deg)";
-          img.style.width = "";
-          img.style.height = "";
-          img.style.maxWidth = "";
-          img.style.maxHeight = "";
-          img.style.objectFit = "";
-        });
-
-      // Reset slide containers
-      document
-        .querySelectorAll("#main-slider .splide__slide")
-        .forEach((slide) => {
-          slide.style.display = "";
-          slide.style.justifyContent = "";
-          slide.style.alignItems = "";
-          slide.style.overflow = "";
-        });
-
-      updateCounter(splide.index);
-    });
-    loadingIcon.classList.add("d-none");
-  } catch (error) {
-    console.error("Error rendering carousel:", error);
-    carouselContainer.innerHTML =
-      "<p class='text-center fs-4 fw-semibold text-white'>Failed to load images. Please try again.</p>";
+  if (firstImg) {
+    firstImg.classList.add("border", "border-3", "border-primary", "rounded-3");
   }
+
+  const counter = document.getElementById("imageCounter");
+
+  function updateCounter(index) {
+    counter.innerText = `${index + 1} / ${totalImages}`;
+  }
+
+  updateCounter(0);
+
+  const thumbnails = document.querySelectorAll("#thumbnails .thumbnail");
+  let current;
+
+  const splide = new Splide("#main-slider", {
+    pagination: false,
+  });
+
+  splide.on("mounted move", () => {
+    const thumb = thumbnails[splide.index];
+    if (thumb) {
+      if (current) current.classList.remove("is-active");
+      thumb.classList.add("is-active");
+      current = thumb;
+    }
+  });
+
+  splide.mount();
+
+  const deleteBtn = document.querySelector(".deleteImg");
+
+  splide.on("moved", (index) => {
+    if (deleteBtn) {
+      deleteBtn.disabled = index === 0;
+    }
+  });
+
+  if (deleteBtn) {
+    deleteBtn.disabled = splide.index === 0;
+  }
+
+  thumbnails.forEach((thumb, index) => {
+    thumb.addEventListener("click", () => {
+      splide.go(index);
+    });
+  });
+
+  splide.on("move", () => {
+    rotationDegrees = 0;
+
+    // Reset all images to original state
+    document
+      .querySelectorAll("#main-slider .splide__slide img")
+      .forEach((img) => {
+        img.style.transform = "rotate(0deg)";
+        img.style.width = "";
+        img.style.height = "";
+        img.style.maxWidth = "";
+        img.style.maxHeight = "";
+        img.style.objectFit = "";
+      });
+
+    // Reset slide containers
+    document
+      .querySelectorAll("#main-slider .splide__slide")
+      .forEach((slide) => {
+        slide.style.display = "";
+        slide.style.justifyContent = "";
+        slide.style.alignItems = "";
+        slide.style.overflow = "";
+      });
+
+    updateCounter(splide.index);
+  });
 }
 
 // Common function to render selected images
@@ -344,10 +327,28 @@ function uploadImage() {
     return;
   }
 
+  for (let file of inputFile.files) {
+    if (file.size > fileSizeLimit) {
+      document.getElementById("invalidFileMsg").innerHTML =
+        "<div class='fw-semibold text-center h6 d-flex justify-content-center align-items-center gap-2'><img src='../../Icons/exclamation-circle-fill.svg' alt='exclamation' width='16' height='16'>Please upload images smaller than 5MB.</div>";
+      document.getElementById("img-view").classList.add("is-invalid");
+      return;
+    } else {
+      document.getElementById("img-view").classList.remove("is-invalid");
+    }
+  }
+
   const files = Array.from(inputFile.files);
 
   for (let file of files) {
-    if (!file.type.startsWith("image/")) {
+    if (
+      !file.type.startsWith("image/") ||
+      !["image/jpg", "image/jpeg", "image/png", "image/webp"].includes(
+        file.type,
+      )
+    ) {
+      document.getElementById("invalidFileMsg").innerHTML =
+        "<div class='fw-semibold text-center h6 d-flex justify-content-center align-items-center gap-2'><img src='../../Icons/exclamation-circle-fill.svg' alt='exclamation' width='16' height='16'>Please upload supported Files!</div>";
       document.getElementById("img-view").classList.add("is-invalid");
       return;
     } else {
@@ -374,10 +375,28 @@ dropArea.addEventListener("dragover", (e) => {
 dropArea.addEventListener("drop", (e) => {
   e.preventDefault();
 
+  for (let file of e.dataTransfer.files) {
+    if (file.size > fileSizeLimit) {
+      document.getElementById("invalidFileMsg").innerHTML =
+        "<div class='fw-semibold text-center h6 d-flex justify-content-center align-items-center gap-2'><img src='../../Icons/exclamation-circle-fill.svg' alt='exclamation' width='16' height='16'>Please upload images smaller than 5MB.</div>";
+      document.getElementById("img-view").classList.add("is-invalid");
+      return;
+    } else {
+      document.getElementById("img-view").classList.remove("is-invalid");
+    }
+  }
+
   const files = Array.from(e.dataTransfer.files);
 
   for (let file of files) {
-    if (!file.type.startsWith("image/")) {
+    if (
+      !file.type.startsWith("image/") ||
+      !["image/jpg", "image/jpeg", "image/png", "image/webp"].includes(
+        file.type,
+      )
+    ) {
+      document.getElementById("invalidFileMsg").innerHTML =
+        "<div class='fw-semibold text-center h6 d-flex justify-content-center align-items-center gap-2'><img src='../../Icons/exclamation-circle-fill.svg' alt='exclamation' width='16' height='16'>Please upload supported Files!</div>";
       document.getElementById("img-view").classList.add("is-invalid");
       return;
     } else {
@@ -538,14 +557,7 @@ function rotateLeft() {
 
   if (activeSlide) {
     rotationDegrees -= 90;
-
-    activeSlide.style.transform = `rotate(${rotationDegrees}deg)`;
-    activeSlide.style.transition = "transform 0.3s ease";
-    activeSlide.style.width = "auto";
-    activeSlide.style.height = "auto";
-    activeSlide.style.maxWidth = "100%";
-    activeSlide.style.maxHeight = "100%";
-    activeSlide.style.objectFit = "contain";
+    activeSlideResize();
   }
 }
 
@@ -557,14 +569,7 @@ function rotateRight() {
 
   if (activeSlide) {
     rotationDegrees += 90;
-
-    activeSlide.style.transform = `rotate(${rotationDegrees}deg)`;
-    activeSlide.style.transition = "transform 0.3s ease";
-    activeSlide.style.width = "auto";
-    activeSlide.style.height = "auto";
-    activeSlide.style.maxWidth = "100%";
-    activeSlide.style.maxHeight = "100%";
-    activeSlide.style.objectFit = "contain";
+    activeSlideResize();
   }
 }
 
@@ -590,30 +595,42 @@ function downloadCurrentImage() {
 
 // Delete currently active image of carousel
 async function deleteCurrentImage(dreamId) {
-  const activeSlide = document.querySelector(
-    "#main-slider .splide__slide.is-active",
-  );
-  if (!activeSlide) return;
+  document.getElementById("deleteImgSpinner").classList.remove("d-none");
+  document.getElementById("deleteImgIcon").classList.add("d-none");
 
-  const allSlides = Array.from(
-    document.querySelectorAll("#main-slider .splide__slide"),
-  );
-  const currentIndex = allSlides.indexOf(activeSlide);
+  try {
+    const activeSlide = document.querySelector(
+      "#main-slider .splide__slide.is-active",
+    );
+    if (!activeSlide) return;
 
-  const dream = await db.dreams.get(dreamId);
+    const allSlides = Array.from(
+      document.querySelectorAll("#main-slider .splide__slide"),
+    );
+    const currentIndex = allSlides.indexOf(activeSlide);
 
-  if (dream && dream.images) {
-    dream.images.splice(currentIndex, 1);
+    const dream = await db.dreams.get(dreamId);
 
-    if (dream.images.length === 0) {
-      await db.dreams.delete(dreamId);
-      location.reload();
-    } else {
-      await db.dreams.put(dream);
-      renderCarousel(dreamId);
+    if (dream && dream.images) {
+      dream.images.splice(currentIndex, 1);
+
+      if (dream.images.length === 0) {
+        await db.dreams.delete(dreamId);
+        location.reload();
+      } else {
+        await db.dreams.put(dream);
+        renderCarousel(dreamId);
+      }
     }
+    getDreamsData();
+    document.getElementById("deleteImgSpinner").classList.add("d-none");
+  } catch (error) {
+    console.error("Error deleting image:", error);
+    showAcknowledgeToast(
+      "Failed to delete image. Please try again.",
+      "text-bg-danger",
+    );
   }
-  getDreamsData();
 }
 
 // Save id & name of the Dream which is going to be renamed
@@ -675,10 +692,30 @@ function uploadNewImage() {
     return;
   }
 
+  for (let file of addNewImageInput.files) {
+    if (file.size > fileSizeLimit) {
+      document.getElementById("newFileUploadMsg").innerHTML =
+        "<div class='fw-semibold text-center h6 d-flex justify-content-center align-items-center gap-2'><img src='../../Icons/exclamation-circle-fill.svg' alt='exclamation' width='16' height='16'>Please upload images smaller than 5MB.</div>";
+      document.getElementById("uploadedImg-view").classList.add("is-invalid");
+      return;
+    } else {
+      document
+        .getElementById("uploadedImg-view")
+        .classList.remove("is-invalid");
+    }
+  }
+
   const files = Array.from(addNewImageInput.files);
 
   for (let file of files) {
-    if (!file.type.startsWith("image/")) {
+    if (
+      !file.type.startsWith("image/") ||
+      !["image/jpg", "image/jpeg", "image/png", "image/webp"].includes(
+        file.type,
+      )
+    ) {
+      document.getElementById("newFileUploadMsg").innerHTML =
+        `<div class="fw-semibold text-center h6 d-flex justify-content-center align-items-center gap-2"><img src="../../Icons/exclamation-circle-fill.svg" alt="exclamation" width="16" height="16">Please upload supported Files!</div>`;
       document.getElementById("uploadedImg-view").classList.add("is-invalid");
       return;
     } else {
@@ -708,10 +745,30 @@ newDropArea.addEventListener("dragover", (e) => {
 newDropArea.addEventListener("drop", (e) => {
   e.preventDefault();
 
+  for (let file of e.dataTransfer.files) {
+    if (file.size > fileSizeLimit) {
+      document.getElementById("newFileUploadMsg").innerHTML =
+        "<div class='fw-semibold text-center h6 d-flex justify-content-center align-items-center gap-2'><img src='../../Icons/exclamation-circle-fill.svg' alt='exclamation' width='16' height='16'>Please upload images smaller than 5MB.</div>";
+      document.getElementById("uploadedImg-view").classList.add("is-invalid");
+      return;
+    } else {
+      document
+        .getElementById("uploadedImg-view")
+        .classList.remove("is-invalid");
+    }
+  }
+
   const files = Array.from(e.dataTransfer.files);
 
   for (let file of files) {
-    if (!file.type.startsWith("image/")) {
+    if (
+      !file.type.startsWith("image/") ||
+      !["image/jpg", "image/jpeg", "image/png", "image/webp"].includes(
+        file.type,
+      )
+    ) {
+      document.getElementById("newFileUploadMsg").innerHTML =
+        `<div class="fw-semibold text-center h6 d-flex justify-content-center align-items-center gap-2"><img src="../../Icons/exclamation-circle-fill.svg" alt="exclamation" width="16" height="16">Please upload supported Files!</div>`;
       document.getElementById("uploadedImg-view").classList.add("is-invalid");
       return;
     } else {
@@ -876,12 +933,6 @@ async function togglePin(event, id) {
   }
 }
 
-async function toggleLoader(id) {
-  const loadingIcon = document.getElementById(`host-${id}`);
-
-  loadingIcon.classList.add("d-none");
-}
-
 function generateSkeletons(count) {
   return Array(count)
     .fill(0)
@@ -889,9 +940,22 @@ function generateSkeletons(count) {
       () => ` 
                             <div class="col-sm-6 col-md-4 col-lg-3" aria-hidden="true">
                                  <div class="position-relative dreamCard placeholder-glow">
-                                      <div class="img-fluid placeholder w-100 h-100 col-4 bg-secondary"></div>
+                                      <div class="img-fluid placeholder w-100 h-100 col-4 bg-body-secondary"></div>
                                 </div>
                             </div>`,
     )
     .join("");
+}
+
+function activeSlideResize() {
+  const activeSlide = document.querySelector(
+    "#main-slider .splide__slide.is-active img",
+  );
+  activeSlide.style.transform = `rotate(${rotationDegrees}deg)`;
+  activeSlide.style.transition = "transform 0.3s ease";
+  activeSlide.style.width = "auto";
+  activeSlide.style.height = "auto";
+  activeSlide.style.maxWidth = "100%";
+  activeSlide.style.maxHeight = "100%";
+  activeSlide.style.objectFit = "contain";
 }
