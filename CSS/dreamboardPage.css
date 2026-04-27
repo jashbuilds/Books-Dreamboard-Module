@@ -101,6 +101,22 @@
     .wrapper .main-content .dreamBoardGrid .dreamCard .imgText {
         opacity: 1;
     }
+
+    .wrapper .main-content .addDreamModal {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .wrapper .main-content .addDreamModal .dropArea {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .wrapper .main-content .uploadNewImageModal {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
 }
 
 /* CUSTOM CLASSES */
@@ -178,7 +194,7 @@
 .splide__slide {
     display: flex !important;
     align-items: center;
-    justify-content: center;
+    justify-content: center !important;
 }
 
 .splide__slide img {
@@ -189,9 +205,79 @@
 
 .splide__track,
 .splide__list {
-    max-width: 250px;
-    height: 400px;
-    max-height: 60vh !important;
+    max-width: 100% !important;
+    height: 450px;
+    max-height: 65vh !important;
     margin: 0 auto;
-    /* aspect-ratio: 1 / 1 !important; */
+    aspect-ratio: 1/1 !important;
+}
+
+@media (max-width: 1024px) {
+
+    .splide__track,
+    .splide__list {
+        height: 400px !important;
+        max-height: 55vh !important;
+    }
+
+    .thumbnail img {
+        width: 90% !important;
+        height: 90% !important;
+    }
+}
+
+
+
+/* Loading Animation CSS */
+
+.host {
+    background: #FFF;
+    width: 70px;
+    margin: auto;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+}
+
+.loading {
+    width: 15px;
+    height: 15px;
+    /* background: #FFF; */
+    border-radius: 100%;
+    float: left;
+    margin-right: 5px;
+}
+
+.loading-0 {
+    -webkit-animation: bounce 1s infinite;
+    -webkit-animation-delay: .1s;
+    background: #2cd1fb
+}
+
+.loading-1 {
+    -webkit-animation: bounce 1s infinite;
+    -webkit-animation-delay: .3s;
+    background: #09beeb
+    
+}
+
+.loading-2 {
+    -webkit-animation: bounce 1s infinite ease;
+    -webkit-animation-delay: .5s;
+    background: #027895
+    
+}
+
+@-webkit-keyframes bounce {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    60% {
+        opacity: .0;
+
+    }
 }

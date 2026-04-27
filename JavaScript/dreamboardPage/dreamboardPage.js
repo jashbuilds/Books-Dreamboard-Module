@@ -33,9 +33,17 @@ submitBtn.disabled = true;
 
 // get dreams data from Dexie.
 async function getDreamsData() {
-  const dreams = await db.dreams.toArray();
-  dreams.sort((a, b) => b.isPinned - a.isPinned);
-  renderDreamboard(dreams);
+  dreamBoardGrid.innerHTML = generateSkeletons(8);
+
+  try {
+    const dreams = await db.dreams.toArray();
+    dreams.sort((a, b) => b.isPinned - a.isPinned);
+    renderDreamboard(dreams);
+  } catch (error) {
+    console.error("Error fetching dreams:", error);
+    dreamBoardGrid.innerHTML =
+      "<p class='text-center fs-4 fw-semibold'>Failed to load dreams. Please try again.</p>";
+  }
 }
 getDreamsData();
 
@@ -51,8 +59,13 @@ function renderDreamboard(res) {
       const url = URL.createObjectURL(d.images[0]);
 
       return `
-       <div class="col-sm-6 col-md-4 col-lg-3">
+                            <div class="col-sm-6 col-md-4 col-lg-3">
                                  <div class="position-relative dreamCard shadow-sm">
+                                    <div class="host bg-transparent d-none" id="host-${d.id}">
+                                      <div class="loading loading-0"></div>
+                                      <div class="loading loading-1"></div>
+                                      <div class="loading loading-2"></div>
+                                    </div>
                                      <img data-bs-toggle="modal" data-bs-target="#carouselGallery" onclick="renderCarousel(${d.id})"
                                          src="${url}"
                                          alt="${d.name}"
@@ -60,10 +73,11 @@ function renderDreamboard(res) {
                                      <img src="${d.isPinned ? "../../Icons/pin-filled.svg" : "../../Icons/pin-outlined.svg"}"
                                            onclick="togglePin(event, ${d.id})"
                                          class="cursor-pointer position-absolute top-0 start-0 m-3 pinIcon z-3" id="pinIcon"
-                                         alt="pin" width="23" height="23">
+                                         alt="pin" width="20" height="20">
                                     <div id="loadingIcon-${d.id}" class="spinner-border spinner-border-sm text-white position-absolute top-0 start-0 ps-3 pt-3 mt-3 ms-3 d-none" role="status">
                                         <span class="visually-hidden">Loading...</span>
                                     </div>
+                                    
                                     <div
                                         class="dropdown position-absolute top-0 end-0 m-3 dropdownIcon z-3">
                                         <img
@@ -143,52 +157,50 @@ function renderDreamboard(res) {
 // function to render carousel with available images
 async function renderCarousel(dreamId) {
   if (!carouselContainer) return;
-  const tooltipTriggerList = document.querySelectorAll(
-    '[data-bs-toggle="tooltip"]',
-  );
-  const tooltipList = [...tooltipTriggerList].map(
-    (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl),
-  );
+  const loadingIcon = document.getElementById(`host-${dreamId}`);
 
-  const dream = await db.dreams.get(dreamId);
-  totalImages = dream.images.length;
-  if (!dream || !dream.images) return;
+  loadingIcon.classList.remove("d-none");
 
-  const imageListHtml = dream.images
-    .map((img) => {
-      const url = URL.createObjectURL(img);
+  try {
+    const dream = await db.dreams.get(dreamId);
+    totalImages = dream.images.length;
+    if (!dream || !dream.images) return;
 
-      return `
+    const imageListHtml = dream.images
+      .map((img) => {
+        const url = URL.createObjectURL(img);
+
+        return `
                                                 <li class="splide__slide">
                                                     <img
                                                         src="${url}"
                                                         alt="carousel-img1"
                                                         class="img-fluid w-100 h-100 cursor-pointer object-fit-contain rounded-2" />
                                                 </li>`;
-    })
-    .join("");
+      })
+      .join("");
 
-  const imageThumbnails = dream.images
-    .map((img) => {
-      const url = URL.createObjectURL(img);
+    const imageThumbnails = dream.images
+      .map((img) => {
+        const url = URL.createObjectURL(img);
 
-      return `                          <li class="thumbnail">
+        return `                          <li class="thumbnail">
                                             <img
                                                 src="${url}"
                                                 alt="thumbnail-img1" width="100"
                                                 height="100"
                                                 class="img-fluid object-fit-contain rounded cursor-pointer h-100" />
                                         </li>`;
-    })
-    .join("");
+      })
+      .join("");
 
-  carouselContainer.innerHTML = `
+    carouselContainer.innerHTML = `
     <div class="splideContainer">
       <section id="main-slider" class="splide">
         <span id="dreamName" class="fs-6 text-white bg-dark-transparent px-1 rounded mt-1 text-center position-absolute z-3 top-7 start-50 translate-middle-x text-wrap">${dream.name}</span>
         <div class="splide__track mx-auto">
           <span id="imageCounter" class="font-14 text-white bg-dark-transparent px-2 py-0 rounded mt-1 text-center position-absolute z-3 top-0 start-50 translate-middle-x"></span>
-          <ul class="splide__list rounded d-flex gap-3">
+          <ul class="splide__list rounded">
             ${imageListHtml}
           </ul>
         </div>
@@ -212,86 +224,94 @@ async function renderCarousel(dreamId) {
       </ul>
     </div>`;
 
-  const firstImg = document.querySelector(".splide__list .splide__slide img");
+    const firstImg = document.querySelector(".splide__list .splide__slide img");
 
-  if (firstImg) {
-    firstImg.classList.add("border", "border-3", "border-primary", "rounded-3");
-  }
-
-
-  const counter = document.getElementById("imageCounter");
-
-  function updateCounter(index) {
-    counter.innerText = `${index + 1} / ${totalImages}`;
-  }
-
-  updateCounter(0);
-
-  const thumbnails = document.querySelectorAll("#thumbnails .thumbnail");
-  let current;
-
-  const splide = new Splide("#main-slider", {
-    pagination: false,
-  });
-
-  splide.on("mounted move", () => {
-    const thumb = thumbnails[splide.index];
-    if (thumb) {
-      if (current) current.classList.remove("is-active");
-      thumb.classList.add("is-active");
-      current = thumb;
+    if (firstImg) {
+      firstImg.classList.add(
+        "border",
+        "border-3",
+        "border-primary",
+        "rounded-3",
+      );
     }
-  });
 
-  splide.mount();
+    const counter = document.getElementById("imageCounter");
 
-  const deleteBtn = document.querySelector(".deleteImg");
-
-  splide.on("moved", (index) => {
-    if (deleteBtn) {
-      deleteBtn.disabled = index === 0;
+    function updateCounter(index) {
+      counter.innerText = `${index + 1} / ${totalImages}`;
     }
-  });
 
-  if (deleteBtn) {
-    deleteBtn.disabled = splide.index === 0;
-  }
+    updateCounter(0);
 
-  thumbnails.forEach((thumb, index) => {
-    thumb.addEventListener("click", () => {
-      splide.go(index);
+    const thumbnails = document.querySelectorAll("#thumbnails .thumbnail");
+    let current;
+
+    const splide = new Splide("#main-slider", {
+      pagination: false,
     });
-  });
 
-  splide.on("move", () => {
-    rotationDegrees = 0;
+    splide.on("mounted move", () => {
+      const thumb = thumbnails[splide.index];
+      if (thumb) {
+        if (current) current.classList.remove("is-active");
+        thumb.classList.add("is-active");
+        current = thumb;
+      }
+    });
 
-    // Reset all images to original state
-    document
-      .querySelectorAll("#main-slider .splide__slide img")
-      .forEach((img) => {
-        img.style.transform = "rotate(0deg)";
-        img.style.width = "";
-        img.style.height = "";
-        img.style.maxWidth = "";
-        img.style.maxHeight = "";
-        img.style.objectFit = "";
+    splide.mount();
+
+    const deleteBtn = document.querySelector(".deleteImg");
+
+    splide.on("moved", (index) => {
+      if (deleteBtn) {
+        deleteBtn.disabled = index === 0;
+      }
+    });
+
+    if (deleteBtn) {
+      deleteBtn.disabled = splide.index === 0;
+    }
+
+    thumbnails.forEach((thumb, index) => {
+      thumb.addEventListener("click", () => {
+        splide.go(index);
       });
+    });
 
-    // Reset slide containers
-    document
-      .querySelectorAll("#main-slider .splide__slide")
-      .forEach((slide) => {
-        slide.style.display = "";
-        slide.style.justifyContent = "";
-        slide.style.alignItems = "";
-        slide.style.overflow = "";
-      });
+    splide.on("move", () => {
+      rotationDegrees = 0;
 
-    updateCounter(splide.index);
-  });
+      // Reset all images to original state
+      document
+        .querySelectorAll("#main-slider .splide__slide img")
+        .forEach((img) => {
+          img.style.transform = "rotate(0deg)";
+          img.style.width = "";
+          img.style.height = "";
+          img.style.maxWidth = "";
+          img.style.maxHeight = "";
+          img.style.objectFit = "";
+        });
 
+      // Reset slide containers
+      document
+        .querySelectorAll("#main-slider .splide__slide")
+        .forEach((slide) => {
+          slide.style.display = "";
+          slide.style.justifyContent = "";
+          slide.style.alignItems = "";
+          slide.style.overflow = "";
+        });
 
+      updateCounter(splide.index);
+    });
+    loadingIcon.classList.add("d-none");
+  } catch (error) {
+    console.error("Error rendering carousel:", error);
+    carouselContainer.innerHTML =
+      "<p class='text-center fs-4 fw-semibold text-white'>Failed to load images. Please try again.</p>";
+  }
 }
 
 // Common function to render selected images
@@ -303,7 +323,7 @@ function renderImages() {
             <tbody>
                 <tr>
                     <th scope="row" class="col-1">${i + 1}</th>
-                    <td class="col-10">${img.file.name}</td>
+                    <td class="col-10"><span class="overflow-ellipsis">${img.file.name}</span></td>
                     <td class="col-1">
                         <button type="button" class="btn-close" aria-label="Close" onclick="removeImg(${i})"></button>
                     </td>
@@ -386,22 +406,30 @@ function removeImg(id) {
 document.getElementById("dreamForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const name = dreamName.value;
-  const imageFiles = uploadedImages.map((img) => img.file);
+  submitBtn.disabled = true;
+  document.getElementById("formSubmitSpinner").classList.remove("d-none");
 
-  await db.dreams.add({
-    name: name,
-    images: imageFiles,
-    isPinned: false,
-  });
+  try {
+    const name = dreamName.value;
+    const imageFiles = uploadedImages.map((img) => img.file);
+    await db.dreams.add({
+      name: name,
+      images: imageFiles,
+      isPinned: false,
+    });
 
-  document.getElementById("dreamForm").reset();
+    document.getElementById("dreamForm").reset();
+    getDreamsData();
+    bootstrap.Modal.getInstance(addDreamModal).hide();
 
-  bootstrap.Modal.getInstance(addDreamModal).hide();
-
-  getDreamsData();
-
-  showAcknowledgeToast("Dream Added.");
+    showAcknowledgeToast("Dream Added.");
+  } catch (error) {
+    console.error("Error adding dream:", error);
+    showAcknowledgeToast(
+      "Failed to add dream. Please try again.",
+      "text-bg-danger",
+    );
+  }
 });
 
 // Store id of Selected dream which is going to be deleted
@@ -411,10 +439,26 @@ function openDeleteModal(id) {
 
 // function to delete dream
 async function deleteDream() {
-  await db.dreams.delete(selectedDreamId);
-  getDreamsData();
+  document.getElementById("deleteSpinner").classList.remove("d-none");
+  document.getElementById("confirmDelete").disabled = true;
 
-  showAcknowledgeToast("Dream Deleted!");
+  try {
+    await db.dreams.delete(selectedDreamId);
+
+    getDreamsData();
+    bootstrap.Modal.getInstance(document.getElementById("deleteModal")).hide();
+
+    showAcknowledgeToast("Dream Deleted!");
+
+    document.getElementById("deleteSpinner").classList.add("d-none");
+    document.getElementById("confirmDelete").disabled = false;
+  } catch (error) {
+    console.error("Error deleting dream:", error);
+    showAcknowledgeToast(
+      "Failed to delete dream. Please try again.",
+      "text-bg-danger",
+    );
+  }
 }
 
 // function to validate name input
@@ -443,7 +487,7 @@ function validateFormInput() {
   submitBtn.disabled = !isFormValid;
 }
 
-// function to reset form values when closed
+// function to reset add dream form values when closed
 addDreamModal.addEventListener("hidden.bs.modal", () => {
   dreamName.value = "";
   uploadedImages = [];
@@ -453,6 +497,7 @@ addDreamModal.addEventListener("hidden.bs.modal", () => {
   submitBtn.disabled = true;
   document.getElementById("img-view").classList.remove("is-invalid");
   renameDreamInput.classList.remove("is-invalid");
+  document.getElementById("formSubmitSpinner").classList.add("d-none");
 
   dreamName.classList.remove("is-invalid");
 });
@@ -579,25 +624,37 @@ function renameDream(id, name) {
 
 // Rename dream name and reflect changes on UI
 async function updateDreamName() {
-  const newName = renameDreamInput.value.trim();
+  document.getElementById("confirmRename").disabled = true;
 
-  await db.dreams.update(selectedDreamId, {
-    name: renameDreamInput.value,
-  });
+  document.getElementById("renameSpinner").classList.remove("d-none");
 
-  getDreamsData();
+  try {
+    const newName = renameDreamInput.value.trim();
 
-  const modalEl = document.getElementById("renameModal");
+    await db.dreams.update(selectedDreamId, {
+      name: renameDreamInput.value,
+    });
 
-  let modal = bootstrap.Modal.getInstance(modalEl);
+    getDreamsData();
 
-  if (!modal) {
-    modal = new bootstrap.Modal(modalEl);
+    const modalEl = document.getElementById("renameModal");
+
+    let modal = bootstrap.Modal.getInstance(modalEl);
+
+    if (!modal) {
+      modal = new bootstrap.Modal(modalEl);
+    }
+
+    validateNameInput();
+    modal.hide();
+    showAcknowledgeToast("Dream renamed!");
+  } catch (error) {
+    console.error("Error renaming dream:", error);
+    showAcknowledgeToast(
+      "Failed to rename dream. Please try again.",
+      "text-bg-danger",
+    );
   }
-
-  modal.hide();
-  validateNameInput();
-  showAcknowledgeToast("Dream renamed!");
 }
 
 // Rename name input fields when rename modal closes
@@ -606,6 +663,9 @@ document
   .addEventListener("hidden.bs.modal", () => {
     renameDreamInput.classList.remove("is-invalid");
     dreamName.classList.remove("is-invalid");
+
+    document.getElementById("renameSpinner").classList.add("d-none");
+    document.getElementById("confirmRename").disabled = true;
   });
 
 addNewImageInput.addEventListener("change", uploadNewImage);
@@ -680,9 +740,9 @@ function renderNewImages() {
             <tbody>
                 <tr>
                     <th scope="row" class="col-1">${i + 1}</th>
-                    <td class="col-10">${img.file.name}</td>
+                    <td class="col-10"><span class="overflow-ellipsis">${img.file.name}</span></td>
                     <td class="col-1">
-                        <button type="button" class="btn-close" aria-label="Close" onclick="removeNewImg(${i})"></button>
+                        <button type="button" class="btn-close" aria-label="Close" onclick="removeNewImg(${i})" width="20" height="20"></button>
                     </td>
                 </tr>
             </tbody>
@@ -717,29 +777,40 @@ document
   .addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const dream = await db.dreams.get(selectedDreamId);
+    document.getElementById("submitNewImgUpload").disabled = true;
+    document
+      .getElementById("uploadImageSubmitSpinner")
+      .classList.remove("d-none");
 
-    const imageFiles = newUploadedImages.map((img) => img.file);
+    try {
+      const dream = await db.dreams.get(selectedDreamId);
 
-    const updatedImages = [...dream.images, ...imageFiles];
+      const imageFiles = newUploadedImages.map((img) => img.file);
 
-    // Update existing dream (NOT create new)
-    await db.dreams.put({
-      ...dream,
-      images: updatedImages,
-    });
+      const updatedImages = [...dream.images, ...imageFiles];
 
-    newUploadedImages = [];
+      await db.dreams.put({
+        ...dream,
+        images: updatedImages,
+      });
 
-    document.getElementById("newImgUploadForm").reset();
+      newUploadedImages = [];
 
-    bootstrap.Modal.getInstance(
-      document.getElementById("uploadNewImage"),
-    ).hide();
+      document.getElementById("newImgUploadForm").reset();
 
-    getDreamsData();
+      getDreamsData();
+      bootstrap.Modal.getInstance(
+        document.getElementById("uploadNewImage"),
+      ).hide();
 
-    showAcknowledgeToast("Images added successfully!");
+      showAcknowledgeToast("Images added successfully!");
+    } catch (error) {
+      console.error("Error uploading images:", error);
+      showAcknowledgeToast(
+        "Failed to upload images. Please try again.",
+        "text-bg-danger",
+      );
+    }
   });
 
 document
@@ -754,6 +825,9 @@ document
     document.getElementById("submitNewImgUpload").disabled = true;
 
     document.getElementById("uploadMessage").classList.add("d-none");
+    document.getElementById("uploadImageSubmitSpinner").classList.add("d-none");
+
+    document.getElementById("uploadedImg-view").classList.remove("is-invalid");
   });
 
 function updateUploadUI() {
@@ -800,4 +874,24 @@ async function togglePin(event, id) {
     pinIcon.classList.remove("d-none");
     loadingIcon.classList.add("d-none");
   }
+}
+
+async function toggleLoader(id) {
+  const loadingIcon = document.getElementById(`host-${id}`);
+
+  loadingIcon.classList.add("d-none");
+}
+
+function generateSkeletons(count) {
+  return Array(count)
+    .fill(0)
+    .map(
+      () => ` 
+                            <div class="col-sm-6 col-md-4 col-lg-3" aria-hidden="true">
+                                 <div class="position-relative dreamCard placeholder-glow">
+                                      <div class="img-fluid placeholder w-100 h-100 col-4 bg-secondary"></div>
+                                </div>
+                            </div>`,
+    )
+    .join("");
 }
