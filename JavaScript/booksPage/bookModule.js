@@ -1,3 +1,4 @@
+// DOM Elements
 const bookName = document.getElementById("bookName");
 const bookPDF = document.getElementById("bookPdf");
 const bookType = document.getElementById("bookType");
@@ -10,16 +11,18 @@ const submitBtn = document.getElementById("submitBtn");
 const addBookModal = document.getElementById("addBook");
 const addBookForm = document.getElementById("bookForm");
 
+let books;
 let selectedBookId = null;
 
 submitBtn.disabled = true;
 
+// Initialize Dexie database
 var db = new Dexie("BooksDB");
 db.version(1).stores({
   books: "++id, name, category, file",
 });
 
-let books;
+// Function to render books based on selected category
 const renderBooks = async (category = "All") => {
   if (category === "All") {
     books = await db.books.toArray();
@@ -90,25 +93,29 @@ const renderBooks = async (category = "All") => {
   const tooltipTriggerList = document.querySelectorAll(
     '[data-bs-toggle="tooltip"]',
   );
-  [...tooltipTriggerList].map(
-    (tooltipTriggerEl) => {
-      tooltipTriggerEl.addEventListener('show.bs.tooltip', (e) => {
-        const sidebar = document.getElementById('sidebar');
-        if (sidebar && sidebar.contains(tooltipTriggerEl) && !sidebar.classList.contains('collapsed')) {
-          e.preventDefault();
-        }
-      });
-      return new bootstrap.Tooltip(tooltipTriggerEl);
-    }
-  );
+  [...tooltipTriggerList].map((tooltipTriggerEl) => {
+    tooltipTriggerEl.addEventListener("show.bs.tooltip", (e) => {
+      const sidebar = document.getElementById("sidebar");
+      if (
+        sidebar &&
+        sidebar.contains(tooltipTriggerEl) &&
+        !sidebar.classList.contains("collapsed")
+      ) {
+        e.preventDefault();
+      }
+    });
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
 };
 renderBooks();
 
+// Event listener for category filter change
 const filterBooks = () => {
   const selectedCategory = bookCategory.value;
   renderBooks(selectedCategory);
 };
 
+// Event listener for form submission to add a new book
 addBookForm?.addEventListener("submit", async (e) => {
   e.preventDefault();
   await db.books.add({
@@ -125,6 +132,7 @@ addBookForm?.addEventListener("submit", async (e) => {
   showAcknowledgeToast("Book added successfully!");
 });
 
+// Event listener to reset form and validation states when the modal is closed
 addBookModal?.addEventListener("hidden.bs.modal", () => {
   bookName.value = "";
   bookCategory.value = "All";
@@ -136,6 +144,7 @@ addBookModal?.addEventListener("hidden.bs.modal", () => {
   renderBooks();
 });
 
+// Logic to validate book name input field.
 const validateName = () => {
   if (/^\s|\d+/.test(bookName.value) || bookName.value === "") {
     bookName.classList.add("is-invalid");
@@ -147,20 +156,26 @@ const validateName = () => {
 
 // Logic to Validate Form Input fields.
 function validateFormInput() {
-  const isFormValid = bookName.value.trim() !== "" && bookPDF.value !== "" && isValidPDF(bookPDF.files[0]);
+  const isFormValid =
+    bookName.value.trim() !== "" &&
+    bookPDF.value !== "" &&
+    isValidPDF(bookPDF.files[0]);
 
   submitBtn.disabled = !isFormValid;
 }
 
+// Function to open book preview page with selected book's ID stored in localStorage
 const openBook = (id) => {
   localStorage.setItem("selectedBookId", id);
   window.location.href = "../../HTML/Books/bookPreview.html";
 };
 
+// Function to open delete confirmation modal and store selected book's ID for deletion
 const openDeleteModal = (id) => {
   selectedBookId = id;
 };
 
+// Function to confirm deletion of the selected book and update the UI accordingly
 const confirmDelete = async () => {
   if (!selectedBookId) return;
 
@@ -170,6 +185,7 @@ const confirmDelete = async () => {
   showAcknowledgeToast("Book deleted successfully!");
 };
 
+// Function to show acknowledgment toast with customizable message and background color
 const showAcknowledgeToast = (message, background = "text-bg-success") => {
   const toastContainer = document.getElementById("notificationToast");
   const toastBody = toastContainer.querySelector(".toast-message");
@@ -181,6 +197,7 @@ const showAcknowledgeToast = (message, background = "text-bg-success") => {
   toast.show();
 };
 
+// Function to validate the selected file type for book PDF input
 function validateFileType() {
   const file = bookPDF.files[0];
 
@@ -195,6 +212,7 @@ function validateFileType() {
   validateFormInput();
 }
 
+// Function to attach logic for closing dropdowns when mouse leaves card
 const attachDropdownCloseLogic = () => {
   const cards = document.querySelectorAll(".booksCard");
 
@@ -210,6 +228,7 @@ const attachDropdownCloseLogic = () => {
   });
 };
 
+// Utility function to check if the selected file is a valid PDF
 function isValidPDF(file) {
   return file && file.type === "application/pdf";
 }

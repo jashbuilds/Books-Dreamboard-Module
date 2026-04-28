@@ -465,9 +465,9 @@ async function deleteDream() {
     await db.dreams.delete(selectedDreamId);
 
     getDreamsData();
-    bootstrap.Modal.getInstance(document.getElementById("deleteModal")).hide();
-
+    
     showAcknowledgeToast("Dream Deleted!");
+    bootstrap.Modal.getInstance(document.getElementById("deleteModal")).hide();
 
     document.getElementById("deleteSpinner").classList.add("d-none");
     document.getElementById("confirmDelete").disabled = false;
@@ -687,6 +687,7 @@ document
 
 addNewImageInput.addEventListener("change", uploadNewImage);
 
+// handles image upload for upload new image Modal.
 function uploadNewImage() {
   if (!addNewImageInput.files || addNewImageInput.files.length === 0) {
     return;
@@ -789,6 +790,7 @@ newDropArea.addEventListener("drop", (e) => {
   validateFormInput();
 });
 
+// renders selected images from user in upload new image modal
 function renderNewImages() {
   document.getElementById("addedImages").innerHTML = newUploadedImages
     .map(
@@ -811,12 +813,14 @@ function renderNewImages() {
     newUploadedImages.length === 0;
 }
 
+// function to remove image from selected images in upload new image modal
 function removeNewImg(id) {
   newUploadedImages.splice(id, 1);
   renderNewImages();
   updateUploadUI();
 }
 
+// function to open upload new image modal and set available upload slots based on number of existing images in the dream
 async function openUploadModal(id) {
   selectedDreamId = id;
 
@@ -829,6 +833,7 @@ async function openUploadModal(id) {
   updateUploadUI();
 }
 
+// function to handle upload of new images to existing dream in Dexie and reflect changes on UI
 document
   .getElementById("newImgUploadForm")
   .addEventListener("submit", async (e) => {
@@ -870,6 +875,7 @@ document
     }
   });
 
+// function to reset upload new image modal values when closed
 document
   .getElementById("uploadNewImage")
   .addEventListener("hidden.bs.modal", () => {
@@ -887,6 +893,7 @@ document
     document.getElementById("uploadedImg-view").classList.remove("is-invalid");
   });
 
+// function to update upload new image modal UI based on number of images selected by user and available upload slots
 function updateUploadUI() {
   const dropArea = document.getElementById("newDrop-area");
   const messageBox = document.getElementById("uploadMessage");
@@ -912,6 +919,7 @@ function updateUploadUI() {
   submitBtn.disabled = newUploadedImages.length === 0;
 }
 
+// function to toggle pin status of dream and reflect changes on UI
 async function togglePin(event, id) {
   const pinIcon = event.currentTarget;
   const loadingIcon = document.getElementById(`loadingIcon-${id}`);
@@ -933,6 +941,7 @@ async function togglePin(event, id) {
   }
 }
 
+// function to generate skeleton loaders based on count
 function generateSkeletons(count) {
   return Array(count)
     .fill(0)
@@ -947,6 +956,7 @@ function generateSkeletons(count) {
     .join("");
 }
 
+// function to rotate active carousel image based on rotationDegrees value and maintain its aspect ratio within the slide container
 function activeSlideResize() {
   const activeSlide = document.querySelector(
     "#main-slider .splide__slide.is-active img",
