@@ -1,4 +1,3 @@
-
 /* COMMON COLOR VARIABLES */
 :root {
     --blue-primary: #92aaf9;
@@ -87,7 +86,9 @@
 }
 
 @media (max-width: 991px) {
-    .wrapper .main-content .dreamBoardGrid .dreamCard .cardPara, .wrapper .main-content .imgCriteriaHead {
+
+    .wrapper .main-content .dreamBoardGrid .dreamCard .cardPara,
+    .wrapper .main-content .imgCriteriaHead {
         font-size: 16px !important;
     }
 
@@ -104,7 +105,9 @@
         opacity: 1;
     }
 
-    .wrapper .main-content .addDreamModal, .wrapper .main-content .addDreamModal .dropArea, .wrapper .main-content .uploadNewImageModal {
+    .wrapper .main-content .addDreamModal,
+    .wrapper .main-content .addDreamModal .dropArea,
+    .wrapper .main-content .uploadNewImageModal {
         width: 100% !important;
         max-width: 100% !important;
     }
@@ -160,8 +163,8 @@
 }
 
 .thumbnail {
-    width: 120px;
-    height: 120px;
+    width: 120px !important;
+    height: 120px !important;
     margin: 0 0.2rem;
     opacity: 0.3;
 }
@@ -179,6 +182,31 @@
     margin: 0 auto;
 }
 
+/* Add numbers to pagination buttons by CSS */
+.splide__pagination {
+    counter-reset: pagination-num;
+    /* display: none; */
+}
+
+.splide__pagination li {
+    height: 40px;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.splide__pagination__page {
+    width: 20px;
+    height: 20px;
+    border-radius: 18%;
+}
+
+.splide__pagination__page:before {
+    counter-increment: pagination-num;
+    content: counter(pagination-num);
+}
+
 @media (max-width: 1024px) {
 
     .splide__track,
@@ -188,8 +216,9 @@
         max-height: 55vh !important;
     }
 
-    .thumbnail img {
-        width: 90% !important;
-        height: 90% !important;
+    .thumbnails {
+        overflow-x: auto !important;
+        max-width: 100vw !important;
+        width: 100% !important;
     }
 }

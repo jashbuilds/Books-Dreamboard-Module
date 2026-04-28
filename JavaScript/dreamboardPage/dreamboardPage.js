@@ -212,7 +212,7 @@ async function renderCarousel(dreamId) {
           <img src="../../Icons/delete-img-icon.svg" alt="delete-btn" class="img-fluid" width="16" height="16" id="deleteImgIcon">
         </button>
       </div>
-      <ul id="thumbnails" class="thumbnails d-flex justify-content-center gap-2 mt-5 p-0">
+      <ul id="thumbnails" class="thumbnails d-flex justify-content-center gap-sm-2 gap-1 mt-5 p-0">
           ${imageThumbnails}
       </ul>
     </div>`;
@@ -235,6 +235,8 @@ async function renderCarousel(dreamId) {
   let current;
 
   const splide = new Splide("#main-slider", {
+    drag: "free",
+    snap: true,
     pagination: false,
   });
 
@@ -294,6 +296,19 @@ async function renderCarousel(dreamId) {
 
     updateCounter(splide.index);
   });
+  const splideNew = new Splide(".splide");
+
+  splide.on("pagination:mounted", function (data) {
+    // You can add your class to the UL element
+    data.list.classList.add("splide__pagination--custom");
+
+    // `items` contains all dot items
+    data.items.forEach(function (item) {
+      item.button.textContent = String(item.page + 1);
+    });
+  });
+
+  splideNew.mount();
 }
 
 // Common function to render selected images
@@ -464,7 +479,7 @@ async function deleteDream() {
     await db.dreams.delete(selectedDreamId);
 
     getDreamsData();
-    
+
     showAcknowledgeToast("Dream Deleted!");
     bootstrap.Modal.getInstance(document.getElementById("deleteModal")).hide();
 
