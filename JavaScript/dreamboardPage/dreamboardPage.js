@@ -8,7 +8,6 @@ db.version(2).stores({
 const dropArea = document.getElementById("drop-area");
 const newDropArea = document.getElementById("newDrop-area");
 const inputFile = document.getElementById("addDreamImage");
-const imageView = document.getElementById("imgFile");
 const addDreamModal = document.getElementById("addDream");
 const submitBtn = document.getElementById("submitBtn");
 const availableImages = document.getElementById("availableImages");
