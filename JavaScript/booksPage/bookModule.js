@@ -34,7 +34,6 @@ const renderBooks = async (category = "All") => {
     booksGrid.innerHTML = `
     <div class='d-flex flex-column justify-content-center align-items-center mx-auto vh-50 text-center'>
       <p class="fw-medium text-secondary fs-3 m-0">No Books Found!</p>
-      <p class="fw-medium text-secondary fs-5 m-0">Click the <a data-bs-toggle="modal" data-bs-target="#addBook" class="text-decoration-none cursor-pointer">"Add Book"</a> button to add your first book.</p>
     </div>`
     return;
   }

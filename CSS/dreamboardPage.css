@@ -199,7 +199,6 @@
     margin: 0 auto;
 }
 
-/* Add numbers to pagination buttons by CSS */
 .splide__pagination {
     counter-reset: pagination-num;
     display: none;
