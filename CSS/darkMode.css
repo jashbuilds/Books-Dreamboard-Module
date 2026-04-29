@@ -1,0 +1,131 @@
+:root {
+    --primary-blue: #4422EF;
+    --secondary-blue: #dbe2ff;
+    --bg-hover-sidebar: #eef4fc;
+    --bg-active-sidebar: #1A1B1D;
+    --text-sidebar: #939292;
+    --bg-offwhite: #f0f2f5;
+    --bg-offwhite-secondary: #eaeaeb;
+    --bg-offwhite-tertiary: #e1e1e3;
+    --secondary-offwhite: #e3effd;
+    --primary-white: white;
+    --text-offwhite: #999999;
+    --search-bg: #141416;
+
+    --light-mode-bg: #FBFBFB;
+    --dark-mode-bg: #707277;
+
+}
+
+body.dark-mode {
+    background-color: var(--dark-mode-bg) !important;
+    color: var(--text-offwhite) !important;
+}
+
+body.dark-mode .wrapper .sidebar {
+    background-color: var(--bg-active-sidebar) !important;
+}
+
+body.dark-mode .wrapper .main-content .navbar {
+    background-color: var(--bg-active-sidebar) !important;
+    color: var(--text-offwhite) !important;
+}
+
+body.dark-mode .wrapper .main-content .navbar .search-box .input-group-text, body.dark-mode .wrapper .main-content .navbar .search-box .form-control {
+    background-color: var(--search-bg) !important;
+}
+
+body.dark-mode .wrapper .main-content .navbar svg path{
+    stroke: var(--primary-white) !important;
+}
+
+body.dark-mode .wrapper .main-content .navbar .profileBlock svg path {
+    fill: var(--primary-white) !important;
+}
+
+body.dark-mode .wrapper .main-content, body.dark-mode .wrapper .main-content .categoryFilter * {
+    background-color: var(--search-bg) !important;
+    color: var(--primary-white) !important;
+}
+
+body.dark-mode .wrapper .main-content .bodyContent .btn {
+    background-color: var(--primary-blue) !important;
+    color: var(--primary-white) !important;
+    border: none;
+}
+
+body.dark-mode .wrapper .main-content .bodyContent .booksGrid .booksCard {
+    background-color: var(--dark-mode-bg) !important;
+    color: var(--primary-white) !important;
+}
+
+body.dark-mode .wrapper .main-content .bodyContent .booksGrid .booksCard .card-title {
+    color: var(--primary-white) !important;
+}
+
+body.dark-mode .wrapper .main-content .bodyContent .booksGrid .booksCard .dropdown .dropdown-menu  {
+    background-color: var(--dark-mode-bg) !important;
+}
+
+body.dark-mode .wrapper .main-content .bodyContent .booksGrid .booksCard .dropdown .dropdown-menu .dropdown-item {
+    color: var(--primary-white) !important;
+}
+body.dark-mode .wrapper .main-content .bodyContent .booksGrid .booksCard .dropdown .dropdown-menu .dropdown-item:hover {
+    color: var(--search-bg) !important;
+}
+
+body.dark-mode .wrapper .sidebar .nav .nav-item .nav-link.active {
+    background-color: var(--primary-blue);
+    color: var(--primary-white);
+}
+
+body.dark-mode .wrapper .main-content .modal .modal-content {
+    background-color: var(--search-bg) !important;
+    color: var(--primary-white) !important;
+}
+
+body.dark-mode .wrapper .main-content .modal .modal-content .modal-header .btn-close {
+    filter: invert(1);
+}
+
+body.dark-mode .wrapper .main-content .modal .modal-content .form-label {
+    color: var(--primary-white) !important;
+}
+
+body.dark-mode .wrapper .main-content .modal .modal-content .form-control, body.dark-mode .wrapper .main-content .modal .modal-content .form-select {
+    background-color: var(--search-bg) !important;
+    color: var(--primary-white) !important;
+}
+
+body.dark-mode .wrapper .main-content .modal .modal-content .form-control::placeholder {
+    color: var(--dark-mode-bg) !important;
+}
+
+body.dark-mode .wrapper .main-content .modal .modal-body .btn-submit-custom {
+    background-color: var(--primary-blue) !important;
+    border: none;
+}
+
+/* bookPreview page CSS */
+
+body.dark-mode .wrapper .main-content .backArrow svg {
+    fill: var(--primary-white);
+}
+
+body.dark-mode .wrapper .main-content .backArrow:hover svg {
+    fill: var(--search-bg);
+}
+
+body.dark-mode .wrapper .main-content .read-mode-box {
+    background: var(--bg-active-sidebar) !important;
+    border-color: var(--dark-mode-bg) !important;
+}
+
+body.dark-mode .wrapper .main-content .pdfControls {
+    background-color: var(--bg-active-sidebar);
+    color: var(--primary-white);
+}
+
+body.dark-mode .wrapper .main-content #bookInfo {
+    border: none !important;
+}

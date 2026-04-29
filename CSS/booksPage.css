@@ -94,6 +94,11 @@
 }
 
 
+
+
+
+
+
 /* -- MOBILE & TABLET (Screens 991px wide and below) -- */
 @media (max-width: 991px) {
     .wrapper .main-content {
@@ -121,10 +126,10 @@
 
 /* CUSTOM CLASSES */
 
-.vh-30{
+.vh-30 {
     height: 30vh;
 }
 
-.vh-50{
+.vh-50 {
     height: 50vh;
 }

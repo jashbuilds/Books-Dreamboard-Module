@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="../../CSS/styles.css">
         <link rel="stylesheet" href="../../CSS/sidebar.css">
         <link rel="stylesheet" href="../../CSS/dreamboardPage.css">
+        <link rel="stylesheet" href="../../CSS/darkMode.css">
         <link rel="shortcut icon" href="../../Icons/dream-favicon.svg"
             type="image/x-icon">
         <script src="../../JavaScript/themeInit.js"></script>
@@ -138,9 +139,19 @@
                             <div class="d-flex  d-none d-sm-flex">
                                 <div
                                     class="me-3 d-flex justify-content-center align-items-center">
-                                    <img src="../../Icons/theme-switcher.svg"
-                                        alt="theme-toggle" width="40"
-                                        height="40">
+                                    <input type="checkbox"
+                                        id="darkmode-toggle" />
+                                    <label for="darkmode-toggle"
+                                        class="darkmodeLabel">
+                                        <img src="../../Icons/sun.svg"
+                                            alt="light-mode" width="28"
+                                            height="28" class="sun">
+
+                                        <img src="../../Icons/moon.svg"
+                                            alt="dark-mode" width="28"
+                                            height="28" class="moon">
+
+                                    </label>
                                 </div>
                                 <div
                                     class="me-3 d-flex justify-content-center align-items-center">
@@ -260,7 +271,8 @@
                                                         id="addDreamImage"
                                                         placeholder="Name"
                                                         accept="image/jpeg, image/png, image/webp, .jpg, .jpeg, .png, .webp"
-                                                        hidden multiple required>
+                                                        hidden multiple
+                                                        required>
                                                     <div id="img-view"
                                                         class="d-flex gap-1 flex-column justify-content-center align-items-center rounded">
                                                         <img
@@ -285,7 +297,9 @@
                                                             can upload upto 5
                                                             Images.</p>
                                                     </div>
-                                                    <div class="invalid-feedback" id="invalidFileMsg">
+                                                    <div
+                                                        class="invalid-feedback"
+                                                        id="invalidFileMsg">
                                                     </div>
                                                 </label>
 
@@ -305,7 +319,10 @@
                                         <button type="submit"
                                             class="btn btn-submit-custom bg-primary cursor-nodrop text-white px-lg-5 px-3 py-lg-2 rounded-3 fw-bold"
                                             id="submitBtn" disabled>
-                                            <span class="spinner-border spinner-border-sm d-none" aria-hidden="true" id="formSubmitSpinner"></span>
+                                            <span
+                                                class="spinner-border spinner-border-sm d-none"
+                                                aria-hidden="true"
+                                                id="formSubmitSpinner"></span>
                                             <span>Save</span>
                                         </button>
                                     </div>
@@ -340,7 +357,10 @@
                                     data-bs-dismiss="modal"
                                     id="confirmDelete"
                                     onclick="deleteDream()">
-                                    <span class="spinner-border spinner-border-sm d-none" aria-hidden="true" id="deleteSpinner"></span>
+                                    <span
+                                        class="spinner-border spinner-border-sm d-none"
+                                        aria-hidden="true"
+                                        id="deleteSpinner"></span>
                                     <span>Yes</span>
                                 </button>
                             </div>
@@ -378,7 +398,8 @@
                                     aria-label="Close">
                                 </button>
                             </div>
-                            <div class="modal-body border-top-0 align-content-center">
+                            <div
+                                class="modal-body border-top-0 align-content-center">
                                 <div id="imageCarousel">
                                     <!-- Carousel will be rendered here. -->
                                 </div>
@@ -432,7 +453,10 @@
                                     id="confirmRename"
                                     onclick="updateDreamName()"
                                     disabled>
-                                    <span class="spinner-border spinner-border-sm d-none" aria-hidden="true" id="renameSpinner"></span>
+                                    <span
+                                        class="spinner-border spinner-border-sm d-none"
+                                        aria-hidden="true"
+                                        id="renameSpinner"></span>
                                     <span>Save</span>
                                 </button>
                             </div>
@@ -496,8 +520,9 @@
                                                             class="fw-semibold d-none text-center text-secondary imgCriteriaSubHead"></p>
                                                     </div>
                                                     <div
-                                                        class="invalid-feedback" id="newFileUploadMsg">
-                                                        
+                                                        class="invalid-feedback"
+                                                        id="newFileUploadMsg">
+
                                                     </div>
                                                 </label>
                                             </div>
@@ -518,7 +543,10 @@
                                         <button type="submit"
                                             class="btn btn-submit-custom bg-primary cursor-nodrop text-white px-lg-5 px-3 py-lg-2 rounded-3 fw-bold"
                                             id="submitNewImgUpload" disabled>
-                                            <span class="spinner-border spinner-border-sm d-none" aria-hidden="true" id="uploadImageSubmitSpinner"></span>
+                                            <span
+                                                class="spinner-border spinner-border-sm d-none"
+                                                aria-hidden="true"
+                                                id="uploadImageSubmitSpinner"></span>
                                             <span>Save</span>
                                         </button>
                                     </div>

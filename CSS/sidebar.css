@@ -12,6 +12,9 @@
     --secondary-offwhite: #e3effd;
     --primary-white: white;
     --text-offwhite: #999999;
+
+    --light-mode-bg: #FBFBFB;
+    --dark-mode-bg: #707277;
 }
 
 /* SIDEBAR CSS */
@@ -134,4 +137,57 @@ html.sidebar-collapsed-init .wrapper .sidebar .nav .nav-item .nav-link,
         width: 100%;
     }
 
+}
+
+
+/* Dark mode Toggle CSS */
+
+.darkmodeLabel {
+    width: 44px;
+    height: 24px;
+    position: relative;
+    display: block;
+    background: var(--light-mode-bg);
+    border-radius: 200px;
+    cursor: pointer;
+}
+
+
+#darkmode-toggle {
+    width: 0;
+    height: 0;
+    visibility: hidden;
+}
+
+#darkmode-toggle:checked+.darkmodeLabel {
+    background: var(--dark-mode-bg);
+    transition: all 0.3s;
+}
+
+.darkmodeLabel img {
+    position: absolute;
+    /* width: 120px; */
+    /* top: 1px; */
+    z-index: 100;
+}
+
+.darkmodeLabel img.sun {
+    top: -2px;
+    left: -2px;
+    opacity: 1;
+}
+
+.darkmodeLabel img.moon {
+    display: none;
+    top: -2px;
+    left: 18px;
+    opacity: 1;
+}
+
+#darkmode-toggle:checked+.darkmodeLabel img.sun {
+    display: none;
+}
+
+#darkmode-toggle:checked+.darkmodeLabel img.moon {
+    display: block;
 }
