@@ -31,8 +31,11 @@ const renderBooks = async (category = "All") => {
   }
 
   if (books.length === 0 && booksGrid) {
-    booksGrid.innerHTML =
-      "<p class='fw-medium d-flex h4 justify-content-center align-items-center mx-auto'>No books found!</p>";
+    booksGrid.innerHTML = `
+    <div class='d-flex flex-column justify-content-center align-items-center mx-auto vh-50 text-center'>
+      <p class="fw-medium text-secondary fs-3 m-0">No Books Found!</p>
+      <p class="fw-medium text-secondary fs-5 m-0">Click the <a data-bs-toggle="modal" data-bs-target="#addBook" class="text-decoration-none cursor-pointer">"Add Book"</a> button to add your first book.</p>
+    </div>`
     return;
   }
 

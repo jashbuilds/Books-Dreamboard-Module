@@ -180,17 +180,19 @@
                                 <p
                                     class="fw-medium text-secondary m-0 w-100 text-nowrap">Sort
                                     by:</p>
-                                <select
-                                    class="fw-semibold bg-transparent border-0 cursor-pointer form-select py-1 ps-2"
+                                <select onchange="sortDreams()"
+                                    class="fw-semibold bg-transparent border-0 cursor-pointer form-select py-1 ps-2 w-auto"
                                     id="categoryFilter"
                                     aria-label="Default select example">
                                     <option value="All" selected>All</option>
+                                    <option value="ASC">Asc..</option>
+                                    <option value="DESC">Desc.</option>
                                 </select>
                             </div>
 
                             <!-- Add Dream button -->
                             <button
-                                class="btn btn-primary addBtn px-md-5 px-3 py-2 order-sm-1 order-0"
+                                class="btn btn-primary addBtn px-md-4 px-3 py-2 order-sm-1 order-0"
                                 data-bs-toggle="modal"
                                 data-bs-target="#addDream"><span
                                     class="fw-medium">Add
@@ -200,7 +202,7 @@
                     </div>
 
                     <!-- All Dreamboard -->
-                    <div class="mt-5">
+                    <div class="mt-4">
                         <div class="row g-4 dreamBoardGrid" id="dreamBoardGrid">
                             <!-- Dreamboards will be available here. -->
                         </div>
@@ -288,8 +290,7 @@
                                                 </label>
 
                                             </div>
-                                            <div id="availableImages"
-                                                class="mt-3">
+                                            <div id="availableImages">
                                                 <!-- Added images will be shown here. -->
                                             </div>
 
@@ -377,7 +378,7 @@
                                     aria-label="Close">
                                 </button>
                             </div>
-                            <div class="modal-body border-top-0">
+                            <div class="modal-body border-top-0 align-content-center">
                                 <div id="imageCarousel">
                                     <!-- Carousel will be rendered here. -->
                                 </div>

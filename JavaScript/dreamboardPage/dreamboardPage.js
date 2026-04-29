@@ -51,8 +51,11 @@ getDreamsData();
 // function to render Dreamboards from Dexie
 function renderDreamboard(res) {
   if (res.length === 0) {
-    dreamBoardGrid.innerHTML =
-      "<p class='text-center fs-4 fw-semibold'>No Dreams Created!</p>";
+    dreamBoardGrid.innerHTML = `
+    <div class='d-flex flex-column justify-content-center align-items-center mx-auto vh-50 text-center'>
+      <p class="fw-medium text-secondary fs-3 m-0">No Dreams Created!</p>
+      <p class="fw-medium text-secondary fs-5 m-0">Click the <a data-bs-toggle="modal" data-bs-target="#addDream" class="text-decoration-none cursor-pointer">"Add Dream"</a> button to create your first dream.</p>
+    </div>`
     return;
   }
   dreamBoardGrid.innerHTML = res
@@ -60,7 +63,7 @@ function renderDreamboard(res) {
       const url = URL.createObjectURL(d.images[0]);
 
       return `
-                            <div class="col-sm-6 col-md-4 col-lg-3">
+                            <div class="col-sm-6 col-lg-4 col-xl-3">
                                  <div class="position-relative dreamCard shadow-sm">
                                      <img data-bs-toggle="modal" data-bs-target="#carouselGallery" onclick="renderCarousel(${d.id})"
                                          src="${url}"
@@ -95,7 +98,7 @@ function renderDreamboard(res) {
                                                     Rename</button></li>
                                             <li><button onclick="openUploadModal(${d.id})"
                                                       data-bs-toggle="modal" data-bs-target="#uploadNewImage"
-                                                    class="dropdown-item d-flex justify-content-start align-items-center gap-2"><img
+                                                    class="dropdown-item ${d.images.length === 5 ? "d-none" : "d-flex"} justify-content-start align-items-center gap-2"><img
                                                         src="../../Icons/upload-image.svg"
                                                         alt="upload"
                                                         width="20"
@@ -233,11 +236,10 @@ async function renderCarousel(dreamId) {
 
   const thumbnails = document.querySelectorAll("#thumbnails .thumbnail");
   let current;
+  const isMobile = window.matchMedia("(max-width: 768px)").matches;
 
   const splide = new Splide("#main-slider", {
-    drag: "free",
-    snap: true,
-    pagination: false,
+    pagination: isMobile,
   });
 
   splide.on("mounted move", () => {
@@ -248,6 +250,12 @@ async function renderCarousel(dreamId) {
       current = thumb;
     }
   });
+
+  if (isMobile) {
+    splide.on("pagination:mounted", function (data) {
+      data.list.classList.add("splide__pagination--custom");
+    });
+  }
 
   splide.mount();
 
@@ -296,19 +304,6 @@ async function renderCarousel(dreamId) {
 
     updateCounter(splide.index);
   });
-  const splideNew = new Splide(".splide");
-
-  splide.on("pagination:mounted", function (data) {
-    // You can add your class to the UL element
-    data.list.classList.add("splide__pagination--custom");
-
-    // `items` contains all dot items
-    data.items.forEach(function (item) {
-      item.button.textContent = String(item.page + 1);
-    });
-  });
-
-  splideNew.mount();
 }
 
 // Common function to render selected images
@@ -316,11 +311,11 @@ function renderImages() {
   availableImages.innerHTML = uploadedImages
     .map(
       (img, i) => `
-        <table class="table table-hover">
+        <table class="table table-borderless m-0">
             <tbody>
                 <tr>
-                    <th scope="row" class="col-1">${i + 1}</th>
-                    <td class="col-10"><span class="overflow-ellipsis">${img.file.name}</span></td>
+                    <th class="col-1 text-center fs-6">${i + 1}</th>
+                    <td class="col-10"><span class="overflow-ellipsis fs-6">${img.file.name}</span></td>
                     <td class="col-1">
                         <button type="button" class="btn-close" aria-label="Close" onclick="removeImg(${i})"></button>
                     </td>
@@ -809,11 +804,11 @@ function renderNewImages() {
   document.getElementById("addedImages").innerHTML = newUploadedImages
     .map(
       (img, i) => `
-        <table class="table table-hover">
+        <table class="table table-borderless m-0">
             <tbody>
                 <tr>
-                    <th scope="row" class="col-1">${i + 1}</th>
-                    <td class="col-10"><span class="overflow-ellipsis">${img.file.name}</span></td>
+                    <th scope="row" class="col-1 text-center fs-6">${i + 1}</th>
+                    <td class="col-10"><span class="overflow-ellipsis fs-6">${img.file.name}</span></td>
                     <td class="col-1">
                         <button type="button" class="btn-close" aria-label="Close" onclick="removeNewImg(${i})" width="20" height="20"></button>
                     </td>
@@ -982,4 +977,27 @@ function activeSlideResize() {
   activeSlide.style.maxWidth = "100%";
   activeSlide.style.maxHeight = "100%";
   activeSlide.style.objectFit = "contain";
+}
+
+// function to sort dreams based on selected filter and render them on UI
+async function sortDreams() {
+  const categoryFilter = document.getElementById("categoryFilter").value;
+  const dreams = await db.dreams.toArray();
+
+  let sortedDreams = [];
+
+  if (categoryFilter === "ASC") {
+    sortedDreams = dreams.sort((a, b) => a.name.localeCompare(b.name));
+  } else if (categoryFilter === "DESC") {
+    sortedDreams = dreams.sort((a, b) => b.name.localeCompare(a.name));
+  } else {
+    sortedDreams = dreams;
+  }
+  dreams.forEach((d) => {
+    if (categoryFilter === "ASC" || categoryFilter === "DESC") {
+      d.isPinned = false;
+    }
+    db.dreams.update(d.id, { isPinned: d.isPinned });
+  });
+  renderDreamboard(sortedDreams);
 }
