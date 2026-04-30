@@ -12,211 +12,212 @@
     --border-offwhite: #232527;
 }
 
-body.dark-mode {
+html.dark-mode body {
     background-color: var(--dark-mode-bg) !important;
     color: var(--text-offwhite) !important;
 }
 
-body.dark-mode .wrapper .sidebar .logo-text img {
+html.dark-mode body .wrapper .sidebar .logo-text img {
     content: url("../../Icons/logo-light.svg") !important;
 }
 
-body.dark-mode .wrapper .sidebar {
+html.dark-mode body .wrapper .sidebar {
     background-color: var(--bg-active-sidebar) !important;
 }
 
-body.dark-mode .wrapper .main-content .navbar {
+html.dark-mode body .wrapper .main-content .navbar {
     background-color: var(--bg-active-sidebar) !important;
     color: var(--text-offwhite) !important;
 }
 
-body.dark-mode .wrapper .sidebar .nav .nav-item .nav-link:hover {
+html.dark-mode body .wrapper .sidebar .nav .nav-item .nav-link:hover {
     background-color: var(--secondary-blue-dark) !important;
 }
 
-body.dark-mode .wrapper .main-content .navbar .search-box .input-group-text,
-body.dark-mode .wrapper .main-content .navbar .search-box .form-control {
+html.dark-mode body .wrapper .main-content .navbar .search-box .input-group-text,
+html.dark-mode body .wrapper .main-content .navbar .search-box .form-control {
     background-color: var(--search-bg) !important;
 }
 
-body.dark-mode .wrapper .main-content .navbar .smsIcon {
+html.dark-mode body .wrapper .main-content .navbar .smsIcon {
     content: url("../../Icons/sms-dark.svg");
 }
 
-body.dark-mode .wrapper .main-content .navbar .notificationIcon {
+html.dark-mode body .wrapper .main-content .navbar .notificationIcon {
     content: url("../../Icons/notification-dark.svg");
 }
 
-body.dark-mode .wrapper .main-content .navbar .profileIcon {
+html.dark-mode body .wrapper .main-content .navbar .profileIcon {
     content: url("../../Icons/profile-dark.svg") !important;
 }
 
-body.dark-mode .wrapper .main-content .navbar .profileBlock svg path {
+html.dark-mode body .wrapper .main-content .navbar .profileBlock svg path {
     fill: var(--primary-white) !important;
 }
 
-body.dark-mode .wrapper .main-content,
-body.dark-mode .wrapper .main-content .categoryFilter * {
+html.dark-mode body .wrapper .main-content,
+html.dark-mode body .wrapper .main-content .categoryFilter * {
     background-color: var(--search-bg) !important;
     color: var(--primary-white) !important;
 }
 
-body.dark-mode .wrapper .main-content .bodyContent .btn {
+html.dark-mode body .wrapper .main-content .bodyContent .btn {
     background-color: var(--primary-blue-dark) !important;
     color: var(--primary-white) !important;
-    border: none;
+    border-color: transparent !important;
 }
 
-body.dark-mode .wrapper .main-content .bodyContent .booksGrid .booksCard {
+html.dark-mode body .wrapper .main-content .bodyContent .booksGrid .booksCard {
     background-color: var(--bg-active-sidebar) !important;
     color: var(--primary-white) !important;
     border-color: var(--primary-blue-dark) !important;
 }
 
-body.dark-mode .wrapper .main-content .bodyContent .booksGrid .booksCard .dropdown-toggle {
+html.dark-mode body .wrapper .main-content .bodyContent .booksGrid .booksCard .dropdown-toggle {
     content: url("../../Icons/three-dots-light.svg") !important;
 }
 
-body.dark-mode .wrapper .main-content .bodyContent .booksGrid .booksCard .card-title {
+html.dark-mode body .wrapper .main-content .bodyContent .booksGrid .booksCard .card-title {
     color: var(--primary-white) !important;
 }
 
-body.dark-mode .wrapper .main-content .bodyContent .booksGrid .booksCard .dropdown .dropdown-menu {
+html.dark-mode body .wrapper .main-content .bodyContent .booksGrid .booksCard .dropdown .dropdown-menu {
     background-color: var(--border-offwhite) !important;
 }
 
-body.dark-mode .wrapper .main-content .bodyContent .booksGrid .booksCard .dropdown .dropdown-menu .dropdown-item {
+html.dark-mode body .wrapper .main-content .bodyContent .booksGrid .booksCard .dropdown .dropdown-menu .dropdown-item {
     color: var(--primary-white) !important;
 }
 
-body.dark-mode .wrapper .main-content .bodyContent .booksGrid .booksCard .dropdown .dropdown-menu .dropdown-item:hover {
+html.dark-mode body .wrapper .main-content .bodyContent .booksGrid .booksCard .dropdown .dropdown-menu .dropdown-item:hover {
     color: var(--search-bg) !important;
 }
 
-body.dark-mode .wrapper .sidebar .nav .nav-item .nav-link.active {
+html.dark-mode body .wrapper .sidebar .nav .nav-item .nav-link.active {
     background-color: var(--primary-blue-dark) !important;
     color: var(--primary-white) !important;
 }
 
-body.dark-mode .wrapper .main-content .modal .modal-content {
+html.dark-mode body .wrapper .main-content .modal .modal-content {
     background-color: var(--search-bg) !important;
     color: var(--primary-white) !important;
 }
 
-body.dark-mode .wrapper .main-content .modal .modal-content .btn,
-body.dark-mode .splide__list img {
+html.dark-mode body .wrapper .main-content .modal .modal-content .btn,
+html.dark-mode body .splide__list img {
     border-color: var(--primary-blue-dark);
 }
 
-body.dark-mode .wrapper .main-content .modal .modal-content .modal-header .btn-close,
-body.dark-mode .wrapper .main-content .modal .table .btn-close {
+html.dark-mode body .wrapper .main-content .modal .modal-content .modal-header .btn-close,
+html.dark-mode body .wrapper .main-content .modal .table .btn-close {
     filter: invert(1);
 }
 
-body.dark-mode .wrapper .main-content .modal .btn-decline {
+html.dark-mode body .wrapper .main-content .modal .btn-decline {
     color: var(--primary-blue-dark) !important;
     border-color: var(--primary-blue-dark) !important;
 }
 
-body.dark-mode .wrapper .main-content .modal .btn-decline:hover {
+html.dark-mode body .wrapper .main-content .modal .btn-decline:hover {
     color: var(--primary-white) !important;
     background-color: var(--primary-blue-dark) !important;
 }
 
-body.dark-mode .wrapper .main-content .modal .modal-content .form-label {
+html.dark-mode body .wrapper .main-content .modal .modal-content .form-label {
     color: var(--primary-white) !important;
 }
 
-body.dark-mode .wrapper .main-content .modal .modal-content .form-control,
-body.dark-mode .wrapper .main-content .modal .modal-content .form-select,
-body.dark-mode .wrapper .main-content .modal .modal-content .drop-area {
+html.dark-mode body .wrapper .main-content .modal .modal-content .form-control,
+html.dark-mode body .wrapper .main-content .modal .modal-content .form-select,
+html.dark-mode body .wrapper .main-content .modal .modal-content .drop-area {
     background-color: var(--search-bg) !important;
     color: var(--primary-white) !important;
     border-color: var(--border-offwhite) !important;
 }
 
-body.dark-mode .wrapper .main-content .modal .modal-content .form-control::placeholder {
+html.dark-mode body .wrapper .main-content .modal .modal-content .form-control::placeholder {
     color: var(--dark-mode-bg) !important;
 }
 
 /* bookPreview page Darkmode CSS */
 
-body.dark-mode .wrapper .main-content .backArrow img {
+html.dark-mode body .wrapper .main-content .backArrow img {
     content: url("../../Icons/arrow-left-light.svg");
 }
 
-body.dark-mode .wrapper .main-content .backArrow:hover {
+html.dark-mode body .wrapper .main-content .backArrow:hover {
     background-color: var(--secondary-blue-dark) !important;
 }
 
-body.dark-mode .wrapper .main-content .read-mode-box {
+html.dark-mode body .wrapper .main-content .read-mode-box {
     background: var(--bg-active-sidebar) !important;
     border-color: var(--border-offwhite) !important;
 }
 
-body.dark-mode .wrapper .main-content .readControls,
-body.dark-mode .wrapper .main-content .readModeSwitch:checked,
-body.dark-mode .wrapper .main-content .toast,
-body.dark-mode .splide__pagination__page.is-active,
-body.dark-mode .wrapper .main-content .modal .btn-accept,
-body.dark-mode .wrapper .sidebar .logo-placeholder {
+html.dark-mode body .wrapper .main-content .readControls,
+html.dark-mode body .wrapper .main-content .readModeSwitch:checked,
+html.dark-mode body .wrapper .main-content .toast,
+html.dark-mode body .splide__pagination__page.is-active,
+html.dark-mode body .wrapper .main-content .modal .btn-accept,
+html.dark-mode body .wrapper .sidebar .logo-placeholder {
     background-color: var(--primary-blue-dark) !important;
 }
 
-body.dark-mode .wrapper .main-content .readModeSwitch {
+html.dark-mode body .wrapper .main-content .readModeSwitch {
     background-color: var(--dark-mode-light);
     border-color: transparent;
 }
 
-body.dark-mode .wrapper .main-content .pdfControls {
+html.dark-mode body .wrapper .main-content .pdfControls {
     background-color: var(--bg-active-sidebar);
     color: var(--primary-white);
 }
 
-body.dark-mode .wrapper .main-content #bookInfo {
-    border: none !important;
+html.dark-mode body .wrapper .main-content #bookInfo {
+    border-color: transparent !important;
 }
 
 /* Dreamboard Module Darkmode CSS */
 
-body.dark-mode .wrapper .main-content .img-view img {
+html.dark-mode body .wrapper .main-content .img-view img {
     content: url("../../Icons/drop-image-icon-dark.svg") !important;
 }
 
-body.dark-mode .wrapper .main-content .modal .modal-content .imgCriteriaHead {
+html.dark-mode body .wrapper .main-content .modal .modal-content .imgCriteriaHead {
     color: var(--text-offwhite);
 }
 
-body.dark-mode .wrapper .main-content .modal .modal-content .imgCriteriaHead span {
+html.dark-mode body .wrapper .main-content .modal .modal-content .imgCriteriaHead span {
     color: var(--primary-blue-dark) !important;
 }
 
-body.dark-mode .wrapper .main-content .modal .carouselGallery,
-body.dark-mode .wrapper .main-content .splideContainer .actionBtnGrp {
+html.dark-mode body .wrapper .main-content .modal .carouselGallery,
+html.dark-mode body .wrapper .main-content .splideContainer .actionBtnGrp {
     background-color: transparent !important;
 }
 
-body.dark-mode .wrapper .main-content .dreamCard .dropdown .dropdown-toggle {
+html.dark-mode body .wrapper .main-content .dreamCard .dropdown .dropdown-toggle {
     content: url("../../Icons/three-dots-vertical-filled-dark.svg");
 }
 
-body.dark-mode .wrapper .main-content .dreamCard .dropdown-menu {
+html.dark-mode body .wrapper .main-content .dreamCard .dropdown-menu {
     background-color: var(--dark-mode-bg);
 }
 
-body.dark-mode .wrapper .main-content .dreamCard .dropdown-menu .dropdown-item {
+html.dark-mode body .wrapper .main-content .dreamCard .dropdown-menu .dropdown-item {
     color: var(--primary-white) !important;
 }
 
-body.dark-mode .wrapper .main-content .dreamCard .dropdown-menu .dropdown-item:hover {
+html.dark-mode body .wrapper .main-content .dreamCard .dropdown-menu .dropdown-item:hover {
     color: var(--search-bg) !important;
 }
 
-body.dark-mode .wrapper .main-content .modal .table * {
+html.dark-mode body .wrapper .main-content .modal .table * {
     background-color: transparent !important;
     color: var(--primary-white) !important;
 }
 
-body.dark-mode .splide__arrow--prev path, body.dark-mode .splide__arrow--next path {
+html.dark-mode body .splide__arrow--prev path,
+html.dark-mode body .splide__arrow--next path {
     fill: var(--primary-blue-dark) !important;
 }

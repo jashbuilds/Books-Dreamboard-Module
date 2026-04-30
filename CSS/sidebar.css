@@ -1,4 +1,3 @@
-
 /* COMMON COLOR VARIABLES */
 :root {
     --primary-blue: #2B5BFC;
@@ -150,6 +149,7 @@ html.sidebar-collapsed-init .wrapper .sidebar .nav .nav-item .nav-link,
     background: var(--light-mode-bg);
     border-radius: 200px;
     cursor: pointer;
+    transition: all 0.3s;
 }
 
 
@@ -159,15 +159,17 @@ html.sidebar-collapsed-init .wrapper .sidebar .nav .nav-item .nav-link,
     visibility: hidden;
 }
 
-#darkmode-toggle:checked+.darkmodeLabel {
+html.dark-mode .darkmodeLabel {
+    background: var(--dark-mode-bg);
+}
+
+/* #darkmode-toggle:checked+.darkmodeLabel {
     background: var(--dark-mode-bg);
     transition: all 0.3s;
-}
+} */
 
 .darkmodeLabel img {
     position: absolute;
-    /* width: 120px; */
-    /* top: 1px; */
     z-index: 100;
 }
 
@@ -184,10 +186,10 @@ html.sidebar-collapsed-init .wrapper .sidebar .nav .nav-item .nav-link,
     opacity: 1;
 }
 
-#darkmode-toggle:checked+.darkmodeLabel img.sun {
+html.dark-mode .darkmodeLabel img.sun {
     display: none;
 }
 
-#darkmode-toggle:checked+.darkmodeLabel img.moon {
+html.dark-mode .darkmodeLabel img.moon {
     display: block;
 }
