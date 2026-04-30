@@ -33,7 +33,7 @@ const renderBooks = async (category = "All") => {
   if (books.length === 0 && booksGrid) {
     booksGrid.innerHTML = `
     <div class='d-flex flex-column justify-content-center align-items-center mx-auto vh-50 text-center'>
-      <p class="fw-medium text-secondary fs-3 m-0">No Books Found!</p>
+      <p class="fw-medium text-secondary fs-5 m-0">No Books Found!</p>
     </div>`
     return;
   }

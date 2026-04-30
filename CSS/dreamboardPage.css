@@ -257,5 +257,8 @@
         margin-top: 1rem;
         flex-wrap: wrap;
     }
+    .splide__pagination__page.is-active {
+        background: var(--blue-primary) !important;
+    }
 
 }

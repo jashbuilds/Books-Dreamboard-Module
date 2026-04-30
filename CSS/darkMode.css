@@ -1,25 +1,24 @@
 :root {
-    --primary-blue: #4422EF;
-    --secondary-blue: #dbe2ff;
+    --primary-blue-dark: #4422EF;
+    --secondary-blue-dark: #9e8fea36;
     --bg-hover-sidebar: #eef4fc;
     --bg-active-sidebar: #1A1B1D;
-    --text-sidebar: #939292;
     --bg-offwhite: #f0f2f5;
-    --bg-offwhite-secondary: #eaeaeb;
-    --bg-offwhite-tertiary: #e1e1e3;
-    --secondary-offwhite: #e3effd;
     --primary-white: white;
     --text-offwhite: #999999;
     --search-bg: #141416;
-
-    --light-mode-bg: #FBFBFB;
     --dark-mode-bg: #707277;
-
+    --dark-mode-light: #c8cbd4;
+    --border-offwhite: #232527;
 }
 
 body.dark-mode {
     background-color: var(--dark-mode-bg) !important;
     color: var(--text-offwhite) !important;
+}
+
+body.dark-mode .wrapper .sidebar .logo-text img {
+    content: url("../../Icons/logo-light.svg") !important;
 }
 
 body.dark-mode .wrapper .sidebar {
@@ -31,52 +30,72 @@ body.dark-mode .wrapper .main-content .navbar {
     color: var(--text-offwhite) !important;
 }
 
-body.dark-mode .wrapper .main-content .navbar .search-box .input-group-text, body.dark-mode .wrapper .main-content .navbar .search-box .form-control {
+body.dark-mode .wrapper .sidebar .nav .nav-item .nav-link:hover {
+    background-color: var(--secondary-blue-dark) !important;
+}
+
+body.dark-mode .wrapper .main-content .navbar .search-box .input-group-text,
+body.dark-mode .wrapper .main-content .navbar .search-box .form-control {
     background-color: var(--search-bg) !important;
 }
 
-body.dark-mode .wrapper .main-content .navbar svg path{
-    stroke: var(--primary-white) !important;
+body.dark-mode .wrapper .main-content .navbar .smsIcon {
+    content: url("../../Icons/sms-dark.svg");
+}
+
+body.dark-mode .wrapper .main-content .navbar .notificationIcon {
+    content: url("../../Icons/notification-dark.svg");
+}
+
+body.dark-mode .wrapper .main-content .navbar .profileIcon {
+    content: url("../../Icons/profile-dark.svg") !important;
 }
 
 body.dark-mode .wrapper .main-content .navbar .profileBlock svg path {
     fill: var(--primary-white) !important;
 }
 
-body.dark-mode .wrapper .main-content, body.dark-mode .wrapper .main-content .categoryFilter * {
+body.dark-mode .wrapper .main-content,
+body.dark-mode .wrapper .main-content .categoryFilter * {
     background-color: var(--search-bg) !important;
     color: var(--primary-white) !important;
 }
 
 body.dark-mode .wrapper .main-content .bodyContent .btn {
-    background-color: var(--primary-blue) !important;
+    background-color: var(--primary-blue-dark) !important;
     color: var(--primary-white) !important;
     border: none;
 }
 
 body.dark-mode .wrapper .main-content .bodyContent .booksGrid .booksCard {
-    background-color: var(--dark-mode-bg) !important;
+    background-color: var(--bg-active-sidebar) !important;
     color: var(--primary-white) !important;
+    border-color: var(--primary-blue-dark) !important;
+}
+
+body.dark-mode .wrapper .main-content .bodyContent .booksGrid .booksCard .dropdown-toggle {
+    content: url("../../Icons/three-dots-light.svg") !important;
 }
 
 body.dark-mode .wrapper .main-content .bodyContent .booksGrid .booksCard .card-title {
     color: var(--primary-white) !important;
 }
 
-body.dark-mode .wrapper .main-content .bodyContent .booksGrid .booksCard .dropdown .dropdown-menu  {
-    background-color: var(--dark-mode-bg) !important;
+body.dark-mode .wrapper .main-content .bodyContent .booksGrid .booksCard .dropdown .dropdown-menu {
+    background-color: var(--border-offwhite) !important;
 }
 
 body.dark-mode .wrapper .main-content .bodyContent .booksGrid .booksCard .dropdown .dropdown-menu .dropdown-item {
     color: var(--primary-white) !important;
 }
+
 body.dark-mode .wrapper .main-content .bodyContent .booksGrid .booksCard .dropdown .dropdown-menu .dropdown-item:hover {
     color: var(--search-bg) !important;
 }
 
 body.dark-mode .wrapper .sidebar .nav .nav-item .nav-link.active {
-    background-color: var(--primary-blue);
-    color: var(--primary-white);
+    background-color: var(--primary-blue-dark) !important;
+    color: var(--primary-white) !important;
 }
 
 body.dark-mode .wrapper .main-content .modal .modal-content {
@@ -84,41 +103,69 @@ body.dark-mode .wrapper .main-content .modal .modal-content {
     color: var(--primary-white) !important;
 }
 
-body.dark-mode .wrapper .main-content .modal .modal-content .modal-header .btn-close {
+body.dark-mode .wrapper .main-content .modal .modal-content .btn,
+body.dark-mode .splide__list img {
+    border-color: var(--primary-blue-dark);
+}
+
+body.dark-mode .wrapper .main-content .modal .modal-content .modal-header .btn-close,
+body.dark-mode .wrapper .main-content .modal .table .btn-close {
     filter: invert(1);
+}
+
+body.dark-mode .wrapper .main-content .modal .btn-decline {
+    color: var(--primary-blue-dark) !important;
+    border-color: var(--primary-blue-dark) !important;
+}
+
+body.dark-mode .wrapper .main-content .modal .btn-decline:hover {
+    color: var(--primary-white) !important;
+    background-color: var(--primary-blue-dark) !important;
 }
 
 body.dark-mode .wrapper .main-content .modal .modal-content .form-label {
     color: var(--primary-white) !important;
 }
 
-body.dark-mode .wrapper .main-content .modal .modal-content .form-control, body.dark-mode .wrapper .main-content .modal .modal-content .form-select {
+body.dark-mode .wrapper .main-content .modal .modal-content .form-control,
+body.dark-mode .wrapper .main-content .modal .modal-content .form-select,
+body.dark-mode .wrapper .main-content .modal .modal-content .drop-area {
     background-color: var(--search-bg) !important;
     color: var(--primary-white) !important;
+    border-color: var(--border-offwhite) !important;
 }
 
 body.dark-mode .wrapper .main-content .modal .modal-content .form-control::placeholder {
     color: var(--dark-mode-bg) !important;
 }
 
-body.dark-mode .wrapper .main-content .modal .modal-body .btn-submit-custom {
-    background-color: var(--primary-blue) !important;
-    border: none;
+/* bookPreview page Darkmode CSS */
+
+body.dark-mode .wrapper .main-content .backArrow img {
+    content: url("../../Icons/arrow-left-light.svg");
 }
 
-/* bookPreview page CSS */
-
-body.dark-mode .wrapper .main-content .backArrow svg {
-    fill: var(--primary-white);
-}
-
-body.dark-mode .wrapper .main-content .backArrow:hover svg {
-    fill: var(--search-bg);
+body.dark-mode .wrapper .main-content .backArrow:hover {
+    background-color: var(--secondary-blue-dark) !important;
 }
 
 body.dark-mode .wrapper .main-content .read-mode-box {
     background: var(--bg-active-sidebar) !important;
-    border-color: var(--dark-mode-bg) !important;
+    border-color: var(--border-offwhite) !important;
+}
+
+body.dark-mode .wrapper .main-content .readControls,
+body.dark-mode .wrapper .main-content .readModeSwitch:checked,
+body.dark-mode .wrapper .main-content .toast,
+body.dark-mode .splide__pagination__page.is-active,
+body.dark-mode .wrapper .main-content .modal .btn-accept,
+body.dark-mode .wrapper .sidebar .logo-placeholder {
+    background-color: var(--primary-blue-dark) !important;
+}
+
+body.dark-mode .wrapper .main-content .readModeSwitch {
+    background-color: var(--dark-mode-light);
+    border-color: transparent;
 }
 
 body.dark-mode .wrapper .main-content .pdfControls {
@@ -128,4 +175,53 @@ body.dark-mode .wrapper .main-content .pdfControls {
 
 body.dark-mode .wrapper .main-content #bookInfo {
     border: none !important;
+}
+
+/* Dreamboard Module Darkmode CSS */
+
+body.dark-mode .wrapper .main-content .img-view img {
+    content: url("../../Icons/drop-image-icon-dark.svg") !important;
+}
+
+body.dark-mode .wrapper .main-content .modal .modal-content .imgCriteriaHead {
+    color: var(--text-offwhite);
+}
+
+body.dark-mode .wrapper .main-content .modal .modal-content .imgCriteriaHead span {
+    color: var(--primary-blue-dark) !important;
+}
+
+body.dark-mode .wrapper .main-content .modal .carouselGallery,
+body.dark-mode .wrapper .main-content .splideContainer .actionBtnGrp {
+    background-color: transparent !important;
+}
+
+body.dark-mode .wrapper .main-content .dreamCard .dropdown .dropdown-toggle {
+    content: url("../../Icons/three-dots-vertical-filled-dark.svg");
+}
+
+body.dark-mode .wrapper .main-content .dreamCard .dropdown-menu {
+    background-color: var(--dark-mode-bg);
+}
+
+body.dark-mode .wrapper .main-content .dreamCard .dropdown-menu .dropdown-item {
+    color: var(--primary-white) !important;
+}
+
+body.dark-mode .wrapper .main-content .dreamCard .dropdown-menu .dropdown-item:hover {
+    color: var(--search-bg) !important;
+}
+
+body.dark-mode .wrapper .main-content .modal .table * {
+    background-color: transparent !important;
+    color: var(--primary-white) !important;
+}
+
+
+body.dark-mode .splide__arrow--prev path {
+    fill: var(--primary-blue-dark) !important;
+}
+
+body.dark-mode .splide__arrow--next path {
+    fill: var(--primary-blue-dark) !important;
 }

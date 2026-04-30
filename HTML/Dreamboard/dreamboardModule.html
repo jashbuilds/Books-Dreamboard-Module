@@ -34,7 +34,7 @@
                     <p
                         class="mb-0 fw-bold d-flex justify-content-center align-items-center logo-text text-uppercase">
                         <img src="../../Icons/Logo.svg" alt="Logo"
-                            class="img-fluid">
+                            class="img-fluid" id="navLogo">
                     </p>
                 </div>
 
@@ -135,14 +135,15 @@
                         </div>
 
                         <!-- Right Section: Actions & Profile -->
-                        <div class="d-flex align-items-center me-3">
-                            <div class="d-flex  d-none d-sm-flex">
+                        <div class="d-flex align-items-center me-3 gap-2">
+                            <div class="d-flex gap-2 align-items-center">
                                 <div
                                     class="me-3 d-flex justify-content-center align-items-center">
                                     <input type="checkbox"
                                         id="darkmode-toggle" />
                                     <label for="darkmode-toggle"
-                                        class="darkmodeLabel">
+                                        class="darkmodeLabel"
+                                        id="darkModeSwitch">
                                         <img src="../../Icons/sun.svg"
                                             alt="light-mode" width="28"
                                             height="28" class="sun">
@@ -154,22 +155,29 @@
                                     </label>
                                 </div>
                                 <div
-                                    class="me-3 d-flex justify-content-center align-items-center">
-                                    <img src="../../Icons/sms-notified.svg"
-                                        alt="sms" width="25" height="25">
+                                    class="me-3 d-sm-flex d-none justify-content-center align-items-center">
+
+                                    <img
+                                        src="../../Icons/sms-notified-light.svg"
+                                        alt="sms" class="smsIcon">
+
                                 </div>
                                 <div
-                                    class="me-3 d-flex justify-content-center align-items-center">
-                                    <img src="../../Icons/notification.svg"
-                                        alt="notification" width="25"
-                                        height="25">
+                                    class="me-3 d-sm-flex d-none justify-content-center align-items-center">
+
+                                    <img
+                                        src="../../Icons/notification-light.svg"
+                                        alt="notification"
+                                        class="notificationIcon">
+
                                 </div>
                             </div>
                             <div
                                 class="d-flex justify-content-center align-items-center">
-                                <div>
-                                    <img src="../../Icons/profile.svg"
-                                        alt="profile" width="157" height="40">
+                                <div class="profileBlock">
+                                    <img src="../../Icons/profile-light.svg"
+                                        alt="profile" class="profileIcon">
+
                                 </div>
                             </div>
                         </div>
@@ -178,7 +186,7 @@
                 </nav>
 
                 <!-- Body content -->
-                <div class="container-fluid p-4">
+                <div class="bodyContent container-fluid p-4">
                     <div class="d-flex justify-content-between gap-2">
                         <div class="d-flex">
                             <p class="fs-4 m-0 fw-semibold">Dreamboard</p>
@@ -187,7 +195,7 @@
                         <div
                             class="d-flex flex-sm-row flex-column justify-content-center align-items-sm-center align-items-end gap-3">
                             <div
-                                class="d-flex align-items-center gap-1 order-sm-0 order-1">
+                                class="categoryFilter d-flex align-items-center gap-1 order-sm-0 order-1">
                                 <p
                                     class="fw-medium text-secondary m-0 w-100 text-nowrap">Sort
                                     by:</p>
@@ -232,7 +240,7 @@
                                 class="modal-header d-flex justify-content-start align-items-center border-bottom-0 px-4 py-3">
                                 <p class="modal-title h2 fw-semibold mb-0 fs-4"
                                     id="formModalLabel">Add Dream</p>
-                                <button type="button" class="btn-close"
+                                <button type="button" class="btn-close pe-3"
                                     data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                             </div>
@@ -274,7 +282,7 @@
                                                         hidden multiple
                                                         required>
                                                     <div id="img-view"
-                                                        class="d-flex gap-1 flex-column justify-content-center align-items-center rounded">
+                                                        class="img-view d-flex gap-1 flex-column justify-content-center align-items-center rounded">
                                                         <img
                                                             src="../../Icons/dropImage-icon.svg"
                                                             alt="drop-icon"
@@ -314,10 +322,10 @@
                                     <div
                                         class="d-flex gap-2 justify-content-end mt-3">
                                         <button type="button" id="cancelBtn"
-                                            class="btn btn-outline-primary px-lg-5 px-3 py-lg-2 rounded-3"
+                                            class="btn btn-outline-primary px-lg-5 px-3 py-lg-2 rounded-3 btn-decline"
                                             data-bs-dismiss="modal"><span>Cancel</span></button>
                                         <button type="submit"
-                                            class="btn btn-submit-custom bg-primary cursor-nodrop text-white px-lg-5 px-3 py-lg-2 rounded-3 fw-bold"
+                                            class="btn btn-submit-custom bg-primary cursor-nodrop text-white px-lg-5 px-3 py-lg-2 rounded-3 fw-bold btn-accept"
                                             id="submitBtn" disabled>
                                             <span
                                                 class="spinner-border spinner-border-sm d-none"
@@ -350,10 +358,10 @@
                             </div>
                             <div class="modal-footer border-top-0">
                                 <button type="button"
-                                    class="btn btn-outline-primary px-5"
+                                    class="btn btn-outline-primary px-5 btn-decline"
                                     data-bs-dismiss="modal">No</button>
                                 <button type="button"
-                                    class="btn btn-primary px-5"
+                                    class="btn btn-primary px-5 btn-accept"
                                     data-bs-dismiss="modal"
                                     id="confirmDelete"
                                     onclick="deleteDream()">
@@ -390,7 +398,8 @@
                 <div class="modal fade" id="carouselGallery" tabindex="-1"
                     aria-labelledby="exampleModalLabel">
                     <div class="modal-dialog modal-fullscreen p-3">
-                        <div class="modal-content bg-transparent">
+                        <div
+                            class="modal-content bg-transparent carouselGallery">
                             <div class="modal-header border-bottom-0 p-0">
                                 <button type="button"
                                     class="btn btn-close btn-light"
@@ -412,7 +421,7 @@
                 <div class="modal fade" id="renameModal" tabindex="-1"
                     aria-labelledby="renameModalLabel"
                     aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-dialog modal-dialog-centered renameModal">
                         <div class="modal-content">
                             <div class="modal-header border-bottom-0">
                                 <h5 class="modal-title" id="deleteModalLabel">
@@ -445,10 +454,10 @@
                             </div>
                             <div class="modal-footer border-top-0">
                                 <button type="button"
-                                    class="btn btn-outline-primary px-5"
+                                    class="btn btn-outline-primary px-5 btn-decline"
                                     data-bs-dismiss="modal">Cancel</button>
                                 <button type="button"
-                                    class="btn btn-primary px-5 cursor-nodrop"
+                                    class="btn btn-primary px-5 cursor-nodrop btn-accept"
                                     data-bs-dismiss="modal"
                                     id="confirmRename"
                                     onclick="updateDreamName()"
@@ -538,10 +547,10 @@
                                     <div
                                         class="d-flex gap-2 justify-content-end mt-3">
                                         <button type="button" id="cancelBtn"
-                                            class="btn btn-outline-primary px-lg-5 px-3 py-lg-2 rounded-3"
+                                            class="btn btn-outline-primary px-lg-5 px-3 py-lg-2 rounded-3 btn-decline"
                                             data-bs-dismiss="modal"><span>Cancel</span></button>
                                         <button type="submit"
-                                            class="btn btn-submit-custom bg-primary cursor-nodrop text-white px-lg-5 px-3 py-lg-2 rounded-3 fw-bold"
+                                            class="btn btn-submit-custom bg-primary cursor-nodrop text-white px-lg-5 px-3 py-lg-2 rounded-3 fw-bold btn-accept"
                                             id="submitNewImgUpload" disabled>
                                             <span
                                                 class="spinner-border spinner-border-sm d-none"
@@ -569,6 +578,7 @@
         <script src="../../JavaScript/dreamboardPage/dreamboardPage.js"
             defer></script>
         <script src="../../JavaScript/toggleSidebar.js" defer></script>
+        <script src="../../JavaScript/darkMode.js" defer></script>
 
     </body>
 

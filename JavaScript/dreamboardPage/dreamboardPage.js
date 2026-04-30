@@ -53,8 +53,7 @@ function renderDreamboard(res) {
   if (res.length === 0) {
     dreamBoardGrid.innerHTML = `
     <div class='d-flex flex-column justify-content-center align-items-center mx-auto vh-50 text-center'>
-      <p class="fw-medium text-secondary fs-3 m-0">No Dreams Created!</p>
-      <p class="fw-medium text-secondary fs-5 m-0">Click the <a data-bs-toggle="modal" data-bs-target="#addDream" class="text-decoration-none cursor-pointer">"Add Dream"</a> button to create your first dream.</p>
+      <p class="fw-medium text-secondary fs-5 m-0">No Dreams Created!</p>
     </div>`
     return;
   }
@@ -80,7 +79,7 @@ function renderDreamboard(res) {
                                     <div
                                         class="dropdown position-absolute top-0 end-0 m-3 dropdownIcon z-3">
                                         <img
-                                            src="../../Icons/three-dots-vertical-filled.svg"
+                                            src="../../Icons/three-dots-vertical-filled-light.svg"
                                             class="dropdown-toggle cursor-pointer"
                                             alt="action-menu" width="30"
                                             height="30"
@@ -99,10 +98,10 @@ function renderDreamboard(res) {
                                             <li><button onclick="openUploadModal(${d.id})"
                                                       data-bs-toggle="modal" data-bs-target="#uploadNewImage"
                                                     class="dropdown-item ${d.images.length === 5 ? "d-none" : "d-flex"} justify-content-start align-items-center gap-2"><img
-                                                        src="../../Icons/upload-image.svg"
+                                                        src="../../Icons/add_image.svg" class="uploadImg"
                                                         alt="upload"
                                                         width="20"
-                                                        height="20">Upload
+                                                        height="22">Upload
                                                     Image</button></li>
                                             <li><button onclick="openDeleteModal(${d.id})" data-bs-toggle="modal" data-bs-target="#deleteModal"
 
@@ -314,8 +313,9 @@ function renderImages() {
         <table class="table table-borderless m-0">
             <tbody>
                 <tr>
-                    <th class="col-1 text-center fs-6">${i + 1}</th>
-                    <td class="col-10"><span class="overflow-ellipsis fs-6">${img.file.name}</span></td>
+                    <td class="col-11">
+                      <p class="overflow-ellipsis fs-6 m-0">${i + 1} <span class="ps-3 text-wrap">${img.file.name}</span></p>
+                    </td>
                     <td class="col-1">
                         <button type="button" class="btn-close" aria-label="Close" onclick="removeImg(${i})"></button>
                     </td>

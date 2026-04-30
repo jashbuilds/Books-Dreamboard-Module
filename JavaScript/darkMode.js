@@ -1,27 +1,25 @@
-let darkMode = localStorage.getItem("darkmode")
-let darkModeSwitch = document.getElementById("darkModeSwitch")
+let darkMode = localStorage.getItem("darkmode");
+let darkModeSwitch = document.getElementById("darkModeSwitch");
+let darkModeToggle = document.getElementById("darkmode-toggle");
 
-let navLogo = document.getElementById("navLogo")
+let navLogo = document.getElementById("navLogo");
 
 const enableDarkMode = () => {
-    if(!document.getElementById("darkmode-toggle").checked) {
-        document.body.classList.add("dark-mode")
-        localStorage.setItem("darkmode", "active")
-        navLogo.src = '../../Icons/logo-light.svg'
-    }
-}
+  document.body.classList.add("dark-mode");
+  localStorage.setItem("darkmode", "active");
+};
 
 const disableDarkMode = () => {
-    if(document.getElementById("darkmode-toggle").checked) {
-        document.body.classList.remove("dark-mode")
-        localStorage.setItem("darkmode", null)
-        navLogo.src = '../../Icons/Logo.svg'
-    }
+  document.body.classList.remove("dark-mode");
+  localStorage.setItem("darkmode", null);
+};
+
+if (darkMode === "active") {
+  darkModeToggle.checked = true;
+  enableDarkMode();
 }
 
-if(darkMode === "active") enableDarkMode()
-
 darkModeSwitch.addEventListener("click", () => {
-    darkMode = localStorage.getItem("darkmode")
-    darkMode !== "active" ? enableDarkMode() : disableDarkMode()
-})
+  darkMode = localStorage.getItem("darkmode");
+  darkMode !== "active" ? enableDarkMode() : disableDarkMode();
+});

@@ -2,7 +2,7 @@
 /* COMMON COLOR VARIABLES */
 :root {
     --primary-blue: #2B5BFC;
-    --secondary-blue: #dbe2ff;
+    --secondary-blue-light: #dbe2ff;
     --bg-hover-sidebar: #eef4fc;
     --bg-active-sidebar: #e3effd;
     --text-sidebar: #939292;
@@ -49,12 +49,12 @@
 }
 
 .wrapper .sidebar .nav .nav-item .nav-link:hover {
-    background-color: var(--bg-active-sidebar);
+    background-color: var(--secondary-blue-light) !important;
 }
 
 .wrapper .sidebar .nav .nav-item .nav-link.active {
-    background-color: var(--primary-blue);
-    color: var(--bg-offwhite);
+    background-color: var(--primary-blue) !important;
+    color: var(--bg-offwhite) !important;
 }
 
 .wrapper .sidebar .nav .nav-item .nav-link.active svg {
