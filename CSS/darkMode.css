@@ -217,11 +217,6 @@ body.dark-mode .wrapper .main-content .modal .table * {
     color: var(--primary-white) !important;
 }
 
-
-body.dark-mode .splide__arrow--prev path {
-    fill: var(--primary-blue-dark) !important;
-}
-
-body.dark-mode .splide__arrow--next path {
+body.dark-mode .splide__arrow--prev path, body.dark-mode .splide__arrow--next path {
     fill: var(--primary-blue-dark) !important;
 }
