@@ -221,3 +221,9 @@ html.dark-mode body .splide__arrow--prev path,
 html.dark-mode body .splide__arrow--next path {
     fill: var(--primary-blue-dark) !important;
 }
+
+/* Skeleton Loader Dark Mode CSS */
+html.dark-mode body .placeholder {
+    background-color: var(--dark-mode-bg) !important;
+    opacity: 0.6;
+}

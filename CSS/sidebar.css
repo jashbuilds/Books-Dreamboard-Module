@@ -163,11 +163,6 @@ html.dark-mode .darkmodeLabel {
     background: var(--dark-mode-bg);
 }
 
-/* #darkmode-toggle:checked+.darkmodeLabel {
-    background: var(--dark-mode-bg);
-    transition: all 0.3s;
-} */
-
 .darkmodeLabel img {
     position: absolute;
     z-index: 100;
