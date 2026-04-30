@@ -15,7 +15,6 @@
         <link rel="shortcut icon" href="../../Icons/bookModule-icon.svg"
             type="image/x-icon">
         <script src="../../JavaScript/themeInit.js"></script>
-        <script src="../../JavaScript/darkMode.js" defer></script>
     </head>
 
     <body class="preload-transitions">
@@ -41,7 +40,7 @@
                 <ul class="nav flex-column mt-3 gap-1">
                     <li class="nav-item mx-3" data-bs-toggle="tooltip"
                         data-bs-placement="right" data-bs-title="Books">
-                        <a href="../../HTML/Books/bookModule.html"
+                        <a href="javascript: void(0)"
                             class="nav-link rounded-3 d-flex align-items-center justify-content-sm-start justify-content-center active">
 
                             <div
@@ -316,11 +315,11 @@
                                     <div
                                         class="d-flex gap-2 justify-content-end mt-5">
                                         <button type="button" id="cancelBtn"
-                                            class="btn btn-outline-primary px-4 py-2 rounded-3"
+                                            class="btn btn-outline-primary px-4 py-2 rounded-3 btn-decline"
                                             data-bs-dismiss="modal"><span
                                                 class="px-sm-4 px-3">Cancel</span></button>
                                         <button type="submit"
-                                            class="btn btn-submit-custom bg-primary cursor-nodrop text-white px-4 py-2 rounded-3 fw-bold"
+                                            class="btn btn-submit-custom bg-primary cursor-nodrop text-white px-4 py-2 rounded-3 fw-bold btn-accept"
                                             id="submitBtn" disabled>
                                             <span
                                                 class="px-sm-4 px-3">Save</span>
@@ -393,6 +392,8 @@
         <script src="../../JavaScript/toggleSidebar.js" defer></script>
         <script src="../../JavaScript/booksPage/bookModule.js"
             defer></script>
+        <script src="../../JavaScript/darkMode.js"></script>
+
     </body>
 
 </html>
